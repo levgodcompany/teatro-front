@@ -1,20 +1,32 @@
-import CardStyles from './css/card.module.css'
+import CardStyles from "./css/card.module.css";
 
-const Card = () => {
-    return (
-        <div className= {CardStyles.contenedor_actividad}>
-            <img 
-            className= {CardStyles.imagen_actividad}
-            src= ''
-            alt="Foto de sala" />
-            <div className={CardStyles.contenedor_texto_actividad}>
-                <p className={CardStyles.nombre_actividad}> nombre </p>
-                <p className={CardStyles.detalle_actividad}> detalle </p>
-                <p className={CardStyles.texto_actividad}> texto </p>
-            </div>
-        </div>
-        
-    )
+export interface PropsCard {
+  image: string;
+  title: string;
+  description: string;
 }
+
+const Card: React.FC<PropsCard> = ({ title, description, image }) => {
+  return (
+    <>
+      <div className={CardStyles.container_card}>
+        <div className={CardStyles.container_info}>
+          <span className={CardStyles.container_info_title}>{title}</span>
+          <span className={CardStyles.container_info_description}>
+            {description}
+          </span>
+          <button className={CardStyles.container_info__button}>VER MAS</button>
+        </div>
+        <div className={CardStyles.container_image}>
+          <img
+            className={CardStyles.container_image_img}
+            src={image}
+            alt="Foto de sala"
+          />
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default Card;
