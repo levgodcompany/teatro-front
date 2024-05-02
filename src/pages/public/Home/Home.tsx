@@ -1,5 +1,6 @@
 import Card, { PropsCard } from "../../../components/Card/Card";
 import Card_H from "../../../components/Card_H/Card_H";
+import Card_B from "../../../components/Card_B/Card_B";
 import HomeStyle from './css/Home.module.css'
 
 const Home = ()=> {
@@ -94,6 +95,25 @@ const Home = ()=> {
         <section className={HomeStyle.container__section_rooms}>
             {
                 objest.map(room => <Card_H description={room.description} image={room.image} title={room.title} /> )
+            }
+        </section>
+    </section>
+
+    <section className={HomeStyle.container__section_room} >
+        <div className={HomeStyle.container_section_header}>
+            <div className={HomeStyle.container_section_header_titles}>
+                <div className={HomeStyle.title}>
+                    <h2 className={HomeStyle.title_link}>Encuentra tu Espacio Creativo</h2>
+                </div>
+                <div className={HomeStyle.sub_title}>
+                    <span className={HomeStyle.sub_title_link}>Salas diponibles</span>
+                </div>
+            </div>
+
+        </div>
+        <section className={HomeStyle.container__section_rooms}>
+            {
+                objest.map(room => <Card_B description={room.description} image={room.image} title={room.title} /> )
             }
         </section>
     </section>
