@@ -1,6 +1,7 @@
 .container__section_room{
     margin: auto;
     max-width: 90%;
+    margin-top: 40px;
 }
 
 
@@ -8,6 +9,8 @@
 .container_section_header {
     line-height: 19px;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
 }
 
 .container_section_header_titles {
@@ -41,4 +44,19 @@
     flex-wrap: wrap;
     gap: 30px;
     justify-content: center;
+}
+
+.container__section_event{
+    margin: auto;
+    max-width: 90%;
+    margin-top: 40px;
+}
+
+.container__section_events {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    flex-direction: column;
+    align-content: center;
 }

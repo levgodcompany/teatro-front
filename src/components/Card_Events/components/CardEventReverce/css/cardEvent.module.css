@@ -1,0 +1,114 @@
+.container_listcard{
+    display: flex;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+
+.container_card_{
+    background-color: #fff;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+    flex-direction: row;
+    display: flex;
+    height: 250px;
+    max-width: 100%;
+    overflow: hidden;
+    height: 190px;
+    margin-right: 8px;
+    gap: 40px;
+    justify-content: flex-end;
+}
+
+.container_image {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    min-width: 249px;
+}
+
+.container_image_img{
+    height: 100%;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+}
+
+.container_info{
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    /* padding: 32px 10px 32px 32px; */
+    width: 400px;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.container_info_title{
+    text-transform: uppercase;
+    font-size: 18px;
+    /* letter-spacing: 4px; */
+    margin-bottom: 12px;
+    color: #4b4b4b;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.container_info_sub_title {
+    /* text-transform: uppercase; */
+    font-size: 13px;
+    /* letter-spacing: 4px; */
+    margin-bottom: 12px;
+    color: #4b4b4b;
+    min-width: 322px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.container_info_description{
+font-size: 12px;
+    font-weight: 300;
+    color: #4b4b4b;
+    font-stretch: normal;
+    text-align: center;
+    font-style: normal;
+    max-width: 265px;
+}
+
+.container_info__button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    /* font-size: 1em; */
+    font-weight: 500;
+    /* font-family: inherit; */
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    width: 50%;
+    margin-top: 10px;
+    background-color: #bf2424;
+    color: #fff;
+}
+
+
+.nombre_actividad{
+    font-size: 1.3rem;
+    font-weight: bold;    
+}
+
+.detalle_actividad{
+    font-size: 1.3rem;
+    font-style: italic;
+    margin-top: 15px;
+    padding-bottom: 30px;
+}
+
+.texto_actividad{
+    font-size: 1.1rem;
+    text-align: justify;
+}

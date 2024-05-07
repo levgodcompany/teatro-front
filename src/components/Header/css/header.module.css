@@ -1,0 +1,130 @@
+.container {
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0rem 0.0625rem 0.125rem 0rem rgba(16, 24, 40, 0.05);
+  padding: 5px 3rem;
+}
+
+.container_cont{
+  display: flex;
+  align-items: center;
+}
+
+.navBar_movil {
+  display: none;
+}
+
+.navBar_movil_close {
+  display: none;
+}
+
+.container_ul {
+  margin: 0;
+  padding: 0;
+}
+
+.container_ul > a {
+  color: #475467;
+  font-weight: 400;
+}
+
+.navBar {
+  width: 250px;
+}
+
+.navBar .container_ul {
+  display: flex;
+  justify-content: space-around;
+}
+
+.apply_button {
+  display: block; /* Mostrar el botón en modo móvil */
+}
+
+.button_option {
+  display: none; /* Mostrar el botón en modo móvil */
+}
+
+.bootcamp_button {
+  background-color: #fff;
+  color: #8d8b8b;
+}
+
+
+
+.bootcamp_button:hover {
+  border: none;
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+
+  .bootcamp_button {
+    color: #ffffff;
+    font-weight: 700;
+    margin: 1rem;
+    background-color: #00a8e100;
+  }
+
+
+  /* Estilos para dispositivos móviles */
+  .apply_button {
+    display: none; /* Mostrar el botón en modo móvil */
+  }
+
+  .button_option {
+    display: block; /* Mostrar el botón en modo móvil */
+  }
+
+  .navBar {
+    display: none;
+  }
+  .navBar_movil {
+    display: block;
+    background-color: #fff;
+    height: 100vh;
+    background-color: #fff;
+  }
+
+  .container_item_movil {
+    padding: 2rem;
+  }
+
+  .container_item_movil > button {
+    width: 100%;
+  }
+  .navBar_movil > .container_ul > a {
+    padding: 2px;
+    /* background-color: red; */
+    box-shadow: 0px 1px 0px 0px #00a8e1;
+  }
+
+  .navBar_movil > .container_ul > a:hover {
+    color: #fff;
+    background-color: #00a8e1;
+  }
+
+  .navBar_movil > ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    gap: 10px;
+  }
+
+  .menu {
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #222;
+    padding: 1rem;
+    display: none; /* Ocultar el menú en modo móvil */
+  }
+
+  .menu.open {
+    display: flex; /* Mostrar el menú cuando está abierto */
+  }
+}
