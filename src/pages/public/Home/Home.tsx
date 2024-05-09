@@ -7,6 +7,7 @@ import CardEvent from "../../../components/Card_Events/CardEvent";
 import Carousel from "../../../components/Carousel/Carousel";
 import CarouselComp from "../../../components/CarouselComponents/CarouselComp";
 import CardEventReverce from "../../../components/Card_Events/components/CardEventReverce/CardEventReverce";
+import Footer from "../../../components/Footer/components/Footer"
 
 const Home = () => {
   const objest: PropsCard[] = [
@@ -276,8 +277,11 @@ const Home = () => {
           ))}
         </section>
       </section>
+      <Footer/>
     </>
-  );
+    
+);
 };
 
 export default Home;
+
