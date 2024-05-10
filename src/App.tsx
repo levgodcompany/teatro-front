@@ -7,7 +7,7 @@ import RoutesWithNotFound from "./utilities/RoutesWithNotFound.utility";
 import Home from "./pages/public/Home/Home";
 import SingUp from "./pages/public/SingUp/SingUp";
 import Login from "./pages/public/Login/Login";
-
+import User from "./pages/public/User/User";
 
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
           <Route path="singup" element={<SingUp />} />
           <Route path="singin" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/user" element={<User />} />
           {/*<Route path={PublicRoutes.LOGIN} element={<Login />} />*/}
           </RoutesWithNotFound>
         </Provider>
