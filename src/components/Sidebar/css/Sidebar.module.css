@@ -1,0 +1,163 @@
+.Container {
+  border: 1px solid #000;
+}
+
+.toggle_btn {
+  position: absolute;
+  top: 150px;
+  left: -125px;
+  background: none;
+  border: none;
+  color: #fff;
+  /* font-size: 20px; */
+  cursor: pointer;
+  background-color: #00000080;
+  border-radius: 0px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 35px;
+  transition: all 0.5s;
+}
+
+.toggle_btn > p {
+  margin: 0;
+}
+
+.toggle_btn:hover {
+  left: 0px;
+}
+
+.toggle_btn_close {
+  background-color: #00000000;
+  padding: 0.1rem;
+}
+
+.toggle_btn_close:hover {
+  border-color: #fff;
+}
+
+.time_min {
+  font-size: 0.7rem;
+}
+
+.cont_title_open_sidebar {
+  display: flex;
+  align-content: center;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 11.1px 0.8rem 0.2rem 1.6rem;
+  max-width: 292px;
+  background-color: #fff;
+}
+
+.cont_title_open_sidebar_title {
+  margin: 0;
+  font-size: 14px;
+}
+
+.sidebar {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: -340px;
+  z-index: 100;
+  background-color: #fff;
+  /* padding-top: 50px; */
+  transition: all 0.3s ease;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.Container_sidebar {
+  position: fixed;
+  background-color: #000000a8;
+  z-index: 10000000;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.Container_list {
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 330px;
+  /* overflow: auto; */
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #fff;
+}
+
+/* Cambia el ancho del scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Cambia el color de fondo del scrollbar track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Cambia el color del thumb (la barra deslizante) del scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #00a8e1;
+}
+
+/* Cambia el color del thumb cuando está siendo activado (por ejemplo, al hacer clic) */
+::-webkit-scrollbar-thumb:hover {
+  background: #00a8e1;
+}
+
+.list {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.list:hover {
+  background-color: #e5e5e5;
+}
+
+.list_img {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.info_title {
+  color: #000;
+}
+
+.info_title > h1 {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.nav_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.li_container {
+  list-style: none;
+  padding: 8px;
+}
+
+.li_container:hover {
+    background-color: #d1d7dc;
+}
+
+@media (max-width: 550px) {
+  .info_title > h1 {
+    font-size: 0.7rem;
+  }
+}

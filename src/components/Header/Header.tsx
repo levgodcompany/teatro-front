@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
       setMenuOpen(!menuOpen);
     }
     setBootcampsOpen(!bootcampsOpen);
-    navigate("/student/home")
+    navigate("/theater/home")
   };
 
   const item = ()=>{

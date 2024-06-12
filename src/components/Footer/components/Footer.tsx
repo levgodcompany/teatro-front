@@ -17,17 +17,17 @@ const Footer = () => {
             pb-8">
                 <FooterList>
                     <h3 className="text-base font-bold mb-2">Que ofrecemos</h3>
-                    <link href='#'>Alquiler de Salas</link>
-                    <link href='#'>Bar</link>
-                    <link href='#'>Shows</link>
-                    <link href='#'>Clases Personalizadas</link>
+                    <a href='#'>Alquiler de Salas</a>
+                    <a href='#'>Bar</a>
+                    <a href='#'>Shows</a>
+                    <a href='#'>Clases Personalizadas</a>
                 </FooterList>
                 <FooterList>
                     <h3 className="text-base font-bold mb-2">Que ofrecemos</h3>
-                    <link href='#'>Servicio al Cliente</link>
-                    <link href='#'>Reclamos</link>
-                    <link href='#'>Contacto</link>
-                    <link href='#'>Politicas</link>
+                    <a href='#'>Servicio al Cliente</a>
+                    <a href='#'>Reclamos</a>
+                    <a href='#'>Contacto</a>
+                    <a href='#'>Politicas</a>
                 </FooterList>
                 <FooterList>
                     <h3 className="text-base font-bold mb-2">Sobre Nosotros</h3>
@@ -39,10 +39,10 @@ const Footer = () => {
                 
                     <h3 className="text-base font-bold mb-2">Seguinos</h3>
                     <div className="flex gap-2">
-                    <link href='#'><MdFacebook size = {24}/></link>
-                    <link href='#'><AiFillTwitterCircle size = {24}/></link>
-                    <link href='#'><AiFillInstagram size = {24}/></link>
-                    <link href='#'><AiFillYoutube size = {24}/></link>
+                    <a href='#'><MdFacebook size = {24}/></a>
+                    <a href='#'><AiFillTwitterCircle size = {24}/></a>
+                    <a href='#'><AiFillInstagram size = {24}/></a>
+                    <a href='#'><AiFillYoutube size = {24}/></a>
                     </div>
                 
                 </FooterList>

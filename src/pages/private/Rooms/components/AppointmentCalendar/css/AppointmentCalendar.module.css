@@ -1,0 +1,13 @@
+.container {
+  padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .header h2 {
+    margin: 0;
+  }

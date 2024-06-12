@@ -3,10 +3,14 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import formStyle from "./css/SingUp.module.css";
 import logo from "../../../assets/el_juvenil.svg";
+import AuthService from "../../../services/Auth.service";
+import { createOwner } from "../../../redux/slices/Owner.slice";
+import { createToken } from "../../../redux/slices/token.slice";
 
 interface StudentForm {
   name: string;
   lastName: string;
+  phone: string;
   email: string;
   password: string;
 }
@@ -18,6 +22,7 @@ const SingUp = () => {
   const [formData, setFormData] = useState<StudentForm>({
     name: "",
     lastName: "",
+    phone: "",
     email: "",
     password: "",
   });
@@ -25,16 +30,21 @@ const SingUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      navigate(`/home`, { replace: true });
 
+      const owner = await AuthService.register(formData.name, formData.phone, formData.email, formData.password);
+      if(owner){
+        dispatch(createOwner(owner))
+        dispatch(createToken({token: owner.token}))
+        navigate(`/home`, { replace: true });
+      }
     } catch (error) {
       console.log(`Error al buscar el student: ${error}`);
     }
   };
 
-  const handleSingIn = ()=> {
+  const handleSingIn = () => {
     navigate(`/singin`, { replace: true });
-  }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,14 +52,16 @@ const SingUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
   const calculateAge = (birthDate: string): number => {
     const today = new Date();
     const birthDateObj = new Date(birthDate);
     let age = today.getFullYear() - birthDateObj.getFullYear();
     const monthDiff = today.getMonth() - birthDateObj.getMonth();
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDateObj.getDate())
+    ) {
       age--;
     }
 
@@ -65,7 +77,7 @@ const SingUp = () => {
               <img src={logo} alt="In English" width="80" height="80" />
             </div>
             <div className={formStyle.container_inputs_input}>
-              <div  className={formStyle.inputs_name_last}>
+              <div className={formStyle.inputs_name_last}>
                 <input
                   className={formStyle.inputText}
                   type="text"
@@ -82,7 +94,6 @@ const SingUp = () => {
                   onChange={handleChange}
                   placeholder="Apellido Completo *"
                 />
-
               </div>
               <input
                 className={formStyle.inputText}
@@ -94,33 +105,12 @@ const SingUp = () => {
               />
               <input
                 className={formStyle.inputText}
-                type="text"
-                name="lastName"
-                value={formData.lastName}
+                type="password"
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
-                placeholder="País, Provincia, Localidad *"
+                placeholder="Password *"
               />
-              <input
-                className={formStyle.inputText}
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Codigo Postal *"
-              />
-              <div className={formStyle.cont_input}>
-                <label htmlFor="">Fecha de Nacimiento *</label>
-                <input
-                  className={formStyle.inputText}
-                  type="date"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Fecha de nacimiento"
-                />
-
-              </div>
-              
             </div>
           </div>
           <div className={formStyle.container_button}>
@@ -130,11 +120,12 @@ const SingUp = () => {
 
             <div className={formStyle.space}></div>
 
-            <button className={formStyle.button_singup} onClick={handleSingIn}>Iniciar sesión</button>
+            <button className={formStyle.button_singup} onClick={handleSingIn}>
+              Iniciar sesión
+            </button>
           </div>
         </div>
       </main>
-
     </>
   );
 };

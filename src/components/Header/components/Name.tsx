@@ -11,7 +11,7 @@ export const Name: React.FC<NameParam> = ({toHome}) => {
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div onClick={toHome}  className={styleComponent.container} >
                 <img src={Diseno} width="50rem" />
-                <Typography variant="h6" component="div" fontSize={14} color={'#9E2D49'}>El Juvenil</Typography>
+                <Typography variant="h6" component="div" fontSize={14} color={'#000'}>El Juvenil</Typography>
 
             </div>
         </Box>

@@ -1,0 +1,61 @@
+.opening_hours {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: auto;
+    background-color: white;
+  }
+  .title {
+    margin-bottom: 15px;
+    font-size: 24px;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .header h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .opening_hours_day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .day_name {
+    font-weight: bold;
+  }
+  
+  .hours {
+    color: green;
+  }
+  
+  .closed {
+    color: red;
+  }
+  
+  @media (max-width: 600px) {
+    .opening_hours_day {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .day_name {
+      margin-bottom: 5px;
+    }
+  }
+  

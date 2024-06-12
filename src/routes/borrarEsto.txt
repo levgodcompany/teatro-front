@@ -1,2 +1,0 @@
-archivo realizado para que se cree la carpeta y asi formar la estructura del proyecto
-al final hay que borrarlos

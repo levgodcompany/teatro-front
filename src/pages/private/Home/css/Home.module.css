@@ -1,0 +1,6 @@
+.container_room {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}

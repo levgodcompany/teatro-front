@@ -1,9 +1,13 @@
 import formStyle from "./css/login.module.css";
 import logo from "../../../assets/el_juvenil.svg";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useState } from "react";
+import { useAppDispatch } from "../../../redux/hooks";
 
 import { useNavigate } from "react-router-dom";
+import AuthService from "../../../services/Auth.service";
+import { createOwner } from "../../../redux/slices/Owner.slice";
+import { createToken } from "../../../redux/slices/token.slice";
+import { PrivateRoutes } from "../../../routes/routes";
 
 interface StudentForm {
   email: string;
@@ -15,8 +19,8 @@ const Login = () => {
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState<StudentForm>({
-    email: "",
-    password: "",
+    email: "leandroveron1110@gmail.com",
+    password: "LJVinformatica14_",
   });
 
 
@@ -25,7 +29,13 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      navigate(`/home`, { replace: true });
+      const login = await AuthService.login(formData.email, formData.password);
+      if(login){
+        dispatch(createOwner(login))
+        dispatch(createToken({token: login.token}))
+        navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.HOME}`, { replace: true });
+
+      }
 
     } catch (error) {
       console.log(`Error al buscar el student: ${error}`);
