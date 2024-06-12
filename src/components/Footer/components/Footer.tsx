@@ -1,15 +1,14 @@
 import { Container } from "@mui/material";
-import FooterList from "./FooterList";
 import {MdFacebook} from 'react-icons/md';
 import {AiFillTwitterCircle, AiFillInstagram, AiFillYoutube} from 'react-icons/ai';
-import FooterStyle from "./css/Footer.module.css";
+import FooterStyle from '../css/Footer.module.css';
+import { Link } from "react-router-dom";
 
 
 const Footer = () => {
-    return <footer className="bg-slate-700 
-    text-slate-200
-    text-sm mt16
-    ">
+    return <footer className={FooterStyle.container}>
+
+
         <Container>
             <div className="flex flex-col md:flex-row
             justify-between
@@ -45,7 +44,17 @@ const Footer = () => {
                     <a href='#'><AiFillYoutube size = {24}/></a>
                     </div>
                 
-                </FooterList>
+                    <div className={FooterStyle.footer_element}>
+                    <h3 className={FooterStyle.footer_element}>Seguinos</h3>
+                    <div className={FooterStyle.footer_redes}>
+                    <Link to='#'><MdFacebook size = {24}/></Link>
+                    <Link to='#'><AiFillTwitterCircle size = {24}/></Link>
+                    <Link to='#'><AiFillInstagram size = {24}/></Link>
+                    <Link to='#'><AiFillYoutube size = {24}/></Link>
+                    </div>
+                    </div>
+                
+               
             </div>
 
 
