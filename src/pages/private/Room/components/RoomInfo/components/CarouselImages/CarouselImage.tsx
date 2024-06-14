@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CouruselImageStyle from "./css/Carousel.module.css";
-import { IImage } from "../../pages/private/Rooms/services/Rooms.service";
+import { IImage } from "../../../../../Local/services/Local.service";
 
 const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -17,6 +17,9 @@ const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
     );
   };
 
+  const backgroundUrl =
+    "http://eljuvenil.com/wp-content/uploads/2019/11/encabezado.jpg";
+
   return (
     <div className={CouruselImageStyle.carousel}>
       <button onClick={goToPreviousSlide} className={CouruselImageStyle.prev}>
@@ -27,11 +30,17 @@ const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
           key={index}
           className={
             index === currentImageIndex
-              ? `${CouruselImageStyle.slide} ${CouruselImageStyle.active}`
+              ? `${CouruselImageStyle.slide} ${CouruselImageStyle.container_image} ${CouruselImageStyle.active}`
               : `${CouruselImageStyle.slide}`
           }
         >
-          <img src={image.url} alt={`Slide ${index + 1}`} />
+          <figure  className={CouruselImageStyle.container_image_figure}>
+            <div className={CouruselImageStyle.figure_cont}>
+              <img className={CouruselImageStyle.figure_img} src={image.url} alt={`Slide ${index + 1}`} />
+
+            </div>
+
+          </figure>
         </div>
       ))}
       <button onClick={goToNextSlide} className={CouruselImageStyle.next}>
@@ -39,6 +48,20 @@ const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
       </button>
     </div>
   );
+};
+
+interface BackgroundWrapperProps {
+  backgroundUrl: string;
+}
+
+const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
+  backgroundUrl,
+}) => {
+  const style = {
+    backgroundImage: `url(${backgroundUrl})`,
+  };
+
+  return <div className={CouruselImageStyle.back_image} style={style}></div>;
 };
 
 export default CarouselImage;

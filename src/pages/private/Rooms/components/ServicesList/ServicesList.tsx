@@ -31,13 +31,6 @@ const ServicesList: React.FC<ServicesListProps> = ({ services, idRoom }) => {
     <div className={ServiceStyle.services_list}>
       <div className={ServiceStyle.header}>
         <h2>Servicios que ofrece la sala</h2>
-        <img onClick={handleOpenModal} src={editImage} alt="" /> 
-        <ServicesModal
-        services={services}
-        isOpen={isModalOpen}
-        onRequestClose={handleCloseModal}
-        idRoom={idRoom}
-      />
       </div>
       <ul>
         {services.map((service, index) => (

@@ -48,14 +48,14 @@ const Sidebar = () => {
 
               <div className={SidebarStyle.Container_list}>
                 <nav className={SidebarStyle.nav_container}>
-                  <li onClick={()=> redirect(PrivateRoutes.LOCAL)} className={SidebarStyle.li_container}>
-                    <span>Local</span>
-                  </li>
                   <li  onClick={()=> redirect(PrivateRoutes.ROOMS)} className={SidebarStyle.li_container}>
                     <span>Salas</span>
                   </li>
                   <li onClick={()=> redirect(PrivateRoutes.CLIENTS)} className={SidebarStyle.li_container}>
-                    <span>Clientes</span>
+                    <span>Perfil</span>
+                  </li>
+                  <li onClick={()=> redirect(PrivateRoutes.CLIENTS)} className={SidebarStyle.li_container}>
+                    <span>Mis Turnos</span>
                   </li>
                 </nav>
               </div>

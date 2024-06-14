@@ -30,13 +30,7 @@ const HighlightedImages: React.FC<HighlightedImagesProps> = ({
     <div className={HighlightedImagesStyle.container}>
       <div className={HighlightedImagesStyle.header}>
         <h2>Imagenes de la sala</h2>
-        <img onClick={() => setModalOpen(true)} src={editImage} alt="" />
-        <ImageFormModal
-          images={images}
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          idRoom={idRoom}
-        />
+       
       </div>
 
       <div className={HighlightedImagesStyle.highlighted_images_grid}>
@@ -54,24 +48,6 @@ const HighlightedImages: React.FC<HighlightedImagesProps> = ({
                     src={image.url}
                     alt={image.description || `Image ${index + 1}`}
                   />
-                  {hoveredIndex === index && (
-                    <div
-                      className={
-                        HighlightedImagesStyle.highlighted_image_overlay
-                      }
-                    >
-                      <img
-                        className={HighlightedImagesStyle.image_delete}
-                        src={deleteImage}
-                        alt=""
-                      />
-                      <img
-                        className={HighlightedImagesStyle.image_edit}
-                        src={editImage}
-                        alt=""
-                      />
-                    </div>
-                  )}
                 </div>
               </>
             ) : (

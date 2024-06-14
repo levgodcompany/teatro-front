@@ -7,8 +7,7 @@ import { getRoomHTTP } from "./service/Room.service";
 import AppointmentCalendar from "./components/AppointmentCalendar/AppointmentCalendar";
 import RoomStyle from "./css/Room.module.css"
 import Sidebar from "../../../components/Sidebar/Sidebar";
-import DateSelector from "./components/DateSelector/DateSelector";
-import MyCalendar from "./components/AppointmentSelector/AppointmentSelector";
+import RoomInfo from "./components/RoomInfo/RoomInfo";
 
 interface ISelects {
   id: string;
@@ -129,19 +128,10 @@ const Room = () => {
   return (
     <>
       <Header />
-      <Sidebar />
 
       <div className={RoomStyle.room_container}>
         <div key={room.name} className={RoomStyle.container_room}>
-          <InfoRoom
-            idRoom={room._id}
-            image={room.mainImage.url}
-            capacity={room.capacity}
-            description={room.description}
-            phone={room.phone}
-            title={room.name}
-            price={room.priceBase}
-          />
+          <RoomInfo room={room} />
           <div className={RoomStyle.room_calendar}>
             <AppointmentCalendar
               _appointments={room.availableAppointments}

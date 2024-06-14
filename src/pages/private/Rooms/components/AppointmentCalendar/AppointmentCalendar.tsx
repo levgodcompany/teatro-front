@@ -58,6 +58,10 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({ _appointments, idRoom })
 
     const app: IAppointment[] = _appointments.map((appointment) => ({
       _id: appointment._id,
+      GuestListClient: appointment.GuestListClient,
+      GuestListNotClient: appointment.GuestListNotClient,
+      price: appointment.price,
+      dto: appointment.dto,
       date: new Date(appointment.date),
       start: new Date(appointment.start),
       end: new Date(appointment.end),

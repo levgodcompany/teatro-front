@@ -55,8 +55,7 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ idRoom, openingDays }) => {
     <div className={OpeningHoursStyle.opening_hours}>
       <div className={OpeningHoursStyle.header}>
         <h2>Horarios</h2>
-        <img onClick={handleOpenModal} src={editImage} alt="" /> 
-        <OpeningHoursModal openingHoursRoom={openingDays} idRoom={idRoom} isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+        
       </div>
       {days.map((day, index) => (
         <div key={index} className={OpeningHoursStyle.opening_hours_day}>

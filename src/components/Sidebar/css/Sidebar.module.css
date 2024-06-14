@@ -97,22 +97,22 @@
 
 /* Cambia el ancho del scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 
 /* Cambia el color de fondo del scrollbar track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #dddddd;
 }
 
 /* Cambia el color del thumb (la barra deslizante) del scrollbar */
 ::-webkit-scrollbar-thumb {
-  background: #00a8e1;
+  background: #505051;
 }
 
 /* Cambia el color del thumb cuando está siendo activado (por ejemplo, al hacer clic) */
 ::-webkit-scrollbar-thumb:hover {
-  background: #00a8e1;
+  background: #dddddd;
 }
 
 .list {

@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import moment from "moment";
 import NewEventModalStyle from "./css/AppointmentModal.module.css";
-import { DtoRoom, IAppointment } from "../../../Rooms/services/Rooms.service";
+import {
+  DtoRoom,
+  IAppointment,
+  IDtoAppointment,
+} from "../../../Rooms/services/Rooms.service";
 import {
   ClientDTO,
   getClientsHTTP,
   getClientsRegisterHTTP,
-  postNotClientsHTTP,
 } from "../../service/Room.service";
 import HoursImage from "../../../../../assets/clock-svgrepo-com.svg";
 import DescriptionImage from "../../../../../assets/text-description-svgrepo-com.svg";
-import UsersImage from "../../../../../assets/users.svg";
-import UserImage from "../../../../../assets/user-1-svgrepo-com.svg";
-import ReactQuill from "react-quill";
+import { format } from "date-fns";
+import CapacityClientImage from "../../../../../assets/users-svgrepo-com.svg";
+import DimeImage from "../../../../../assets/dime.svg";
+import { es } from "date-fns/locale";
 
 interface NewEventModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
   onSave: (event: IAppointment) => void;
-  onDelet: (IAppointment: string) => void;
-  onPrint: () => void;
   capacity: number;
   event: IAppointment;
   price: number;
@@ -31,12 +32,10 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   isOpen,
   onRequestClose,
   onSave,
-  onDelet,
-  onPrint,
   event,
   capacity,
   price,
-  dto
+  dto,
 }) => {
   // State hooks for form fields
   const [title, setTitle] = useState(event.title);
@@ -44,11 +43,10 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   const [description, setDescription] = useState(event.description);
   const [start, setStart] = useState(event.start as Date);
   const [end, setEnd] = useState(event.end as Date);
+  const [dtoRoom, setDtoRoom] = useState<IDtoAppointment | null>(null);
 
   // State hooks for client management
-  const [inputValue, setInputValue] = useState<string>("");
   const [inputValuePrice, setInputValuePrice] = useState<number>(price);
-  const [inputValueOrganizer, setInputValueOrganizer] = useState<string>("");
   const [selectedClients, setSelectedClients] = useState<ClientDTO[]>([]);
   const [selectedClientOrganizer, setSelectedClientOrganizer] =
     useState<ClientDTO>({
@@ -59,15 +57,6 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
       isRegister: true,
     });
 
-  const [isOpenNewNotClient, setIsOpenNewNotClient] = useState<boolean>(false);
-  const [newNotClient, setNewNotClient] = useState<ClientDTO>({
-    id: "",
-    name: "",
-    email: "",
-    phone: "",
-    isRegister: false,
-  });
-
   const [clients, setClients] = useState<ClientDTO[]>([]);
   const [clientsRegister, setClientsRegister] = useState<ClientDTO[]>([]);
 
@@ -77,6 +66,27 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
 
   // Effect to sync event data with state
   useEffect(() => {
+    const ahora = new Date();
+    const val = new Date(event.start as Date);
+
+    if (
+      val.getDay() >= ahora.getDay() &&
+      val.getMonth() >= ahora.getMonth() &&
+      val.getFullYear() >= ahora.getFullYear()
+    ) {
+      const formattedTime = val.toTimeString().split(" ")[0]; // "HH:MM:SS"
+      const hourMinute = formattedTime.substring(0, 5);
+
+      const roomWithDiscount = isTimeWithinAnyRange(hourMinute, dto);
+      if (roomWithDiscount) {
+        setIsAplicDto(roomWithDiscount);
+      } else {
+        setIsAplicDto(null);
+      }
+    }
+
+    setDtoRoom(event.dto);
+
     setTitle(event.title);
     setAvailable(event.available);
     setDescription(event.description);
@@ -145,90 +155,6 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
     fetchClients();
   }, []);
 
-  // Handlers for form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setInputValue(e.target.value);
-  const handleInputOrganizerChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setInputValueOrganizer(e.target.value);
-
-  // Handler for selecting clients from the list
-  const handleOptionClick = (client: ClientDTO) => {
-    if (
-      !selectedClients.some((selectedClient) => selectedClient.id === client.id)
-    ) {
-      setSelectedClients((prev) => [...prev, client]);
-    }
-    setInputValue("");
-  };
-
-  const handleInputPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValuePrice(Number.parseInt(e.target.value));
-  };
-
-  const handleOptionOrganizerClick = (client: ClientDTO) => {
-    setSelectedClientOrganizer(client);
-    setInputValueOrganizer("");
-  };
-
-  const handleRemoveOption = (client: ClientDTO) => {
-    setSelectedClients((prev) =>
-      prev.filter((selectedClient) => selectedClient.email !== client.email)
-    );
-  };
-
-  const handleRemoveOrganizerOption = () => {
-    setSelectedClientOrganizer({
-      id: "",
-      name: "",
-      email: "",
-      phone: "",
-      isRegister: true,
-    });
-  };
-
-  // Filter clients based on input values
-  const filteredClients = clients.filter(
-    (client) =>
-      client.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-      client.email.toLowerCase().includes(inputValue.toLowerCase())
-  );
-
-  const filteredClientsRegister = clientsRegister.filter(
-    (client) =>
-      client.name.toLowerCase().includes(inputValueOrganizer.toLowerCase()) ||
-      client.email.toLowerCase().includes(inputValueOrganizer.toLowerCase())
-  );
-
-  const isValidEmail = (email: string): boolean => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
-
-  const handleAddNewClient = () => {
-    if (isValidEmail(inputValue)) {
-      const newClient: ClientDTO = {
-        id: "",
-        name: "",
-        email: inputValue,
-        phone: "",
-        isRegister: false,
-      };
-
-      if (
-        selectedClients.some(
-          (client) => client.email.toLowerCase() === inputValue.toLowerCase()
-        )
-      ) {
-        alert("El correo ya está registrado en la lista");
-      } else {
-        setSelectedClients((prev) => [...prev, newClient]);
-        setInputValue("");
-      }
-    } else {
-      alert("Correo electrónico no válido");
-    }
-  };
-
   // Save handler for the modal
   const handleSave = () => {
     const organizerId =
@@ -282,46 +208,6 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
     }
   };
 
-  // Save handler for the modal
-  const handleDelete = () => {
-    onDelet(event._id);
-  };
-
-  // Handlers for new non-registered client info
-  const addInfoNotClient = (client: ClientDTO) => {
-    setIsOpenNewNotClient(true);
-    setNewNotClient(client);
-  };
-
-  const saveNewNotClient = async () => {
-    try {
-      await postNotClientsHTTP(newNotClient);
-      setSelectedClients((prev) =>
-        prev.map((client) =>
-          client.email === newNotClient.email ? newNotClient : client
-        )
-      );
-      setClients((prev) => [...prev, newNotClient]);
-      setIsOpenNewNotClient(false);
-    } catch (error) {
-      console.error("Error saving new client:", error);
-    }
-  };
-
-  const handleInputNameNewNotClient = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setNewNotClient((prev) => ({ ...prev, name: e.target.value }));
-  };
-
-  const handleOpenPrint = () => {
-    onPrint();
-  };
-
-  const handleDescriptionChange = (value: string) => {
-    setDescription(value);
-  };
-
   const isTimeWithinAnyRange = (
     time: string,
     rooms: DtoRoom[]
@@ -331,72 +217,33 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
         const startTime = new Date(`1970-01-01T${room.startHour}:00`);
         const endTime = new Date(`1970-01-01T${room.endHour}:00`);
         const checkTime = new Date(`1970-01-01T${time}:00`);
-        console.log("checkTime > startTime", checkTime > startTime);
-        console.log("checkTime < endTime", checkTime < endTime);
         return checkTime >= startTime && checkTime < endTime;
       }) || null
     );
   };
 
-  const handelDateStart = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const ahora = new Date();
-    const val = new Date(e.target.value);
+  const formateador = new Intl.NumberFormat("es-ES", {
+    style: "decimal",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
-    if (
-      val.getDay() >= ahora.getDay() &&
-      val.getMonth() >= ahora.getMonth() &&
-      val.getFullYear() >= ahora.getFullYear()
-    ) {
-      const formattedTime = val.toTimeString().split(" ")[0]; // "HH:MM:SS"
-      const hourMinute = formattedTime.substring(0, 5); // "HH:MM"
-      console.log(dto);
-      const roomWithDiscount = isTimeWithinAnyRange(hourMinute, dto);
-      if (roomWithDiscount) {
-        setIsAplicDto(roomWithDiscount);
-      } else {
-        setIsAplicDto(null);
-      }
-
-      setStart(val);
-    } else {
-      console.log("La fecha es anterior a la fecha actual");
-    }
+  const capitalizeFirstLetter = (string: string): string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  const handelDateEnd = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = new Date(e.target.value);
-    if (
-      val.getDay() >= start.getDay() &&
-      val.getMonth() >= start.getMonth() &&
-      val.getFullYear() >= start.getFullYear()
-    ) {
-      setEnd(val);
-    }
+  const formatDate = (date: Date): string => {
+    // Formatear la fecha en el formato deseado
+    const formattedDate = format(date, "EEEE, d 'de' MMMM", { locale: es });
+
+    // Capitalizar la primera letra del resultado formateado
+    return capitalizeFirstLetter(formattedDate);
   };
 
+  const formatTime = (date: Date): string => {
+    const formattedTime = format(date, "hh:mm a");
 
-  const viewDto = () => {
-    if (isAplicDto && isAplicDtoCheck) {
-      if (inputValuePrice > 0) {
-        return (
-          <p className={NewEventModalStyle.p_dto}>
-            <span className={NewEventModalStyle.p_span_dto}>
-              ${inputValuePrice}
-            </span>{" "}
-            <strong>
-              ${inputValuePrice - (isAplicDto.dto / 100) * inputValuePrice}
-            </strong>
-          </p>
-        );
-      }
-
-      return (
-        <p className={NewEventModalStyle.p_dto}>
-          <span className={NewEventModalStyle.p_span_dto}>${price}</span>{" "}
-          <strong>${price - (isAplicDto.dto / 100) * price}</strong>
-        </p>
-      );
-    }
+    return formattedTime.toLocaleLowerCase();
   };
 
   return (
@@ -410,12 +257,7 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
         <div className={NewEventModalStyle.container}>
           <div className={NewEventModalStyle.container_form}>
             <div className={NewEventModalStyle.from_title}>
-              <input
-                type="text"
-                placeholder="Añade un título"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+              <span>{title}</span>
             </div>
 
             <div className={NewEventModalStyle.date_start}>
@@ -427,181 +269,103 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                 />
               </div>
               <div className={NewEventModalStyle.date_hour}>
-                <input
-                  type="datetime-local"
-                  value={moment(start).format("YYYY-MM-DDTHH:mm")}
-                  onChange={handelDateStart}
-                />
-                <span>-</span>
-                <input
-                  type="datetime-local"
-                  value={moment(end).format("YYYY-MM-DDTHH:mm")}
-                  onChange={handelDateEnd}
-                />
+                {end.getDate() !== start.getDate() ? (
+                  <>
+                    <span>{`${formatDate(start)} ⋅ ${formatTime(start)}`}</span>
+
+                    <span>{`${formatDate(end)} ⋅ ${formatTime(end)}`}</span>
+                  </>
+                ) : (
+                  <>
+                    <span>
+                      {`${formatDate(start)}`} ⋅ {`${formatTime(start)}`} -{" "}
+                      {`${formatTime(end)}`}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
-
-            <div className={NewEventModalStyle.container_info}>
-              <div className={NewEventModalStyle.container_image_description}>
-                <img
-                  className={NewEventModalStyle.image_description}
-                  src={DescriptionImage}
-                  alt="Description"
-                />
-              </div>
-              <div className={NewEventModalStyle.container_info_description}>
-                <ReactQuill
-                  className={NewEventModalStyle.container_info_description_des}
-                  value={description}
-                  onChange={handleDescriptionChange}
-                  modules={{
-                    toolbar: [
-                      ["bold", "italic", "underline"],
-                      [{ list: "ordered" }, { list: "bullet" }],
-                      ["link"],
-                      ["clean"],
-                    ],
-                  }}
-                  formats={[
-                    "bold",
-                    "italic",
-                    "underline",
-                    "list",
-                    "bullet",
-                    "link",
-                  ]}
-                />
-              </div>
-            </div>
-
-            <div></div>
 
             <div className={NewEventModalStyle.container_capacity_max}>
-              <span>
-                Capacidad máx. de Personas: <strong>{capacity}</strong>
-              </span>
-            </div>
-
-            <div className={NewEventModalStyle.container_client}>
-              <div className={NewEventModalStyle.container_image_client}>
+              <div className={NewEventModalStyle.container_image_hour}>
                 <img
-                  className={NewEventModalStyle.image_client}
-                  src={UserImage}
-                  alt="User"
+                  className={NewEventModalStyle.image_hour}
+                  src={CapacityClientImage}
+                  alt="users"
                 />
               </div>
-              <div className={NewEventModalStyle.autocomplete_select}>
-                <input
-                  type="text"
-                  value={inputValueOrganizer}
-                  onChange={handleInputOrganizerChange}
-                  placeholder="Añade organizador"
-                  className={NewEventModalStyle.input}
+              <span>Capacidad para {capacity} personas</span>
+            </div>
+
+            <div className={NewEventModalStyle.container_capacity_max}>
+              <div className={NewEventModalStyle.container_image_hour}>
+                <img
+                  className={NewEventModalStyle.image_hour}
+                  src={DimeImage}
+                  width={15}
+                  alt="users"
                 />
-                {inputValueOrganizer && (
-                  <ul className={NewEventModalStyle.options_list}>
-                    {filteredClientsRegister.map((client) => (
-                      <li
-                        key={client.id}
-                        onClick={() => handleOptionOrganizerClick(client)}
-                      >
-                        <span>{client.name}</span>
-                        <span>{client.email}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {selectedClientOrganizer.id && (
-                  <ul className={NewEventModalStyle.selected_options}>
-                    <li className={NewEventModalStyle.selected_option}>
+              </div>
+              <span>Medidas <strong>20x30 m</strong></span>
+            </div>
+
+
+            <div className={NewEventModalStyle.container_client}>
+              <div className={NewEventModalStyle.autocomplete_select}>
+                <div className={NewEventModalStyle.container_availability}>
+                  
+                  <p className={NewEventModalStyle.p_dto}>
+                    {dtoRoom == null ? (
                       <>
-                        <span>{selectedClientOrganizer.name} *</span>
-                        <button
-                          onClick={handleRemoveOrganizerOption}
-                          className={NewEventModalStyle.remove_button}
-                        >
-                          Remove
-                        </button>
+                        <strong className={NewEventModalStyle.dto_price}>${formateador.format(inputValuePrice)}</strong>
                       </>
-                    </li>
-                  </ul>
-                )}
+                    ) : (
+                      <div className={NewEventModalStyle.dto_value}>
+                        <span className={NewEventModalStyle.span_dto_value}>
+                          {dtoRoom.dto}% dto.
+                        </span>
+
+                        <div>
+                          <span className={NewEventModalStyle.p_span_dto}>
+                            ${formateador.format(dtoRoom.prevPrice)}
+                          </span>{" "}
+                          <strong className={NewEventModalStyle.dto_price}>
+                            ${formateador.format(dtoRoom.newPrice)}
+                          </strong>
+                        </div>
+                      </div>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
 
-
-            <div className={NewEventModalStyle.container_capacity_max}>
-              <span>Precio del Turno</span>
-            </div>
-            <div className={NewEventModalStyle.container_client}>
-              <div className={NewEventModalStyle.container_image_client}>
-                <span
-                  className={NewEventModalStyle.container_image_client_price}
-                >
-                  $
-                </span>
+            {description.length > 0 ? (
+              <div className={NewEventModalStyle.container_info}>
+                <div className={NewEventModalStyle.container_image_description}>
+                  <img
+                    className={NewEventModalStyle.image_description}
+                    src={DescriptionImage}
+                    alt="Description"
+                  />
+                </div>
+                <div className={NewEventModalStyle.container_info_description}>
+                  <span
+                    dangerouslySetInnerHTML={{ __html: description }}
+                  ></span>
+                </div>
               </div>
-              <div className={NewEventModalStyle.autocomplete_select}>
-                <input
-                  type="number"
-                  value={inputValuePrice}
-                  onChange={handleInputPriceChange}
-                  placeholder="Añade Valor"
-                  className={NewEventModalStyle.input}
-                />
-              </div>
-            </div>
-            <div className={NewEventModalStyle.container_price_app}>
-              <span>
-                Si el valor es 0 se romara el precio base de la sala:{" "}
-                <strong>${price}</strong>
-              </span>
-            </div>
+            ) : (
+              <></>
+            )}
 
-            {isAplicDto != null ? (
-            <>
-              <div className={NewEventModalStyle.container_availability}>
-                <label className={NewEventModalStyle.availability_label}>
-                  Aplicar descuento del {isAplicDto.dto}%
-                </label>
-                <input
-                  type="checkbox"
-                  name="available"
-                  checked={isAplicDtoCheck}
-                  onChange={(e) => setIsAplicDtoCheck(e.target.checked)}
-                />
-              </div>
-            </>
-          ) : (
-            <></>
-          )}
-
-          {isAplicDtoCheck && isAplicDto ? viewDto() : <></>}
-
-
-            <div className={NewEventModalStyle.container_availability}>
-              <label className={NewEventModalStyle.availability_label}>
-                Disponible:
-              </label>
-              <input
-                type="checkbox"
-                name="available"
-                checked={available}
-                onChange={(e) => setAvailable(e.target.checked)}
-              />
-            </div>
             <div className={NewEventModalStyle.container_buttons}>
-              <button type="button" onClick={handleDelete}>
-                Eliminar
-              </button>
               <button type="button" onClick={handleSave}>
-                Editar
+                Reservar
               </button>
             </div>
           </div>
         </div>
-
-        <button onClick={handleOpenPrint}>Imprimir</button>
       </Modal>
     </>
   );

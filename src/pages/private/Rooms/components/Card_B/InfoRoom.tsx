@@ -47,8 +47,8 @@ const InfoRoom: React.FC<PropsCard> = ({
       <div className={InfoLocalStyles.user_info}>
         <div className={InfoLocalStyles.header_title}>
           <h2>{title}</h2>
-          <img onClick={handleOpenModal} src={editImage} alt="" />
-          <LocalForm capacity={Number.parseInt(`${capacity}`)} description={description} image={image} phone={phone} title={title} idRoom={idRoom} isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+         
+    
         </div>
         <div className={InfoLocalStyles.user_info_info}>
           <p>
