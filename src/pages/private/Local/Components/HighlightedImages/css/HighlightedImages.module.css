@@ -1,0 +1,85 @@
+.highlighted_images_grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .container {
+    border-radius: 10px;
+    max-width: 800px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+  }
+  .title {
+    margin-bottom: 15px;
+    font-size: 24px;
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .header h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+
+  .highlighted_image {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .highlighted_image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .highlighted_image_overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .highlighted_image:hover .highlighted_image_overlay {
+    opacity: 1;
+  }
+
+  .image_delete, .image_edit {
+    padding: 6px;
+    background-color: #ffffff63;
+    border-radius: 50%;
+  }
+  
+  .image_delete:hover {
+    background-color: #0000003d;
+  }
+
+  .image_edit:hover {
+    background-color: #0000003d;
+  }
+
+
+  .highlighted_image-overlay button {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .highlighted_image-overlay button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  

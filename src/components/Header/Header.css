@@ -1,0 +1,63 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #333;
+  color: white;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 70px;
+  margin-right: 1rem;
+}
+
+.company-name {
+  font-size: 1.5rem;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.menu li {
+  margin-right: 1rem;
+}
+
+.apply-button {
+  display: none; /* Ocultar el botón en modo móvil */
+}
+
+@media (max-width: 768px) {
+  /* Estilos para dispositivos móviles */
+  .apply-button {
+    display: block; /* Mostrar el botón en modo móvil */
+  }
+
+  .menu {
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #222;
+    padding: 1rem;
+    display: none; /* Ocultar el menú en modo móvil */
+  }
+
+  .menu.open {
+    display: flex; /* Mostrar el menú cuando está abierto */
+  }
+}

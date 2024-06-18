@@ -1,0 +1,84 @@
+.client-table-container {
+    padding: 20px;
+  }
+  
+  .client-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    min-width: 600px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .client-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+  }
+  
+  .client-table th, .client-table td {
+    padding: 12px 15px;
+  }
+  
+  .client-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+  }
+  
+  .client-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+  }
+  
+  .client-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+  }
+  
+  .client-table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+  
+  .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 4px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 350px;
+    overflow: auto;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .appointment-item {
+    margin-bottom: 20px;
+  }
+  
+  .close-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ff5c5c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .close-button:hover {
+    background-color: #ff1c1c;
+  }
+  

@@ -1,0 +1,126 @@
+/* src/components/css/AppointmentCalendar.module.css */
+.container {
+
+}
+
+.header {
+  margin-bottom: 10px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: stretch;
+  padding: 10px;
+  align-items: center;
+  color: #686b6e;
+}
+
+.navigation {
+  display: flex;
+  gap: 10px;
+}
+
+.viewSelect {
+  display: flex;
+  align-items: center;
+}
+
+.select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #686b6e;
+}
+
+.button {
+  background-color: #ffffff;
+  border: none;
+  color: #000;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #cccccc;
+  color: #686b6e;
+}
+
+.button_prev {
+  border: none;
+  border-radius: 100%;
+  font-size: 16px;
+  color: #5f6368;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  background-color: #0000;
+  justify-content: center;
+}
+
+.button_prev:hover {
+  background-color: #e1e1e163;
+  /* padding: 8px; */
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+}
+
+.button_nex {
+  border: none;
+  border-radius: 100%;
+  font-size: 16px;
+  width: 40px;
+  height: 40px;
+  color: #5f6368;
+  display: flex;
+  background-color: #0000;
+  justify-content: center;
+}
+
+.button_nex:hover {
+  background-color: #e1e1e163;
+  /* padding: 8px; */
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: none; /* Elimina el borde de enfoque predeterminado */
+}
+
+.button_prev:focus {
+  outline: none;
+  box-shadow: none; /* Elimina el borde de enfoque predeterminado */
+}
+
+.button_nex:focus {
+  outline: none;
+  box-shadow: none; /* Elimina el borde de enfoque predeterminado */
+}
+
+.select_option {
+  font-size: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.year > span {
+  font-weight: 600;
+}
+
+.day_header {
+  font-size: 12px;
+  color: #5f6368;
+}

@@ -1,0 +1,114 @@
+.carousel {
+  position: relative;
+  min-width: 200px;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.slide {
+  display: none;
+}
+
+.slide img {
+
+}
+
+.active {
+  display: block;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px;
+  background-color: #a9a7a733;
+  color: #000;
+  border: none;
+  z-index: 1;
+}
+
+.prev:focus {
+  background-color: #00000000;
+  color: #000;
+  border: none;
+  outline: none;
+    box-shadow: none;
+}
+.next:focus {
+  background-color: #00000000;
+  color: #000;
+  border: none;
+  outline: none;
+    box-shadow: none;
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
+
+
+.container_image {
+  flex-shrink: 0;
+  transform: translateZ(0);
+  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+}
+
+.container_image_figure {
+  aspect-ratio: 3 / 2;
+  content-visibility: auto;
+  inline-size: 100%;
+  place-self: stretch;
+  position: relative;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.figure_cont {
+  block-size: inherit;
+  inset-block-end: 0;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  inset-inline-start: 0;
+  position: absolute;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.figure_img {
+  block-size: 100%;
+  inline-size: 100%;
+  inset-block-end: 0;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  inset-inline-start: 0;
+  position: absolute;
+  opacity: 1;
+  transition: opacity 1s;
+  display: block;
+  object-fit: cover;
+  vertical-align: middle;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 600px) {
+  .carousel {
+    position: relative;
+    width: 400px;
+    min-height: 200px;
+    overflow: hidden;
+  }
+}
