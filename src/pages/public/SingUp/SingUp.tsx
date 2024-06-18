@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import formStyle from "./css/SingUp.module.css";
 import logo from "../../../assets/el_juvenil.svg";
 import AuthService from "../../../services/Auth.service";
-import { createOwner } from "../../../redux/slices/Owner.slice";
+import { createClient } from "../../../redux/slices/Client.slice";
 import { createToken } from "../../../redux/slices/token.slice";
 
 interface StudentForm {
@@ -33,7 +33,7 @@ const SingUp = () => {
 
       const owner = await AuthService.register(formData.name, formData.phone, formData.email, formData.password);
       if(owner){
-        dispatch(createOwner(owner))
+        dispatch(createClient(owner))
         dispatch(createToken({token: owner.token}))
         navigate(`/home`, { replace: true });
       }

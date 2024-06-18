@@ -170,42 +170,26 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
       }
     });
 
-    if (
-      organizerId === null &&
-      (selectedClientIds.length > 0 || selectedNotClientIds.length > 0)
-    ) {
-      alert(
-        "Tienes que agregar a un organizador para poder invitar a más gente"
-      );
+    let val = 0;
+
+    if (inputValuePrice > 0) {
+      val = inputValuePrice;
     } else {
-      let val = 0;
-
-      if (inputValuePrice > 0) {
-        val = inputValuePrice;
-      } else {
-        val = price;
-      }
-
-      if (isAplicDto && isAplicDtoCheck) {
-        if (inputValuePrice > 0) {
-          val = inputValuePrice - (isAplicDto.dto / 100) * inputValuePrice;
-        } else {
-          val = price - (isAplicDto.dto / 100) * price;
-        }
-      }
-      onSave({
-        ...event,
-        title,
-        start,
-        end,
-        description,
-        price: val,
-        available,
-        client: organizerId,
-        GuestListClient: selectedClientIds,
-        GuestListNotClient: selectedNotClientIds,
-      });
+      val = price;
     }
+
+    onSave({
+      ...event,
+      title,
+      start,
+      end,
+      description,
+      price: val,
+      available,
+      client: organizerId,
+      GuestListClient: selectedClientIds,
+      GuestListNotClient: selectedNotClientIds,
+    });
   };
 
   const isTimeWithinAnyRange = (
@@ -306,18 +290,20 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                   alt="users"
                 />
               </div>
-              <span>Medidas <strong>20x30 m</strong></span>
+              <span>
+                Medidas <strong>20x30 m</strong>
+              </span>
             </div>
-
 
             <div className={NewEventModalStyle.container_client}>
               <div className={NewEventModalStyle.autocomplete_select}>
                 <div className={NewEventModalStyle.container_availability}>
-                  
                   <p className={NewEventModalStyle.p_dto}>
                     {dtoRoom == null ? (
                       <>
-                        <strong className={NewEventModalStyle.dto_price}>${formateador.format(inputValuePrice)}</strong>
+                        <strong className={NewEventModalStyle.dto_price}>
+                          ${formateador.format(inputValuePrice)}
+                        </strong>
                       </>
                     ) : (
                       <div className={NewEventModalStyle.dto_value}>

@@ -53,7 +53,6 @@ export const getLocal = async () => {
       `local/local/${localID.id}`
     );
     const data = response.data;
-    console.log(data);
 
     return data.data;
   } catch (error) {
