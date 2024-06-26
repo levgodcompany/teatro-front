@@ -54,12 +54,63 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+
+/* Estilos generales para todos los scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #dddddd;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #505051;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #505051;
+}
+
+/* Estilos para el scrollbar vertical */
+::-webkit-scrollbar:vertical {
+  width: 4px; /* Cambia a un ancho mayor */
+}
+
+::-webkit-scrollbar-track:vertical {
+  background: #cccccc; /* Ejemplo: Cambiar el color de fondo */
+}
+
+::-webkit-scrollbar-thumb:vertical {
+  background: #606061; /* Ejemplo: Cambiar el color del thumb */
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+  background: #606061; /* Ejemplo: Cambiar el color del thumb cuando está siendo activado */
+}
+
+/* Estilos para el scrollbar horizontal */
+::-webkit-scrollbar:horizontal {
+  height: 4px; /* Cambia a un alto mayor */
+}
+
+::-webkit-scrollbar-track:horizontal {
+  background: #bbbbbb; /* Ejemplo: Cambiar el color de fondo */
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background: #707071; /* Ejemplo: Cambiar el color del thumb */
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+  background: #707071; /* Ejemplo: Cambiar el color del thumb cuando está siendo activado */
 }
 
 @media (prefers-color-scheme: light) {

@@ -1,0 +1,185 @@
+// DateSelector.tsx
+import React, { useEffect, useState } from "react";
+import DateSelectorStyle from "./DateSelector.module.css";
+import Shift from "./components/Shift/Shift";
+import { IRoom } from "../../../Rooms/services/Rooms.service";
+
+interface ISelects {
+  id: string;
+  year: number;
+  month: number;
+  days: string[];
+}
+
+interface IDateSelectorProps {
+  room: IRoom;
+}
+
+const DateSelector: React.FC<IDateSelectorProps> = ({ room }) => {
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    new Date().getMonth()
+  );
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear()
+  );
+  const [selectedDays, setSelectedDays] = useState<number[]>([]);
+  const [selectedDateList, setSelectedDateList] = useState<ISelects>({
+    id: "",
+    days: [],
+    month: 0,
+    year: 0
+  });
+
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+
+  const daysInMonth = (month: number, year: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const handleDayClick = (day: number) => {
+    const date = new Date(`${selectedYear}-${selectedMonth + 1}-${day}`);
+    const ahoraDate = new Date();
+    if(date >= ahoraDate) {
+      setSelectedDays((prevSelectedDays) => {
+        if (prevSelectedDays.includes(day)) {
+          return prevSelectedDays.filter((selectedDay) => selectedDay !== day);
+        } else {
+          return [...prevSelectedDays, day];
+        }
+      });
+
+    }
+  };
+
+  const handleAddButtonClick = () => {
+    const formattedDates = selectedDays.map(
+      (day) => `${selectedYear}-${(selectedMonth + 1) < 10 ? `0${selectedMonth}` : selectedMonth}-${day}`
+    );
+    setSelectedDateList(() => {
+
+      const select: ISelects = {
+        id: `${selectedMonth + 1}${selectedYear}`,
+        year: selectedYear,
+        month: selectedMonth + 1,
+        days: formattedDates,
+      };
+      
+
+      return select;
+    });
+    setIsOpen(true);
+    setIsOpenModal(true);
+  };
+
+  const renderCalendar = () => {
+    const days = Array.from(
+      { length: daysInMonth(selectedMonth, selectedYear) },
+      (_, i) => i + 1
+    );
+    const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1).getDay(); // 0 = Sunday, 1 = Monday, ...
+    const blanks = Array.from({ length: firstDayOfMonth }, (_, i) => (
+      <td key={`blank-${i}`} className={DateSelectorStyle.blank}></td>
+    )
+  
+  );
+    const rows: any = [];
+    let cells = blanks;
+    days.forEach((day, index) => {
+      const date = new Date(`${selectedYear}-${selectedMonth + 1}-${day}`);
+      const ahoraDate = new Date();
+      if(date < ahoraDate) {
+        cells.push(
+          <td
+            key={index}
+            className={
+              selectedDays.includes(day) ? `${DateSelectorStyle.selected}` : `${DateSelectorStyle.not_selected}`
+            }
+          >
+            {day}
+          </td>
+        );
+      }else {
+
+        cells.push(
+          <td
+            key={index}
+            className={
+              selectedDays.includes(day) ? `${DateSelectorStyle.selected}` : ""
+            }
+            onClick={() => handleDayClick(day)}
+          >
+            {day}
+          </td>
+        );
+      }
+      if (
+        (index + firstDayOfMonth + 1) % 7 === 0 ||
+        index === days.length - 1
+      ) {
+        rows.push(<tr key={rows.length}>{cells}</tr>);
+        cells = [];
+      }
+    });
+    return (
+      <table className={DateSelectorStyle.calendar}>
+        <tbody>
+          <tr>
+            <th>DO</th>
+            <th>LU</th>
+            <th>MA</th>
+            <th>MI</th>
+            <th>JU</th>
+            <th>VI</th>
+            <th>SA</th>
+          </tr>
+          {rows}
+        </tbody>
+      </table>
+    );
+  };
+
+  function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.substring(1);
+  }
+
+
+  const onRequestClose = ()=> {
+    setIsOpen(false);
+    setIsOpenModal(false);
+  }
+
+  return (
+    <div className={DateSelectorStyle.date_selector}>
+      <div className={DateSelectorStyle.container_calendar}>
+        <div className={DateSelectorStyle.nav_container}>
+          <h3 className={DateSelectorStyle.header_caledar}>
+            {capitalizeFirstLetter(
+              new Date(selectedYear, selectedMonth).toLocaleDateString(
+                "default",
+                { month: "long" }
+              )
+            )}
+            <div className={DateSelectorStyle.select_container}>
+              <span>{new Date().getFullYear()}</span>
+            </div>
+          </h3>
+        </div>
+
+        <div className={DateSelectorStyle.calendar_container}>
+          {renderCalendar()}
+        </div>
+        <div className={DateSelectorStyle.button_container}>
+          <button onClick={handleAddButtonClick}>Agregar</button>
+        </div>
+      </div>
+      <>
+      {
+        isOpenModal ? <Shift days={selectedDays} updateDay={handleDayClick} daysSelect={selectedDateList} room={room} isOpen={isOpen} onRequestClose={onRequestClose} /> : <></>
+      }
+      </>
+    </div>
+  );
+};
+
+export default DateSelector;

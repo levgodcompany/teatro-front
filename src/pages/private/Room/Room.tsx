@@ -8,6 +8,7 @@ import AppointmentCalendar from "./components/AppointmentCalendar/AppointmentCal
 import RoomStyle from "./css/Room.module.css"
 import Sidebar from "../../../components/Sidebar/Sidebar";
 import RoomInfo from "./components/RoomInfo/RoomInfo";
+import DateSelector from "./components/DateSelector/DateSelector";
 
 interface ISelects {
   id: string;
@@ -132,6 +133,13 @@ const Room = () => {
       <div className={RoomStyle.room_container}>
         <div key={room.name} className={RoomStyle.container_room}>
           <RoomInfo room={room} />
+          <div className={RoomStyle.room_calendar_reservation}>
+            <p>As tu reserva</p>
+            <div>
+              <DateSelector room={room} />
+            </div>
+
+          </div>
           <div className={RoomStyle.room_calendar}>
             <AppointmentCalendar
               _appointments={room.availableAppointments}
