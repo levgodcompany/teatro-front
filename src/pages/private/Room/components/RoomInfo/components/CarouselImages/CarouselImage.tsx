@@ -17,14 +17,12 @@ const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
     );
   };
 
-  const backgroundUrl =
-    "http://eljuvenil.com/wp-content/uploads/2019/11/encabezado.jpg";
-
   return (
     <div className={CouruselImageStyle.carousel}>
-      <button onClick={goToPreviousSlide} className={CouruselImageStyle.prev}>
+      {images.length > 1 ? <button onClick={goToPreviousSlide} className={CouruselImageStyle.prev}>
         &#10094;
-      </button>
+      </button>: <></>}
+      
       {images.map((image, index) => (
         <div
           key={index}
@@ -43,25 +41,14 @@ const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
           </figure>
         </div>
       ))}
-      <button onClick={goToNextSlide} className={CouruselImageStyle.next}>
+      {
+        images.length > 1 ? <button onClick={goToNextSlide} className={CouruselImageStyle.next}>
         &#10095;
-      </button>
+      </button> : <></>
+      }
+      
     </div>
   );
-};
-
-interface BackgroundWrapperProps {
-  backgroundUrl: string;
-}
-
-const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({
-  backgroundUrl,
-}) => {
-  const style = {
-    backgroundImage: `url(${backgroundUrl})`,
-  };
-
-  return <div className={CouruselImageStyle.back_image} style={style}></div>;
 };
 
 export default CarouselImage;

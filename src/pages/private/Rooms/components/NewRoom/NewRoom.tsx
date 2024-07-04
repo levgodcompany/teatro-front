@@ -31,6 +31,9 @@ const NewRoom = () => {
     dtoRoomHours: [],
     availableAppointments: [],
     phone: "",
+    length: 0,
+    Width: 0,
+    typeRoom: "",
     openingHours: {
       monday: { isOpen: false, open: "", close: "" },
       tuesday: { isOpen: false, open: "", close: "" },

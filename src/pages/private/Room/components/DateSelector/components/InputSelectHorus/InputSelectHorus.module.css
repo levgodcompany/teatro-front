@@ -1,4 +1,17 @@
 
+.container {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  align-items: center;
+}
+
+.container_inputs {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 20px;
+}
 
 .container_time {
     display: flex;
@@ -24,7 +37,6 @@
   }
 
   .options {
-    position: absolute;
     list-style-type: none;
     padding: 0;
     margin: 5px 0 0;
@@ -32,8 +44,7 @@
     overflow-y: auto;
     width: 120px;
     max-height: 180px;
-    top: 142px;
-    z-index: 1;
+
   }
 
   .options_list {
@@ -81,4 +92,9 @@
   
   .option:hover {
     background-color: #e9e9e9;
+  }
+
+  .error {
+    font-size: 10px;
+    color: #ff4747;
   }

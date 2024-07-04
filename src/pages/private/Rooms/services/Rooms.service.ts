@@ -62,7 +62,10 @@ export interface IRoom {
   additionalImages: IImage[]; // Lista de imágenes adicionales del local
   description: string; // Descripción del local
   services: string[]; // Lista de servicios que ofrece el local
-  dtoRoomHours: DtoRoom[]
+  dtoRoomHours: DtoRoom[];
+  length: number;
+  Width: number;
+  typeRoom: string;
 }
 
 export interface IImage {

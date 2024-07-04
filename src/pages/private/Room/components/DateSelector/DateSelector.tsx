@@ -13,9 +13,10 @@ interface ISelects {
 
 interface IDateSelectorProps {
   room: IRoom;
+  load: () => void;
 }
 
-const DateSelector: React.FC<IDateSelectorProps> = ({ room }) => {
+const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
   const [selectedMonth, setSelectedMonth] = useState<number>(
     new Date().getMonth()
   );
@@ -40,21 +41,21 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room }) => {
   const handleDayClick = (day: number) => {
     const date = new Date(`${selectedYear}-${selectedMonth + 1}-${day}`);
     const ahoraDate = new Date();
+    setSelectedDays((prevSelectedDays) => {
+      if (prevSelectedDays.includes(day)) {
+        return prevSelectedDays.filter((selectedDay) => selectedDay !== day);
+      } else {
+        return [...prevSelectedDays, day];
+      }
+    });
     if(date >= ahoraDate) {
-      setSelectedDays((prevSelectedDays) => {
-        if (prevSelectedDays.includes(day)) {
-          return prevSelectedDays.filter((selectedDay) => selectedDay !== day);
-        } else {
-          return [...prevSelectedDays, day];
-        }
-      });
 
     }
   };
 
   const handleAddButtonClick = () => {
     const formattedDates = selectedDays.map(
-      (day) => `${selectedYear}-${(selectedMonth + 1) < 10 ? `0${selectedMonth}` : selectedMonth}-${day}`
+      (day) => `${selectedYear}-${(selectedMonth + 1) < 10 ? `0${selectedMonth}` : selectedMonth}-${(day) < 10 ? `0${day}`: day}`
     );
     setSelectedDateList(() => {
 
@@ -88,7 +89,7 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room }) => {
     days.forEach((day, index) => {
       const date = new Date(`${selectedYear}-${selectedMonth + 1}-${day}`);
       const ahoraDate = new Date();
-      if(date < ahoraDate) {
+      if(date.getDate() < ahoraDate.getDate()) {
         cells.push(
           <td
             key={index}
@@ -147,6 +148,14 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room }) => {
   const onRequestClose = ()=> {
     setIsOpen(false);
     setIsOpenModal(false);
+    load();
+    setSelectedDays([]);
+    setSelectedDateList({
+      id: "",
+      days: [],
+      month: 0,
+      year: 0
+    });
   }
 
   return (
@@ -170,7 +179,7 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room }) => {
           {renderCalendar()}
         </div>
         <div className={DateSelectorStyle.button_container}>
-          <button onClick={handleAddButtonClick}>Agregar</button>
+          <button onClick={handleAddButtonClick}>Reservar</button>
         </div>
       </div>
       <>

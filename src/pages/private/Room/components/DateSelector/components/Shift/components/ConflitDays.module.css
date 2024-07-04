@@ -1,7 +1,43 @@
 .contianer {
-    padding: 20px;
+  height: 324px;
 }
 
 .contianer_day {
-    
+  font-size: 12px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.contianer_day_input {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 10px 0;
+}
+
+.span_reservation {
+}
+
+.contianer_list {
+  list-style-type: none;
+  padding: 5px;
+  overflow-y: auto;
+  background-color: #fff;
+  color: #666;
+}
+
+.list {
+}
+
+.container_buttons {
+  display: flex;
+  gap: 45px;
+  flex-direction: row-reverse;
+}
+
+.container_buttons > button {
+  background-color: #9e2d49;
+  width: 100%;
+  color: #fff;
 }

@@ -7,7 +7,7 @@
   padding: 5px;
 }
 
-.container_cont{
+.container_cont {
   display: flex;
   align-items: center;
 }
@@ -52,16 +52,21 @@
   color: #8d8b8b;
 }
 
-
-
 .bootcamp_button:hover {
   border: none;
   cursor: pointer;
 }
 
+.container_items {
+  display: flex;
+  gap: 20px;
+}
 
 @media (max-width: 768px) {
 
+  .container_items {
+    display: none;
+  }
   .bootcamp_button {
     color: #ffffff;
     font-weight: 700;
@@ -69,8 +74,10 @@
     background-color: #00a8e100;
   }
 
-
   /* Estilos para dispositivos móviles */
+  .container_items {
+    display: none; /* Mostrar el botón en modo móvil */
+  } 
   .apply_button {
     display: none; /* Mostrar el botón en modo móvil */
   }
@@ -87,6 +94,10 @@
     background-color: #fff;
     height: 100vh;
     background-color: #fff;
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 10;
   }
 
   .container_item_movil {
@@ -128,3 +139,4 @@
     display: flex; /* Mostrar el menú cuando está abierto */
   }
 }
+

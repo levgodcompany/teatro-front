@@ -3,16 +3,15 @@ import ShiftStyle from "./Shift.module.css";
 import CapacityClientImage from "../../../../../../../assets/users-svgrepo-com.svg";
 import DimeImage from "../../../../../../../assets/dime.svg";
 import HoursImage from "../../../../../../../assets/clock-svgrepo-com.svg";
-import DescriptionImage from "../../../../../../../assets/text-description-svgrepo-com.svg";
-import { IOpeningCloseHoursShiftsDTO } from "../../../../../Shifts/services/Shifts.service";
 import { useAppSelector } from "../../../../../../../redux/hooks";
 import {
   IAppointment,
   IRoom,
 } from "../../../../../Rooms/services/Rooms.service";
-import { getAppointmentHTTP } from "../../../../service/Room.service";
-import { parseISO, isSameDay, isBefore, isAfter } from "date-fns";
+import { getAppointmentHTTP, saveAppointmentsHTTP } from "../../../../service/Room.service";
 import ConflitDays from "./components/ConflitDays";
+import { IClientID } from "../../../../../../../redux/slices/ClientID.slice";
+import { clientByID, IClient } from "../../../../../../../services/Auth.service";
 
 interface ISelects {
   id: string;
@@ -25,6 +24,13 @@ interface IDaysSel {
   day: number;
   start: Date;
   end: Date;
+}
+
+interface IDaysSelConflict {
+  day: number;
+  start: Date;
+  end: Date;
+  dataDay: string;
 }
 
 interface IShiftProps {
@@ -44,26 +50,27 @@ const Shift: React.FC<IShiftProps> = ({
   updateDay,
 }) => {
   const [dataDaySelects, setDataDaySelects] = useState<IDaysSel[]>([]);
-  const [dayConflict, setDayConflict] = useState<IDaysSel[]>([]);
+  const [dayConflict, setDayConflict] = useState<IDaysSelConflict[]>([]);
 
-  const client = useAppSelector((state) => state.client);
+  const [client, setClient] = useState<IClient>({
+    _id: "",
+    token: "",
+    email: "",
+    name: "",
+    phone: ""
+  });
+  const clientIDSelector: IClientID = useAppSelector((state) => state.clientID);
   const [isOpenConflict, setIsOpenConflict] = useState<boolean>(false);
 
-  const [dtoRoom, setDtoRoom] = useState<string | null>(null);
+  const [isSave, setIsSave] = useState<boolean>(false);
+
+  const [newsAppointments, setNewAppointment] = useState<IAppointment[]>([]);
 
   const [error, setError] = useState<string | null>(null);
-
-  const formateador = new Intl.NumberFormat("es-ES", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
 
   const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
   const [inputValueTimeStart, setInputValueTimeStart] = useState("");
   const [showOptionsTimeStart, setShowOptionsTimeStart] = useState(false);
-
-  const [daysSelectConflict, setDaysSelectConflict] = useState<ISelects>()
 
   const [inputValueTimeEnd, setInputValueTimeEnd] = useState("");
   const [showOptionsTimeEnd, setShowOptionsTimeEnd] = useState(false);
@@ -82,6 +89,27 @@ const Shift: React.FC<IShiftProps> = ({
   };
 
   const allOptions = generateTimeOptions();
+
+  useEffect(()=> {
+    if(isSave) {
+      const httpSave =  async () => {
+        await saveAppointmentsHTTP(room._id, client._id, newsAppointments)
+        onRequestClose()
+      }
+      httpSave()
+    }
+  }, [isSave]);
+
+  useEffect(()=> {
+    const  getClientHTTP = async () => {
+      const res = await clientByID(clientIDSelector.id);
+
+      if(res){
+        setClient(res)
+      }
+    }
+    getClientHTTP();
+  }, [])
 
   const handleInputChangeTimeStart = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -127,10 +155,10 @@ const Shift: React.FC<IShiftProps> = ({
         setError("Formato no valido para la hora de salida");
         return;
       } else {
-        console.log("add days");
         const days: IDaysSel[] = [];
         daysSelect.days.forEach((d) => {
           const start = new Date(`${d}T${inputValueTimeStart.slice(0, -3)}`);
+          
           const day = start.getDate();
           days.push({
             day,
@@ -175,6 +203,49 @@ const Shift: React.FC<IShiftProps> = ({
       setDataDaySelects([...days]);
       setError("");
     }
+  };
+
+  const addNewAppointment = (start: Date, end: Date) => {
+    let priceBase =  room.priceBase;
+
+    let priceDto = 0;
+    let totalDto = 0
+
+    start.setMonth(start.getMonth()+1)
+    end.setMonth(end.getMonth()+1)
+    
+    room.dtoRoomHours.forEach(dto=> {
+      const startHourDto = new Date(`2024-08-14T${dto.startHour}`);
+      const endHourDto = new Date(`2024-08-14T${dto.endHour}`);
+
+      if(start.getHours() >= startHourDto.getHours() && start.getHours() < endHourDto.getHours() ) {
+        priceDto = priceBase - (dto.dto/100)*priceBase;
+        totalDto = dto.dto;
+      }
+      
+    });
+
+    setNewAppointment((prev) => {
+      const app: IAppointment = {
+        _id: "",
+        GuestListClient: [],
+        GuestListNotClient: [],
+        available: true,
+        description: "",
+        date: start,
+        start: start,
+        end: end,
+        client: client._id,
+        price: priceBase,
+        title: client.name,
+        dto: priceDto == 0 ? null :  {
+          dto: totalDto,
+          newPrice: priceDto,
+          prevPrice: priceBase,
+        },
+      };
+      return [...prev, app];
+    });
   };
 
   const reservation = async () => {
@@ -229,24 +300,20 @@ const Shift: React.FC<IShiftProps> = ({
         daySelet: TimeInterval
       ): boolean {
         const appStartHours = appointment.start.getHours();
-        const appStartMinutes = appointment.start.getMinutes();
-
         const appEndHours = appointment.end.getHours();
         const appEndMinutes = appointment.end.getMinutes();
 
         const daySeletStartHours = daySelet.start.getHours();
-        const daySelettartMinutes = daySelet.start.getMinutes();
+        const daySeletStartMinutes = daySelet.start.getMinutes();
+        const daySeletEndHours = daySelet.end.getHours();
 
-        const daySeletEndHours = daySelet.start.getHours();
-        const daySeletEndMinutes = daySelet.start.getMinutes();
-
-        // si la hora de entrada es mayor o igual que la hora de entrada ya reservada
-        // si la hora de entrada es menor o igual que la hora de salida ya reservada
-        // no se puede crear este turno
         if (
           daySeletStartHours >= appStartHours &&
           daySeletStartHours <= appEndHours
         ) {
+          if(daySeletStartHours == appEndHours && daySeletStartMinutes > appEndMinutes ) {
+            return true
+          }
           return false;
         }
 
@@ -254,19 +321,28 @@ const Shift: React.FC<IShiftProps> = ({
           daySeletEndHours >= appStartHours &&
           daySeletEndHours <= appEndHours
         ) {
+
+          
+          return false;
+        }
+
+        if (
+          daySeletStartHours < appStartHours &&
+          daySeletEndHours > appEndHours
+        ) {
           return false;
         }
 
         return true;
       }
 
-      const dayConflic: IDaysSel[] = [];
-
+      let dayConflic: IDaysSelConflict[] = [];
       function filterNonConflictingIntervals(
         appointmentsInternal: TimeInterval[],
         dataDaySelectsInternal: TimeInterval[]
-      ): TimeInterval[] {
-        return dataDaySelectsInternal.filter((d) => {
+      ): IDaysSelConflict[] {
+        let dayNotConflic: IDaysSelConflict[] = [];
+        dataDaySelectsInternal.forEach((d) => {
           let bool = true;
           for (const a of appointmentsInternal) {
             if (
@@ -278,37 +354,93 @@ const Shift: React.FC<IShiftProps> = ({
               }
             }
           }
-
+          const day = d.start.getDate();
+          const _d: IDaysSelConflict = {
+            day,
+            end: d.end,
+            start: d.start,
+            dataDay: "",
+          };
           if (!bool) {
-            const day = d.start.getDate();
-            dayConflic.push({
-              day,
-              end: d.end,
-              start: d.start,
-            });
+            dayConflic.push(_d);
+          } else {
+            dayNotConflic.push(_d);
           }
-          return bool;
         });
+
+        return dayNotConflic;
       }
 
       const nonConflictingIntervals = filterNonConflictingIntervals(
         appointments,
         dataDaySelects
       );
+
+      if (nonConflictingIntervals.length > 0) {
+        for (const notConflic of nonConflictingIntervals) {
+          addNewAppointment(notConflic.start, notConflic.end);
+        }
+      }
+
       if (dayConflic.length > 0) {
         setIsOpenConflict(true);
+        dayConflic = dayConflic.map((c) => {
+          daysSelect.days.forEach((d) => {
+            const start = new Date(`${d}`);
+            const day = start.getDate() + 1;
+            if (c.day == day) {
+              c.dataDay = d;
+            }
+          });
+
+          return c;
+        });
+
         setDayConflict(dayConflic);
+
+        let selConflict: ISelects = {
+          id: daysSelect.id,
+          days: [],
+          month: daysSelect.month,
+          year: daysSelect.year,
+        };
+
+        dayConflic.forEach((c) => {
+          daysSelect.days.forEach((d) => {
+            const start = new Date(`${d}`);
+            const day = start.getDate() + 1;
+            if (c.day == day) {
+              selConflict.days.push(d);
+            }
+          });
+        });
+      }else {
+        save()
       }
+    }else {
+      save()
     }
   };
+  const closeConflict = () => {
+    setIsOpenConflict(false);
+  };
 
+  const save = ()=> {
+    setIsSave(true)
+  }
   return (
     <div className={`${ShiftStyle.modal_overlay}`}>
       <div className={`${ShiftStyle.modal} ${ShiftStyle.modal_overlay}`}>
         <div className={ShiftStyle.container_form}>
           {isOpenConflict ? (
             <>
-              <ConflitDays roomId={room._id} conflicts={dayConflict} />
+              <ConflitDays
+                save={save}
+                close={closeConflict}
+                addNewAppointment={addNewAppointment}
+                roomId={room._id}
+                conflicts={dayConflict}
+              />
             </>
           ) : (
             <>
@@ -317,7 +449,7 @@ const Shift: React.FC<IShiftProps> = ({
               </div>
 
               <div className={ShiftStyle.container_days_select}>
-                {days.map((d) => (
+                {days.sort((a, b)=> a-b).map((d) => (
                   <span className={ShiftStyle.container_day}>
                     <span className={ShiftStyle.day}>{d}</span>
                     <span
@@ -388,9 +520,6 @@ const Shift: React.FC<IShiftProps> = ({
                 </div>
               </div>
               {error && <p className={ShiftStyle.error}>{error}</p>}
-              <div className={ShiftStyle.container_personalizado}>
-                <span>Horario personalizado</span>
-              </div>
 
               <div className={ShiftStyle.container_capacity_max}>
                 <div className={ShiftStyle.container_image_hour}>
@@ -420,48 +549,30 @@ const Shift: React.FC<IShiftProps> = ({
               <div className={ShiftStyle.container_client}>
                 <div className={ShiftStyle.autocomplete_select}>
                   <div className={ShiftStyle.container_availability}>
-                    <p className={ShiftStyle.p_dto}>
-                      {room.dtoRoomHours.map((dto) => (
+                    {room.dtoRoomHours.map((dto) => (
+                      <p className={ShiftStyle.p_dto}>
                         <>
-                          {dto.dto}% - {dto.startHour} / {dto.endHour}
-                        </>
-                      ))}
-                      {dtoRoom == null ? (
-                        <>
-                          <strong className={ShiftStyle.dto_price}>
-                            $ {formateador.format(room.priceBase)}
-                          </strong>
-                        </>
-                      ) : (
-                        <div className={ShiftStyle.dto_value}>
-                          <span className={ShiftStyle.span_dto_value}>
-                            20% dto.
+                          <span className={ShiftStyle.dtp}>{dto.dto}% OFF</span>{" "}
+                          -{" "}
+                          <span className={ShiftStyle.dto_hours}>
+                            {dto.startHour} / {dto.endHour}
                           </span>
-
-                          <div>
-                            <span className={ShiftStyle.p_span_dto}>
-                              $ 15.500
-                            </span>{" "}
-                            <strong className={ShiftStyle.dto_price}>
-                              $ 12.500
-                            </strong>
-                          </div>
-                        </div>
-                      )}
-                    </p>
+                        </>
+                      </p>
+                    ))}
                   </div>
                 </div>
               </div>
 
               <div className={ShiftStyle.container_buttons}>
-                <button onClick={reservation}>Reservar</button>
-                <button onClick={onRequestClose}></button>
+                <button className={ShiftStyle.button_reserver} onClick={reservation}>Reservar</button>
+                <button className={ShiftStyle.button_cancel} onClick={onRequestClose}>Cancelar</button>
               </div>
             </>
           )}
         </div>
       </div>
-    </div>
+    </div>  
   );
 };
 

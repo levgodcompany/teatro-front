@@ -45,7 +45,7 @@ export const getClientsHTTP = async () => {
 export const getClientsRegisterHTTP = async () => {
   try {
     const response = await axiosInstance.get<JsonResponseToken<ClientDTO[]>>(
-      `clients//client/`
+      `clients/client/`
     );
     const data = response.data;
 
@@ -146,6 +146,19 @@ export const getAppointmentHTTP = async (idRoom: string) => {
     const response = await axiosInstance.get<JsonResponseToken<IAppointment[]>>(`appointments/${idRoom}`);
     const data = response.data;
 
+
+    return data.data;
+  } catch (error) {
+    console.error("Error loging in:", error);
+    // Manejar el error de forma adecuada
+  }
+}
+
+export const saveAppointmentsHTTP =  async(idRoom: string, idClient: string, appointments: Partial<IAppointment>[]) => {
+  try {
+    
+    const response = await axiosInstance.post(`clients/client/appointments/${idRoom}/${idClient}`, appointments);
+    const data = response.data;
 
     return data.data;
   } catch (error) {

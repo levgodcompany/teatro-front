@@ -8,10 +8,11 @@ import HomeStyle from "./css/Home.module.css";
 import { getHttpLocalID, ILocalID } from "../../../services/LocalID.service";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { createLocalID } from "../../../redux/slices/LocalID.slice";
-import { getRoomsHTTP, IImage, IRoom } from "../Rooms/services/Rooms.service";
+import { DtoRoom, getRoomsHTTP, IImage, IRoom } from "../Rooms/services/Rooms.service";
 import { getLocal, ILocal } from "../Local/services/Local.service";
 import imgLogo from "../../../assets/el_juvenil.svg";
 import { IToken } from "../../../redux/slices/token.slice";
+import Footer from "../../../components/Footer/Footer";
 
 interface InfoRoom {
   idRoom: string;
@@ -19,6 +20,10 @@ interface InfoRoom {
   price: number;
   images: IImage[];
   capacity: number;
+  length: number;
+  Width: number;
+  dtos: DtoRoom[];
+  typeRoom: string;
 }
 
 const Home = () => {
@@ -49,6 +54,10 @@ const Home = () => {
           price: room.priceBase,
           capacity: room.capacity,
           images: [room.mainImage, ...room.additionalImages],
+          length: room.length,
+          Width: room.Width,
+          dtos: room.dtoRoomHours,
+          typeRoom: room.typeRoom
         })
       );
       setRooms([...transformedRooms]);
@@ -83,9 +92,10 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <div className={HomeStyle.local_services}>
+            {
+              local.services.length > 0 ?  <div className={HomeStyle.local_services}>
               <span className={HomeStyle.services_title}>
-                Servicios principales
+                SERVICIOS PRINCIPALES
               </span>
               <div className={HomeStyle.services}>
                 {local.services.map((s, i) => (
@@ -94,7 +104,9 @@ const Home = () => {
                   </>
                 ))}
               </div>
-            </div>
+            </div> :  <></>
+            }
+           
           </>
         ) : (
           <></>
@@ -103,27 +115,29 @@ const Home = () => {
         <div className={HomeStyle.rooms}>
           <div className={HomeStyle.rooms_title}>
             <h3>Salas de Ensayo</h3>
-            ___
           </div>
           <div className={HomeStyle.container_room}>
             {rooms.map((room) => (
               <>
                 <Room
                   idRoom={room.idRoom}
+                  typeRoom={room.typeRoom}
                   capacity={room.capacity}
                   title={room.title}
                   images={room.images}
                   price={room.price}
+                  Width={room.Width}
+                  length={room.length}
+                  dtos={room.dtos}
                 />
               </>
             ))}
           </div>
         </div>
 
-        <div>
-          <div></div>
-        </div>
       </main>
+
+      <Footer />
     </>
   );
 };

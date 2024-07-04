@@ -17,11 +17,12 @@ import { format } from "date-fns";
 import CapacityClientImage from "../../../../../assets/users-svgrepo-com.svg";
 import DimeImage from "../../../../../assets/dime.svg";
 import { es } from "date-fns/locale";
+import { useAppSelector } from "../../../../../redux/hooks";
 
 interface NewEventModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
-  onSave: (event: IAppointment) => void;
+  onSave: (event: string) => void;
   capacity: number;
   event: IAppointment;
   price: number;
@@ -40,27 +41,15 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   // State hooks for form fields
   const [title, setTitle] = useState(event.title);
   const [available, setAvailable] = useState<boolean>(event.available);
-  const [description, setDescription] = useState(event.description);
   const [start, setStart] = useState(event.start as Date);
   const [end, setEnd] = useState(event.end as Date);
   const [dtoRoom, setDtoRoom] = useState<IDtoAppointment | null>(null);
 
+  const clientState = useAppSelector(state => state.client);
+
   // State hooks for client management
   const [inputValuePrice, setInputValuePrice] = useState<number>(price);
-  const [selectedClients, setSelectedClients] = useState<ClientDTO[]>([]);
-  const [selectedClientOrganizer, setSelectedClientOrganizer] =
-    useState<ClientDTO>({
-      id: "",
-      name: "",
-      email: "",
-      phone: "",
-      isRegister: true,
-    });
 
-  const [clients, setClients] = useState<ClientDTO[]>([]);
-  const [clientsRegister, setClientsRegister] = useState<ClientDTO[]>([]);
-
-  const [isAplicDtoCheck, setIsAplicDtoCheck] = useState<boolean>(false);
 
   const [isAplicDto, setIsAplicDto] = useState<DtoRoom | null>(null);
 
@@ -89,107 +78,33 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
 
     setTitle(event.title);
     setAvailable(event.available);
-    setDescription(event.description);
     setStart(event.start as Date);
     setEnd(event.end as Date);
     setInputValuePrice(event.price);
 
-    if (event.client) {
-      const organizerIndex = clientsRegister.findIndex(
-        (cl) => cl.id === event.client
-      );
-      if (organizerIndex !== -1) {
-        setSelectedClientOrganizer(clientsRegister[organizerIndex]);
-      } else {
-        setSelectedClientOrganizer({
-          id: "",
-          name: "",
-          email: "",
-          phone: "",
-          isRegister: true,
-        });
-      }
-    } else {
-      setSelectedClientOrganizer({
-        id: "",
-        name: "",
-        email: "",
-        phone: "",
-        isRegister: true,
-      });
-    }
 
-    const selectedEventClients: ClientDTO[] = [];
-    if (event.GuestListClient.length > 0) {
-      clients.forEach((client) => {
-        if (event.GuestListClient.includes(client.id)) {
-          selectedEventClients.push(client);
-        }
-      });
-    }
-
-    if (event.GuestListNotClient.length > 0) {
-      clientsRegister.forEach((client) => {
-        if (event.GuestListNotClient.includes(client.id)) {
-          selectedEventClients.push(client);
-        }
-      });
-    }
-    setSelectedClients(selectedEventClients);
-  }, [event, clients, clientsRegister]);
+  }, [event]);
 
   // Effect to fetch clients data
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const [clientsData, clientsRegisterData] = await Promise.all([
-          getClientsHTTP(),
-          getClientsRegisterHTTP(),
-        ]);
-        setClients(clientsData || []);
-        setClientsRegister(clientsRegisterData || []);
-      } catch (error) {
-        console.error("Error fetching clients:", error);
-      }
-    };
-    fetchClients();
-  }, []);
 
   // Save handler for the modal
   const handleSave = () => {
-    const organizerId =
-      selectedClientOrganizer.id === "" ? null : selectedClientOrganizer.id;
-    const selectedClientIds: string[] = [];
-    const selectedNotClientIds: string[] = [];
 
-    selectedClients.forEach((client) => {
-      if (client.isRegister) {
-        selectedClientIds.push(client.id);
-      } else {
-        selectedNotClientIds.push(client.id);
-      }
-    });
+    // Obtén la fecha y hora actual
+    let now: Date = new Date();
 
-    let val = 0;
+    // Calcula la diferencia en milisegundos entre la fecha del turno y la fecha actual
+    let diffInMillis: number = start.getTime() - now.getTime();
 
-    if (inputValuePrice > 0) {
-      val = inputValuePrice;
+    // Calcula las horas a partir de la diferencia en milisegundos
+    let diffInHours: number = diffInMillis / (1000 * 60 * 60);
+
+    // Verifica si la diferencia es mayor a 24 horas
+    if (diffInHours > 24 && clientState._id == event.client) {
+      onSave(event._id);
     } else {
-      val = price;
+      alert("No puedes cancelar el turno, faltan menos de 24 horas.")
     }
-
-    onSave({
-      ...event,
-      title,
-      start,
-      end,
-      description,
-      price: val,
-      available,
-      client: organizerId,
-      GuestListClient: selectedClientIds,
-      GuestListNotClient: selectedNotClientIds,
-    });
   };
 
   const isTimeWithinAnyRange = (
@@ -326,29 +241,12 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
               </div>
             </div>
 
-            {description.length > 0 ? (
-              <div className={NewEventModalStyle.container_info}>
-                <div className={NewEventModalStyle.container_image_description}>
-                  <img
-                    className={NewEventModalStyle.image_description}
-                    src={DescriptionImage}
-                    alt="Description"
-                  />
-                </div>
-                <div className={NewEventModalStyle.container_info_description}>
-                  <span
-                    dangerouslySetInnerHTML={{ __html: description }}
-                  ></span>
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-
             <div className={NewEventModalStyle.container_buttons}>
-              <button type="button" onClick={handleSave}>
-                Reservar
-              </button>
+              {
+                clientState._id == event.client ? <button type="button" onClick={handleSave}>
+                Cancelar reserva
+              </button> : <button onClick={()=> onRequestClose()}>Aceptar</button> 
+              }
             </div>
           </div>
         </div>
