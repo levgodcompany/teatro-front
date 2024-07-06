@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Header } from "../../../components/Header/Header";
 import Room from "./Components/Rooms/Room";
 
+import fondoImg from "../../../assets/fondo_local.jpg"
+
 import HomeStyle from "./css/Home.module.css";
 import { getHttpLocalID, ILocalID } from "../../../services/LocalID.service";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -85,7 +87,7 @@ const Home = () => {
           <>
             <div
               className={HomeStyle.background}
-              style={{ backgroundImage: `url(${local.mainImage.url})` }}
+              style={{ backgroundImage: `url(${fondoImg})` }}
             >
               <div className={HomeStyle.content}>
                 <img className={HomeStyle.content_logo} src={imgLogo} alt="" />
