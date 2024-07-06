@@ -8,10 +8,16 @@ import {
   IAppointment,
   IRoom,
 } from "../../../../../Rooms/services/Rooms.service";
-import { getAppointmentHTTP, saveAppointmentsHTTP } from "../../../../service/Room.service";
+import {
+  getAppointmentHTTP,
+  saveAppointmentsHTTP,
+} from "../../../../service/Room.service";
 import ConflitDays from "./components/ConflitDays";
 import { IClientID } from "../../../../../../../redux/slices/ClientID.slice";
-import { clientByID, IClient } from "../../../../../../../services/Auth.service";
+import {
+  clientByID,
+  IClient,
+} from "../../../../../../../services/Auth.service";
 
 interface ISelects {
   id: string;
@@ -57,7 +63,7 @@ const Shift: React.FC<IShiftProps> = ({
     token: "",
     email: "",
     name: "",
-    phone: ""
+    phone: "",
   });
   const clientIDSelector: IClientID = useAppSelector((state) => state.clientID);
   const [isOpenConflict, setIsOpenConflict] = useState<boolean>(false);
@@ -90,26 +96,26 @@ const Shift: React.FC<IShiftProps> = ({
 
   const allOptions = generateTimeOptions();
 
-  useEffect(()=> {
-    if(isSave) {
-      const httpSave =  async () => {
-        await saveAppointmentsHTTP(room._id, client._id, newsAppointments)
-        onRequestClose()
-      }
-      httpSave()
+  useEffect(() => {
+    if (isSave) {
+      const httpSave = async () => {
+        await saveAppointmentsHTTP(room._id, client._id, newsAppointments);
+        onRequestClose();
+      };
+      httpSave();
     }
   }, [isSave]);
 
-  useEffect(()=> {
-    const  getClientHTTP = async () => {
+  useEffect(() => {
+    const getClientHTTP = async () => {
       const res = await clientByID(clientIDSelector.id);
 
-      if(res){
-        setClient(res)
+      if (res) {
+        setClient(res);
       }
-    }
+    };
     getClientHTTP();
-  }, [])
+  }, []);
 
   const handleInputChangeTimeStart = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -158,7 +164,7 @@ const Shift: React.FC<IShiftProps> = ({
         const days: IDaysSel[] = [];
         daysSelect.days.forEach((d) => {
           const start = new Date(`${d}T${inputValueTimeStart.slice(0, -3)}`);
-          
+
           const day = start.getDate();
           days.push({
             day,
@@ -206,22 +212,24 @@ const Shift: React.FC<IShiftProps> = ({
   };
 
   const addNewAppointment = (start: Date, end: Date) => {
-    let priceBase =  room.priceBase;
+    let priceBase = room.priceBase;
 
     let priceDto = 0;
-    let totalDto = 0
-    start.setMonth(start.getMonth()+1)
-    end.setMonth(end.getMonth()+1)
-    
-    room.dtoRoomHours.forEach(dto=> {
+    let totalDto = 0;
+    start.setMonth(start.getMonth() + 1);
+    end.setMonth(end.getMonth() + 1);
+
+    room.dtoRoomHours.forEach((dto) => {
       const startHourDto = new Date(`2024-08-14T${dto.startHour}`);
       const endHourDto = new Date(`2024-08-14T${dto.endHour}`);
 
-      if(start.getHours() >= startHourDto.getHours() && start.getHours() < endHourDto.getHours() ) {
-        priceDto = priceBase - (dto.dto/100)*priceBase;
+      if (
+        start.getHours() >= startHourDto.getHours() &&
+        start.getHours() < endHourDto.getHours()
+      ) {
+        priceDto = priceBase - (dto.dto / 100) * priceBase;
         totalDto = dto.dto;
       }
-      
     });
 
     setNewAppointment((prev) => {
@@ -237,11 +245,14 @@ const Shift: React.FC<IShiftProps> = ({
         client: client._id,
         price: priceBase,
         title: client.name,
-        dto: priceDto == 0 ? null :  {
-          dto: totalDto,
-          newPrice: priceDto,
-          prevPrice: priceBase,
-        },
+        dto:
+          priceDto == 0
+            ? null
+            : {
+                dto: totalDto,
+                newPrice: priceDto,
+                prevPrice: priceBase,
+              },
       };
       return [...prev, app];
     });
@@ -310,8 +321,11 @@ const Shift: React.FC<IShiftProps> = ({
           daySeletStartHours >= appStartHours &&
           daySeletStartHours <= appEndHours
         ) {
-          if(daySeletStartHours == appEndHours && daySeletStartMinutes > appEndMinutes ) {
-            return true
+          if (
+            daySeletStartHours == appEndHours &&
+            daySeletStartMinutes > appEndMinutes
+          ) {
+            return true;
           }
           return false;
         }
@@ -320,8 +334,6 @@ const Shift: React.FC<IShiftProps> = ({
           daySeletEndHours >= appStartHours &&
           daySeletEndHours <= appEndHours
         ) {
-
-          
           return false;
         }
 
@@ -413,20 +425,37 @@ const Shift: React.FC<IShiftProps> = ({
             }
           });
         });
-      }else {
-        save()
+      } else {
+        save();
       }
-    }else {
-      save()
+    } else {
+      let dayNotConflic: IDaysSelConflict[] = [];
+      dataDaySelects.forEach((d) => {
+        const day = d.start.getDate();
+        const _d: IDaysSelConflict = {
+          day,
+          end: d.end,
+          start: d.start,
+          dataDay: "",
+        };
+        dayNotConflic.push(_d);
+      });
+
+      if (dayNotConflic.length > 0) {
+        for (const notConflic of dayNotConflic) {
+          addNewAppointment(notConflic.start, notConflic.end);
+        }
+      }
+      save();
     }
   };
   const closeConflict = () => {
     setIsOpenConflict(false);
   };
 
-  const save = ()=> {
-    setIsSave(true)
-  }
+  const save = () => {
+    setIsSave(true);
+  };
   return (
     <div className={`${ShiftStyle.modal_overlay}`}>
       <div className={`${ShiftStyle.modal} ${ShiftStyle.modal_overlay}`}>
@@ -448,18 +477,20 @@ const Shift: React.FC<IShiftProps> = ({
               </div>
 
               <div className={ShiftStyle.container_days_select}>
-                {days.sort((a, b)=> a-b).map((d) => (
-                  <span className={ShiftStyle.container_day}>
-                    <span className={ShiftStyle.day}>{d}</span>
-                    <span
-                      className={ShiftStyle.close_day}
-                      onClick={() => updateDay(d)}
-                    >
-                      {" "}
-                      <span>x</span>
+                {days
+                  .sort((a, b) => a - b)
+                  .map((d) => (
+                    <span className={ShiftStyle.container_day}>
+                      <span className={ShiftStyle.day}>{d}</span>
+                      <span
+                        className={ShiftStyle.close_day}
+                        onClick={() => updateDay(d)}
+                      >
+                        {" "}
+                        <span>x</span>
+                      </span>
                     </span>
-                  </span>
-                ))}
+                  ))}
               </div>
 
               <div className={ShiftStyle.date_start}>
@@ -541,7 +572,12 @@ const Shift: React.FC<IShiftProps> = ({
                   />
                 </div>
                 <span>
-                  Medidas <strong>{room.length == room.Width ? `${room.length}m²` : `${room.length}x${room.Width}mt`}</strong>
+                  Medidas{" "}
+                  <strong>
+                    {room.length == room.Width
+                      ? `${room.length}m²`
+                      : `${room.length}x${room.Width}mt`}
+                  </strong>
                 </span>
               </div>
 
@@ -564,14 +600,24 @@ const Shift: React.FC<IShiftProps> = ({
               </div>
 
               <div className={ShiftStyle.container_buttons}>
-                <button className={ShiftStyle.button_reserver} onClick={reservation}>Reservar</button>
-                <button className={ShiftStyle.button_cancel} onClick={onRequestClose}>Cancelar</button>
+                <button
+                  className={ShiftStyle.button_reserver}
+                  onClick={reservation}
+                >
+                  Reservar
+                </button>
+                <button
+                  className={ShiftStyle.button_cancel}
+                  onClick={onRequestClose}
+                >
+                  Cancelar
+                </button>
               </div>
             </>
           )}
         </div>
       </div>
-    </div>  
+    </div>
   );
 };
 
