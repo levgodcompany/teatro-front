@@ -1,7 +1,7 @@
 /* MyShifts.module.css */
 
 .container {
-  background-color: #feffd5;
+  background-color: #272520;
   color: #210110;
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -20,7 +20,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.container_room p {
+.container_room > .room_info > p {
   font-size: 20px;
   font-weight: bold;
   color: #9e2d49;
@@ -28,6 +28,8 @@
 }
 
 .room_info {
+  max-width: 545px;
+  margin: auto;
   margin-bottom: 20px;
 }
 
@@ -38,12 +40,13 @@
 }
 
 .info_prop {
-  font-weight: bold;
+  
   color: #450c1f;
 }
 
 .info_value {
   color: #210110;
+  font-weight: bold;
 }
 
 .table_appointment {
@@ -74,6 +77,26 @@
   padding: 10px;
 }
 
+.container_appointments > p {
+  margin: 0;
+  text-align: center;
+}
+
+.container_rooms_not_app {
+  display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.container_rooms_app {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+}
+
 .table_appointment_body_tr {
   background-color: #feffd5;
   color: #210110;
@@ -94,7 +117,7 @@
   border-bottom: none;
 }
 
-button {
+.button_cancel {
   background-color: #9e2d49;
   color: #feffd5;
   border: none;
@@ -103,7 +126,7 @@ button {
   border-radius: 5px;
 }
 
-button:hover {
+.button_cancel:hover {
   background-color: #450c1f;
 }
 
@@ -117,10 +140,7 @@ button:hover {
 
 
 @media (max-width: 768px) {
-    .info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+
 
     .table_appointment_head_tr th, .table_appointment_body_tr td {
         padding: 10px;

@@ -298,7 +298,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
             },
             event: ({ event }) => (
               <div style={{ fontSize: "10px" }}>
-                <strong style={{ color: "#fff" }}>{event.title}</strong>
+                <strong style={{ color: "#fff" }}>{`${event.title?.toString().split(";")[0]} ${event.title?.toString().split(";")[1] ? event.title?.toString().split(";")[1] : ""}`}</strong>
               </div>
             ),
           }}

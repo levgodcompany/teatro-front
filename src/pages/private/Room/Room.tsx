@@ -11,6 +11,8 @@ import RoomInfo from "./components/RoomInfo/RoomInfo";
 import DateSelector from "./components/DateSelector/DateSelector";
 import { useAppSelector } from "../../../redux/hooks";
 import Footer from "../../../components/Footer/Footer";
+import { clientByID, IClient } from "../../../services/Auth.service";
+import { IClientID } from "../../../redux/slices/ClientID.slice";
 
 interface ISelects {
   id: string;
@@ -25,7 +27,14 @@ const Room = () => {
 
   const [isDateSelect, setIsDateSelect] = useState<boolean>(false);
 
-  const clientState = useAppSelector(state => state.client);
+  const clientSelector: IClientID = useAppSelector((state) => state.clientID);
+  const [client, setClient] = useState<IClient>({
+    _id: "",
+    email: "",
+    name: "",
+    phone: "",
+    token: "",
+  });
   const [selectOptionFilter, setSelecOptionFilter] = useState<string>("Todo")
 
   const [room, setRoom] = useState<IRoom>({
@@ -85,6 +94,13 @@ const Room = () => {
     services: [], // Lista de servicios que ofrece el local
   });
 
+  const getClientHTTP = async () => {
+    const res = await clientByID(clientSelector.id);
+    if (res) {
+      setClient(res);
+    }
+  };
+
   const get = async () => {
     if (idRoom) {
       const res = await getRoomHTTP(idRoom);
@@ -96,6 +112,7 @@ const Room = () => {
 
   useEffect(() => {
     get();
+    getClientHTTP()
   }, []);
 
   const onClickDateSelect = () => {
@@ -107,7 +124,7 @@ const Room = () => {
     if(val == "Todo") {
       get();
     }else {
-      const f = room.availableAppointments.filter(a => a.client == clientState._id);
+      const f = room.availableAppointments.filter(a => a.client == client._id);
       setRoom({
         ...room,
         availableAppointments: f
@@ -125,7 +142,7 @@ const Room = () => {
           <RoomInfo room={room} />
           <div className={RoomStyle.room_calendar_reservation}>
             <p onClick={onClickDateSelect}>
-              As tu reserva <strong>aquí</strong>
+              Has tu reserva <strong>aquí</strong>
             </p>
 
             {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}

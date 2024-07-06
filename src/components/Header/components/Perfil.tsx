@@ -5,7 +5,7 @@ const Perfil = () => {
     return (
       <div className={PerfilStyle.container} >
         <div className={PerfilStyle.container_perfil}>
-          <p className={PerfilStyle.container_perfil_user}>Perfil</p>
+          <span className={PerfilStyle.container_perfil_user}>Perfil</span>
         </div>
       </div>
     );

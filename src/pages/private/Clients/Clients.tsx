@@ -5,6 +5,7 @@ import './css/Clients.css'
 import Modal from 'react-modal';
 
 export interface IClient {
+    _id: string;
     name: string; // Nombre del cliente
     email: string; // Correo electrónico del cliente
     password: string; // Contraseña del cliente

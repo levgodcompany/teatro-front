@@ -7,6 +7,7 @@ import Footer from "../../../../../components/Footer/Footer";
 import { clientByID, IClient } from "../../../../../services/Auth.service";
 import { IClientID } from "../../../../../redux/slices/ClientID.slice";
 import MyShiftsStyle from "./MyShifts.module.css"; // Importa el archivo de estilos CSS
+import { deleteAppointmentHTTP } from "../../../Room/service/Room.service";
 
 const MyShifts = () => {
   const clientSelector: IClientID = useAppSelector((state) => state.clientID);
@@ -18,6 +19,7 @@ const MyShifts = () => {
     token: "",
   });
   const [rooms, setRooms] = useState<IRoom[]>([]);
+  
 
   const getClientHTTP = async () => {
     const res = await clientByID(clientSelector.id);
@@ -54,13 +56,21 @@ const MyShifts = () => {
     getRooms();
   }, []);
 
+  const cancelShifts = async (idRoom: string, id:string)=> {
+    const res = await deleteAppointmentHTTP(idRoom, id);
+    if(res) {
+      getRooms();
+    }
+  }
+
+
   const formateador = new Intl.NumberFormat("es-ES", {
     style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
 
-  const tableView = (appointments: IAppointment[]) => {
+  const tableView = (idRoom: string, appointments: IAppointment[]) => {
     const now: Date = new Date();
 
     const formatNumberDate = (num: number) => {
@@ -146,7 +156,7 @@ const MyShifts = () => {
                 </td>
                 <td>
                   {isCancel(app.start) ? (
-                    <button className={MyShiftsStyle.button_cancel}>
+                    <button className={MyShiftsStyle.button_cancel} onClick={()=> cancelShifts(idRoom, app._id)}>
                       Cancelar
                     </button>
                   ) : (
@@ -169,9 +179,10 @@ const MyShifts = () => {
     );
 
     return (
+      <>
       <div className={MyShiftsStyle.container_room} key={room._id}>
-        <p>{room.name}</p>
         <div className={MyShiftsStyle.room_info}>
+        <p>{room.name}</p>
           {info("Tipo de sala", room.typeRoom)}
           {info(
             "Medidas",
@@ -179,29 +190,59 @@ const MyShifts = () => {
               ? `${room.length}m`
               : `${room.length}x${room.Width}mt`
           )}
-          {info("Capacidad máxima de personas", `${room.capacity}`)}
-          {info("Contacto", room.phone.length > 0 ? room.phone : "234234")}
+          {info("Capacidad máx.", `${room.capacity}`)}
           {info("Precio", `$ ${formateador.format(room.priceBase)}`)}
         </div>
         <div className={MyShiftsStyle.container_appointments}>
           {room.availableAppointments.length > 0 ? (
-            tableView(room.availableAppointments)
+            tableView(room._id, room.availableAppointments)
           ) : (
             <p>No hay reservas en esta sala</p>
           )}
         </div>
       </div>
+
+      </>
     );
   };
+
+  const roomsWithAppAnNotApp = (rooms:IRoom[])=> {
+
+    const roomsWith: IRoom[] = []
+    const roomsNotWith: IRoom[] = [];
+
+    for(const room of rooms) {
+      if(room.availableAppointments.length>0) {
+        roomsWith.push(room)
+      }else {
+        roomsNotWith.push(room)
+      }
+    }
+
+    return [roomsWith, roomsNotWith]
+
+  }
 
   return (
     <>
       <Header />
       <div className={MyShiftsStyle.container}>
         <div className={MyShiftsStyle.container_rooms}>
-          {rooms.map((room) => (
-            <React.Fragment key={room._id}>{infoRoom(room)}</React.Fragment>
-          ))}
+
+          <div className={MyShiftsStyle.container_rooms_not_app}>
+            {
+              roomsWithAppAnNotApp(rooms)[1].map(room=> (
+                <React.Fragment key={room._id}>{infoRoom(room)}</React.Fragment>
+              ) )
+            }
+
+          </div>
+          <div className={MyShiftsStyle.container_rooms_app}>
+            {roomsWithAppAnNotApp(rooms)[0].map((room) => (
+              <React.Fragment key={room._id}>{infoRoom(room)}</React.Fragment>
+            ))}
+
+          </div>
         </div>
       </div>
       <Footer />

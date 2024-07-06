@@ -39,6 +39,10 @@
   justify-content: space-around;
 }
 
+.img_close {
+  width: 15px;
+}
+
 .apply_button {
   display: block; /* Mostrar el botón en modo móvil */
 }
@@ -60,6 +64,31 @@
 .container_items {
   display: flex;
   gap: 20px;
+  color: #000;
+}
+
+.perfil_close {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-right: 10px;
+}
+
+.container_items > span {
+  cursor: pointer;
+  width: 100px;
+  text-align: center;
+  padding: 5px;
+}
+
+.container_items > span:hover {
+  background-color: #450c1f;
+  border-radius: 5px;
+  color: #fff;
+  width: 100px;
+  text-align: center;
+  padding: 5px;
 }
 
 @media (max-width: 768px) {
@@ -102,6 +131,11 @@
 
   .container_item_movil {
     padding: 2rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #000;
   }
 
   .container_item_movil > button {

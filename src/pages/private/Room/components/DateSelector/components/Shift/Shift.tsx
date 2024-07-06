@@ -210,7 +210,7 @@ const Shift: React.FC<IShiftProps> = ({
 
     let priceDto = 0;
     let totalDto = 0
-
+console.log(start)
     start.setMonth(start.getMonth()+1)
     end.setMonth(end.getMonth()+1)
     

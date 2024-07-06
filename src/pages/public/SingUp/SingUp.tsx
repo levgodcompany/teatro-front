@@ -6,6 +6,7 @@ import logo from "../../../assets/el_juvenil.svg";
 import AuthService from "../../../services/Auth.service";
 import { createClient } from "../../../redux/slices/Client.slice";
 import { createToken } from "../../../redux/slices/token.slice";
+import { createClientID } from "../../../redux/slices/ClientID.slice";
 
 interface StudentForm {
   name: string;
@@ -31,11 +32,12 @@ const SingUp = () => {
     e.preventDefault();
     try {
 
-      const owner = await AuthService.register(formData.name, formData.phone, formData.email, formData.password);
+      const owner = await AuthService.register(`${formData.name}; ${formData.lastName}`, formData.phone, formData.email, formData.password);
       if(owner){
         dispatch(createClient(owner))
+        dispatch(createClientID({id: owner._id}))
         dispatch(createToken({token: owner.token}))
-        navigate(`/home`, { replace: true });
+        navigate(`/theater/home`, { replace: true });
       }
     } catch (error) {
       console.log(`Error al buscar el student: ${error}`);
@@ -52,29 +54,13 @@ const SingUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const calculateAge = (birthDate: string): number => {
-    const today = new Date();
-    const birthDateObj = new Date(birthDate);
-    let age = today.getFullYear() - birthDateObj.getFullYear();
-    const monthDiff = today.getMonth() - birthDateObj.getMonth();
-
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDateObj.getDate())
-    ) {
-      age--;
-    }
-
-    return age;
-  };
-
   return (
     <>
       <main className={formStyle.main_form}>
         <div className={formStyle.container}>
           <div className={formStyle.container_inputs}>
             <div className={formStyle.container_image}>
-              <img src={logo} alt="In English" width="80" height="80" />
+              <img src={logo} alt="El Juvenil" width="80" height="80" />
             </div>
             <div className={formStyle.container_inputs_input}>
               <div className={formStyle.inputs_name_last}>
