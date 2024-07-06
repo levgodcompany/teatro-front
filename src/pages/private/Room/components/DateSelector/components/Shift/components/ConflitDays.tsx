@@ -12,20 +12,6 @@ interface ConflitDaysProps {
   save: () => void;
 }
 
-interface ISelects {
-  id: string;
-  year: number;
-  month: number;
-  days: string[];
-}
-
-
-interface IDaysSel {
-  day: number;
-  start: Date;
-  end: Date;
-}
-
 interface IDaysSelConflict {
   day: number;
   start: Date;
