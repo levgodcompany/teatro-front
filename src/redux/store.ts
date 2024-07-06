@@ -1,14 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import ownerReducer from './slices/Owner.slice';
+import clientReducer from './slices/Client.slice';
 import tokenReducer from './slices/token.slice';
+import clientIDReducer from './slices/ClientID.slice';
 import LocalIDReducer from './slices/LocalID.slice';
 import LocalReducer from './slices/Local.slice';
 
 const store = configureStore({
   reducer: {
-    owner: ownerReducer,
+    client: clientReducer,
     token: tokenReducer,
     localID: LocalIDReducer,
+    clientID: clientIDReducer,
     local: LocalReducer
   },
 });

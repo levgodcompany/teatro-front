@@ -1,18 +1,17 @@
 .main_form {
   display: flex;
   justify-content: center;
-  background-color: #f3f3f3;
   min-height: 100vh;
   align-items: center;
   padding: 20px 0;
 }
 
-.container {
+.signup_container {
   display: flex;
   flex-direction: column;
   width: 25%;
-  border-color: #00a8e1;
-  background-color: #fff;
+  border-color: #fff;
+  background-color: #fff; /* Cambiado a color más claro */
   border-width: 1px;
   border-style: solid;
   padding: 2rem;
@@ -21,41 +20,36 @@
   min-height: 250px;
 }
 
-.container_inputs {
+.signup_inputs_container {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 25px;
 }
 
-.container_inputs_input {
+.signup_inputs {
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
 
-.inputs_name_last{
+.signup_name_last_inputs {
   display: flex;
-  /* width: 41%; */
   justify-content: flex-start;
   flex-direction: row;
   gap: 5px;
 }
 
-.cont_input > label{
-  font-size: 10px;
+.signup_input {
+  padding: 8px 4px;
+  border-color: white;
+  border: none;
+  border-bottom: 1px solid #9f9f9f; /* Cambiado a color más claro */
+  outline: none;
+  width: 97%;
 }
 
-.inputText {
-    padding: 8px 4px;
-    border-color: white;
-    border: none;
-    border-bottom: 1px solid #00a8e1;
-    outline: none;
-    width: 97%;
-}
-
-.container_button {
+.signup_buttons {
   display: flex;
   justify-content: center;
   margin-top: 20px;
@@ -63,65 +57,42 @@
   gap: 20px;
 }
 
-.buttonApply {
+.signup_button_apply {
   width: 100%;
-  background-color: #00a8e1;
+  background-color: #450c1f; /* Cambiado a color más claro */
   color: #fff;
 }
 
-.space {
+.signup_space {
   align-items: center;
-  border-bottom: 1px solid #dadde1;
+  border-bottom: 1px solid #c3c3c3; /* Cambiado a color más oscuro */
   display: flex;
   margin: 15px 16px;
   text-align: center;
 }
 
-.button_singup {
-  background-color: #42b72a;
+.signup_button_singup {
+  background-color: #c6b89e; /* Cambiado a color más oscuro */
   color: #fff;
 }
 
-.container_image {
+.signup_image_container {
   text-align: center;
 }
 
-.select {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-}
-
-.select option {
-  padding: 10px;
-  background-color: #fff; /* Color de fondo de las opciones */
-  color: #000; /* Color del texto de las opciones */
-}
-
-/* Estilo para la opción seleccionada */
-.select option:checked {
-  background-color: #007bff; /* Color de fondo de la opción seleccionada */
-  color: #fff; /* Color del texto de la opción seleccionada */
-}
-
-.reset_pass {
+.signup_reset_password {
   text-align: center;
 }
 
-.reset_pass > a {
-  color: #0866ff;
+.signup_reset_password_link {
+  color: #d3c4a5; /* Cambiado a color más claro */
   font-size: 14px;
   text-align: center;
   font-weight: 500;
 }
 
-p {
-  margin-top: 10px;
-}
-
 @media (max-width: 885px) {
-  .container {
+  .signup_container {
     width: 60%;
   }
 }

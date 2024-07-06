@@ -1,7 +1,121 @@
 .container_room {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    padding: 20px;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  justify-items: center;
+  padding: 20px;
 }
+
+
+.background {
+     /* Cambia esta ruta a la ubicación de tu imagen */
+    background-size: cover;
+    background-attachment: fixed; /* Esto asegura que la imagen de fondo no se mueva al hacer scroll */
+    background-repeat: no-repeat;
+    height: 100vh; /* Esto asegura que el fondo cubra toda la ventana del navegador */
+    width: 100%;
+  }
+  
+  .content {
+    /* Estilos adicionales para tu contenido */
+    text-align: center;
+    padding: 20px;
+    margin: auto;
+    position: absolute;
+    top: 30%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    color: #000;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #fff;
+  }
+
+  .content_logo {
+    width: 300px;
+  }
+
+  .content_descrip {
+    padding: 20px;
+    color: #000;
+    /* color: #fff; */
+    /* border: 1px solid #fff; */
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .local_services {
+    background-color: #210110;
+    padding: 50px 30px;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .services_title {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 22px;
+    letter-spacing: 2px;
+    line-height: normal;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 350px;
+    margin: auto;
+  }
+
+  .services {
+    display: flex;
+    gap: 10px;
+    padding: 3px;
+    justify-items: start;
+    margin-top: 25px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .services > span {
+    padding: 5px 10px;
+    min-width: 110px;
+    height: 26px;
+    letter-spacing: 2px;
+  }
+
+  .services > span:hover {
+    background-color: #450c1f;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .rooms {
+
+  }
+
+  .rooms_title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 45px 0 20px;
+  }
+
+  .rooms_title > h3 {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 22px;
+    letter-spacing: 2px;
+    line-height: normal;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 350px;
+    margin: auto;
+  }
+
+  .titulo_es_h1 {
+    background-color: red;
+  }

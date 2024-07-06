@@ -43,6 +43,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
     <div className={RoomInfoStyle.container_room}>
       <div className={RoomInfoStyle.room_container_image_info}>
         <div className={RoomInfoStyle.room_images}>
+          <span className={RoomInfoStyle.type_room}>Estandar</span>
           <CarouselImage images={images} />
         </div>
         <div className={RoomInfoStyle.room_info}>
@@ -50,47 +51,45 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             <div className={RoomInfoStyle.room_info_title}>
               <p>{room.name}</p>
             </div>
-            {datailInfo("Capacidad", room.capacity)}
-            {datailInfo("Precio", `$ ${formateador.format(room.priceBase)}`)}
-            {datailInfo("Medidas", "20 x 30 mt")}
-            {datailInfo("Contacto", room.phone)}
+            {datailInfo("Tipo de sala:", `${room.typeRoom}`)}
+            {room.Width == room.length ? datailInfo("Medidas:", `${room.length}m²`) : datailInfo("Medidas:", `${room.Width}x${room.length}mt`) }
+            {datailInfo("Capacidad máxima de personas:", `${room.capacity}`)}
+            {room.phone.length > 0 ? datailInfo("Contacto:", room.phone) : datailInfo("Contacto", "3442 622763")}
+            {datailInfo("Precio:", `$ ${formateador.format(room.priceBase)}`)}
+            {
+              room.dtoRoomHours.length > 0 ? <div className={RoomInfoStyle.container_dtos}>
+                <p className={RoomInfoStyle.container_dtos_p}>Off</p>
+                <div className={RoomInfoStyle.cont_dtos}>
+                  {room.dtoRoomHours.map(dto => <div className={RoomInfoStyle.dtos}>
+                    <span className={RoomInfoStyle.dto}>{dto.dto}% OFF</span>
+                    <span className={RoomInfoStyle.dto_horus}>{dto.startHour}hs a {dto.endHour}hs</span>
+                  </div>)}
+                </div>
+              </div> : <></>
+            }
+            
           </div>
-
-          <div className={RoomInfoStyle.room_info_services}>
+          {
+            room.services.length > 0 ? <div className={RoomInfoStyle.room_info_services}>
             <span className={RoomInfoStyle.services_title}>
               Servicios principales
             </span>
             <div className={RoomInfoStyle.services}>
               {room.services.map((s, i) => (
                 <>
-                  <span key={i} >⋅ {s}</span>
+                  <span key={i}>⋅ {s}</span>
                 </>
               ))}
             </div>
-          </div>
-          <div className={RoomInfoStyle.room_info_huors}>
-        <span className={RoomInfoStyle.services_title}>Horarios</span>
-        <div className={RoomInfoStyle.huors}>
-          {days.map((day, i) => (
-            <div key={i} className={RoomInfoStyle.cont_huors}>
-              <span className={RoomInfoStyle.huor_day}>{day.name}</span>
-              {day.value.isOpen ? (
-                <span className={RoomInfoStyle.day_hour}>
-                  {day.value.open} - {day.value.close}
-                </span>
-              ) : (
-                <span className={RoomInfoStyle.closed}>Cerrado</span>
-              )}
-            </div>
-          ))}
+          </div> : <></>
+          }
+          
         </div>
       </div>
-        </div>
-      </div>
-      <div className={RoomInfoStyle.room_info_desc}>
+      {room.description.length > 0 ? <div className={RoomInfoStyle.room_info_desc}>
         <p>{room.description}</p>
-      </div>
-
+      </div> : <></> }
+      
     </div>
   );
 };

@@ -17,11 +17,14 @@ import { format } from "date-fns";
 import CapacityClientImage from "../../../../../assets/users-svgrepo-com.svg";
 import DimeImage from "../../../../../assets/dime.svg";
 import { es } from "date-fns/locale";
+import { useAppSelector } from "../../../../../redux/hooks";
+import { IClientID } from "../../../../../redux/slices/ClientID.slice";
+import { clientByID, IClient } from "../../../../../services/Auth.service";
 
 interface NewEventModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
-  onSave: (event: IAppointment) => void;
+  onSave: (event: string) => void;
   capacity: number;
   event: IAppointment;
   price: number;
@@ -40,34 +43,41 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   // State hooks for form fields
   const [title, setTitle] = useState(event.title);
   const [available, setAvailable] = useState<boolean>(event.available);
-  const [description, setDescription] = useState(event.description);
   const [start, setStart] = useState(event.start as Date);
   const [end, setEnd] = useState(event.end as Date);
   const [dtoRoom, setDtoRoom] = useState<IDtoAppointment | null>(null);
 
+
+  const clientSelector: IClientID = useAppSelector((state) => state.clientID);
+
+  const [client, setClient] = useState<IClient>({
+    _id: "",
+    email: "",
+    name: "",
+    phone: "",
+    token: "",
+  });
+
   // State hooks for client management
   const [inputValuePrice, setInputValuePrice] = useState<number>(price);
-  const [selectedClients, setSelectedClients] = useState<ClientDTO[]>([]);
-  const [selectedClientOrganizer, setSelectedClientOrganizer] =
-    useState<ClientDTO>({
-      id: "",
-      name: "",
-      email: "",
-      phone: "",
-      isRegister: true,
-    });
 
-  const [clients, setClients] = useState<ClientDTO[]>([]);
-  const [clientsRegister, setClientsRegister] = useState<ClientDTO[]>([]);
-
-  const [isAplicDtoCheck, setIsAplicDtoCheck] = useState<boolean>(false);
 
   const [isAplicDto, setIsAplicDto] = useState<DtoRoom | null>(null);
+
+  const getClientHTTP = async () => {
+    const res = await clientByID(clientSelector.id);
+    if (res) {
+      setClient(res);
+    }
+  };
+
 
   // Effect to sync event data with state
   useEffect(() => {
     const ahora = new Date();
     const val = new Date(event.start as Date);
+
+    getClientHTTP();
 
     if (
       val.getDay() >= ahora.getDay() &&
@@ -89,122 +99,32 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
 
     setTitle(event.title);
     setAvailable(event.available);
-    setDescription(event.description);
     setStart(event.start as Date);
     setEnd(event.end as Date);
     setInputValuePrice(event.price);
 
-    if (event.client) {
-      const organizerIndex = clientsRegister.findIndex(
-        (cl) => cl.id === event.client
-      );
-      if (organizerIndex !== -1) {
-        setSelectedClientOrganizer(clientsRegister[organizerIndex]);
-      } else {
-        setSelectedClientOrganizer({
-          id: "",
-          name: "",
-          email: "",
-          phone: "",
-          isRegister: true,
-        });
-      }
-    } else {
-      setSelectedClientOrganizer({
-        id: "",
-        name: "",
-        email: "",
-        phone: "",
-        isRegister: true,
-      });
-    }
 
-    const selectedEventClients: ClientDTO[] = [];
-    if (event.GuestListClient.length > 0) {
-      clients.forEach((client) => {
-        if (event.GuestListClient.includes(client.id)) {
-          selectedEventClients.push(client);
-        }
-      });
-    }
-
-    if (event.GuestListNotClient.length > 0) {
-      clientsRegister.forEach((client) => {
-        if (event.GuestListNotClient.includes(client.id)) {
-          selectedEventClients.push(client);
-        }
-      });
-    }
-    setSelectedClients(selectedEventClients);
-  }, [event, clients, clientsRegister]);
+  }, [event]);
 
   // Effect to fetch clients data
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const [clientsData, clientsRegisterData] = await Promise.all([
-          getClientsHTTP(),
-          getClientsRegisterHTTP(),
-        ]);
-        setClients(clientsData || []);
-        setClientsRegister(clientsRegisterData || []);
-      } catch (error) {
-        console.error("Error fetching clients:", error);
-      }
-    };
-    fetchClients();
-  }, []);
 
   // Save handler for the modal
   const handleSave = () => {
-    const organizerId =
-      selectedClientOrganizer.id === "" ? null : selectedClientOrganizer.id;
-    const selectedClientIds: string[] = [];
-    const selectedNotClientIds: string[] = [];
 
-    selectedClients.forEach((client) => {
-      if (client.isRegister) {
-        selectedClientIds.push(client.id);
-      } else {
-        selectedNotClientIds.push(client.id);
-      }
-    });
+    // Obtén la fecha y hora actual
+    let now: Date = new Date();
 
-    if (
-      organizerId === null &&
-      (selectedClientIds.length > 0 || selectedNotClientIds.length > 0)
-    ) {
-      alert(
-        "Tienes que agregar a un organizador para poder invitar a más gente"
-      );
+    // Calcula la diferencia en milisegundos entre la fecha del turno y la fecha actual
+    let diffInMillis: number = start.getTime() - now.getTime();
+
+    // Calcula las horas a partir de la diferencia en milisegundos
+    let diffInHours: number = diffInMillis / (1000 * 60 * 60);
+
+    // Verifica si la diferencia es mayor a 24 horas
+    if (diffInHours > 24 && client._id == event.client) {
+      onSave(event._id);
     } else {
-      let val = 0;
-
-      if (inputValuePrice > 0) {
-        val = inputValuePrice;
-      } else {
-        val = price;
-      }
-
-      if (isAplicDto && isAplicDtoCheck) {
-        if (inputValuePrice > 0) {
-          val = inputValuePrice - (isAplicDto.dto / 100) * inputValuePrice;
-        } else {
-          val = price - (isAplicDto.dto / 100) * price;
-        }
-      }
-      onSave({
-        ...event,
-        title,
-        start,
-        end,
-        description,
-        price: val,
-        available,
-        client: organizerId,
-        GuestListClient: selectedClientIds,
-        GuestListNotClient: selectedNotClientIds,
-      });
+      alert("No puedes cancelar el turno, faltan menos de 24 horas.")
     }
   };
 
@@ -306,18 +226,20 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                   alt="users"
                 />
               </div>
-              <span>Medidas <strong>20x30 m</strong></span>
+              <span>
+                Medidas <strong>20x30 m</strong>
+              </span>
             </div>
-
 
             <div className={NewEventModalStyle.container_client}>
               <div className={NewEventModalStyle.autocomplete_select}>
                 <div className={NewEventModalStyle.container_availability}>
-                  
                   <p className={NewEventModalStyle.p_dto}>
                     {dtoRoom == null ? (
                       <>
-                        <strong className={NewEventModalStyle.dto_price}>${formateador.format(inputValuePrice)}</strong>
+                        <strong className={NewEventModalStyle.dto_price}>
+                          ${formateador.format(inputValuePrice)}
+                        </strong>
                       </>
                     ) : (
                       <div className={NewEventModalStyle.dto_value}>
@@ -340,29 +262,15 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
               </div>
             </div>
 
-            {description.length > 0 ? (
-              <div className={NewEventModalStyle.container_info}>
-                <div className={NewEventModalStyle.container_image_description}>
-                  <img
-                    className={NewEventModalStyle.image_description}
-                    src={DescriptionImage}
-                    alt="Description"
-                  />
-                </div>
-                <div className={NewEventModalStyle.container_info_description}>
-                  <span
-                    dangerouslySetInnerHTML={{ __html: description }}
-                  ></span>
-                </div>
-              </div>
-            ) : (
-              <></>
-            )}
-
             <div className={NewEventModalStyle.container_buttons}>
-              <button type="button" onClick={handleSave}>
-                Reservar
+              {
+                client._id == event.client ? <>
+                <button type="button" onClick={handleSave}>
+                Cancelar reserva
               </button>
+              <button onClick={()=> onRequestClose()}>Aceptar</button>
+                </> : <button style={{marginTop: "10px"}} onClick={()=> onRequestClose()}>Aceptar</button> 
+              }
             </div>
           </div>
         </div>

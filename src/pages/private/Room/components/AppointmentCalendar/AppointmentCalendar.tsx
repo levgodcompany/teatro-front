@@ -9,7 +9,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import AppointmentModal from "../AppointmentModal/AppointmentModal";
 import AppointmentCalendarStyle from "./css/AppointmentCalendar.module.css";
 import { DtoRoom, IAppointment } from "../../../Rooms/services/Rooms.service";
-import { putAppointmentHTTP } from "../../service/Room.service";
+import { deleteAppointmentHTTP, putAppointmentHTTP } from "../../service/Room.service";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -82,8 +82,8 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     }
   };
 
-  const handleEditEventSave = async (event: IAppointment) => {
-    const rest = await putAppointmentHTTP(idRoom, event._id, event);
+  const handleDeleteEvent = async (id: string) => {
+    const rest = await deleteAppointmentHTTP(idRoom, id);
     if (rest) {
       const _events: CalendarEvent[] = rest.map((appointment) => ({
         title: appointment.title,
@@ -116,7 +116,6 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     }
 
     setModalIsOpen(false);
-    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -299,7 +298,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
             },
             event: ({ event }) => (
               <div style={{ fontSize: "10px" }}>
-                <strong style={{ color: "#fff" }}>{event.title}</strong>
+                <strong style={{ color: "#fff" }}>{`${event.title?.toString().split(";")[0]} ${event.title?.toString().split(";")[1] ? event.title?.toString().split(";")[1] : ""}`}</strong>
               </div>
             ),
           }}
@@ -310,7 +309,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
             isOpen={modalIsOpen}
             event={selectedAppointment}
             onRequestClose={() => setModalIsOpen(false)}
-            onSave={handleEditEventSave}
+            onSave={handleDeleteEvent}
             capacity={capacity}
             price={price}
           />

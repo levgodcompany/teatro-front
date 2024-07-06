@@ -1,9 +1,9 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CarouselImage from "../../../../../components/CarouselImages/CarouselImage";
 import { DtoRoom, IImage } from "../../../Rooms/services/Rooms.service";
 import CardStyles from "./css/Room.module.css";
-import DimeImage from "../../../../../assets/dime.svg";
 import { PrivateRoutes } from "../../../../../routes/routes";
-import { useNavigate } from "react-router-dom";
 
 interface PropsRoom {
   idRoom: string;
@@ -11,6 +11,10 @@ interface PropsRoom {
   price: number;
   images: IImage[];
   capacity: number;
+  length: number;
+  Width: number;
+  dtos: DtoRoom[];
+  typeRoom: string;
 }
 
 const Room: React.FC<PropsRoom> = ({
@@ -19,8 +23,14 @@ const Room: React.FC<PropsRoom> = ({
   price,
   capacity,
   images,
+  length,
+  Width,
+  dtos,
+  typeRoom
 }) => {
   const navigate = useNavigate();
+
+  const [isInfoDto, setIsInfoDto] = useState<boolean>(false);
 
   const info = (prop: string, value: string | number) => {
     return (
@@ -54,40 +64,62 @@ const Room: React.FC<PropsRoom> = ({
     maximumFractionDigits: 0,
   });
 
+  const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).tagName !== 'BUTTON') {
+      setIsInfoDto(!isInfoDto);
+    }
+  };
+
   return (
-    <>
-      <div className={CardStyles.container_card}>
+    <div
+      className={`${CardStyles.container_card} ${isInfoDto ? CardStyles.show_dtos : ""}`}
+      onClick={handleCardClick}
+      onMouseEnter={() => setIsInfoDto(true)}
+      onMouseLeave={() => setIsInfoDto(false)}
+    >
+      <span className={CardStyles.type_room}>{typeRoom}</span>
       <div className={CardStyles.container_image}>
-          <CarouselImage images={images} />
-        </div>
-        <div className={CardStyles.container_detail}>
-          <div className={CardStyles.container_detail_title}>
-            <span className={CardStyles.span_title}>{title}</span>
-          </div>
-          <div className={CardStyles.container_detail_info}>
-            {info("Capacidad Máx.", capacity)}
-            {info("Medidas", "15x10 mt")}
-
-            {infoElement(
-              "Precio",
-              <span className={CardStyles.span_inf}>
-                $<strong>{formateador.format(price)}</strong>
-              </span>
-            )}
-          </div>
-
-          <div className={CardStyles.container_button}>
-            <button
-              onClick={onClick}
-              className={CardStyles.container_info__button}
-            >
-              VER MAS
-            </button>
-          </div>
-        </div>
-       
+        <CarouselImage images={images} />
       </div>
-    </>
+      <div className={CardStyles.container_detail}>
+        <div className={CardStyles.container_detail_title}>
+          <span className={CardStyles.span_title}>{title}</span>
+        </div>
+        <div className={CardStyles.container_detail_info}>
+          {info("Capacidad Máx.", `${capacity} Personas`)}
+          {length === Width
+            ? info("Medidas", `${length}m²`)
+            : info("Medidas", `${length}x${Width}mt`)}
+          {infoElement(
+            "Precio",
+            <span className={CardStyles.span_inf}>
+              $<strong>{formateador.format(price)}</strong>
+            </span>
+          )}
+          <div className={CardStyles.container_info_dtos}>
+            <span className={CardStyles.dto_span}>Dtos.</span>
+            <div className={CardStyles.container_dtos}>
+              {dtos.map((dto) => (
+                <div className={CardStyles.cont_dtos} key={dto.dto}>
+                  <span className={CardStyles.dto}>{dto.dto}% OFF</span>
+                  <span className={CardStyles.dto_horus}>
+                    {dto.startHour}hs - {dto.endHour}hs
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className={CardStyles.container_button}>
+          <button
+            onClick={onClick}
+            className={CardStyles.container_info__button}
+          >
+            VER MAS
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

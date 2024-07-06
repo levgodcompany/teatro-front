@@ -45,7 +45,7 @@ export const getClientsHTTP = async () => {
 export const getClientsRegisterHTTP = async () => {
   try {
     const response = await axiosInstance.get<JsonResponseToken<ClientDTO[]>>(
-      `clients//client/`
+      `clients/client/`
     );
     const data = response.data;
 
@@ -63,7 +63,6 @@ export const postNotClientsHTTP = async (newNotClient: {name: string;
   try {
     const response = await axiosInstance.post<JsonResponseToken<any>>(`not-clients/client`, {...newNotClient});
     const data = response.data;
-    console.log("new not client", data)
 
     return data.data;
   } catch (error) {
@@ -76,7 +75,6 @@ export const postAppointmentHTTP = async (idRoom: string, appointment: IAppointm
   try {
     const response = await axiosInstance.post<JsonResponseToken<IAppointment[]>>(`appointments/new/appointment/${idRoom}`, {...appointment});
     const data = response.data;
-    console.log("new not client", data)
 
     return data.data;
   } catch (error) {
@@ -90,7 +88,6 @@ export const putAppointmentHTTP = async (idRoom: string, appointmentId: string, 
   try {
     const response = await axiosInstance.put<JsonResponseToken<IAppointment[]>>(`appointments/room/${idRoom}/appointment/${appointmentId}`, {...appointment});
     const data = response.data;
-    console.log("update appointment", data)
 
     return data.data;
   } catch (error) {
@@ -103,7 +100,6 @@ export const deleteAppointmentHTTP = async (idRoom: string, appointmentId: strin
   try {
     const response = await axiosInstance.delete<JsonResponseToken<IAppointment[]>>(`appointments/room/${idRoom}/appointment/${appointmentId}`);
     const data = response.data;
-    console.log("update appointment", data)
 
     return data.data;
   } catch (error) {
@@ -123,7 +119,6 @@ export const getAppointmentClientsHTTP = async (idRoom: string, appointmentId: s
   try {
     const response = await axiosInstance.get<JsonResponseToken<AppointmentClientDTO[]>>(`appointments/appointment-all-clients/room/${idRoom}/appointment/${appointmentId}`);
     const data = response.data;
-    console.log("clients app", data)
 
     return data.data;
   } catch (error) {
@@ -137,7 +132,33 @@ export const getAppointmentClientOrganizadorHTTP = async (idRoom: string, appoin
   try {
     const response = await axiosInstance.get<JsonResponseToken<AppointmentClientDTO>>(`appointments/organizador/room/${idRoom}/appointment/${appointmentId}`);
     const data = response.data;
-    console.log("clients app", data)
+
+    return data.data;
+  } catch (error) {
+    console.error("Error loging in:", error);
+    // Manejar el error de forma adecuada
+  }
+}
+
+
+export const getAppointmentHTTP = async (idRoom: string) => {
+  try {
+    const response = await axiosInstance.get<JsonResponseToken<IAppointment[]>>(`appointments/${idRoom}`);
+    const data = response.data;
+
+
+    return data.data;
+  } catch (error) {
+    console.error("Error loging in:", error);
+    // Manejar el error de forma adecuada
+  }
+}
+
+export const saveAppointmentsHTTP =  async(idRoom: string, idClient: string, appointments: Partial<IAppointment>[]) => {
+  try {
+    
+    const response = await axiosInstance.post(`clients/client/appointments/${idRoom}/${idClient}`, appointments);
+    const data = response.data;
 
     return data.data;
   } catch (error) {

@@ -19,9 +19,12 @@ const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
 
   return (
     <div className={CouruselImageStyle.carousel}>
-      <button onClick={goToPreviousSlide} className={CouruselImageStyle.prev}>
+      {
+        images.length > 1 ? <button onClick={goToPreviousSlide} className={CouruselImageStyle.prev}>
         &#10094;
-      </button>
+      </button> : <></>
+      }
+      
       {images.map((image, index) => (
         <div
           key={index}
@@ -34,9 +37,13 @@ const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
           <img src={image.url} alt={`Slide ${index + 1}`} />
         </div>
       ))}
-      <button onClick={goToNextSlide} className={CouruselImageStyle.next}>
+
+      {
+        images.length > 1 ? <><button onClick={goToNextSlide} className={CouruselImageStyle.next}>
         &#10095;
-      </button>
+      </button></> : <></>
+      }
+      
     </div>
   );
 };

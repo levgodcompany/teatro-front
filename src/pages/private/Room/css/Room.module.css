@@ -1,5 +1,5 @@
 .room_container {
-background-color: #fff;
+background-color: #c6b89e;
 }
 
 .container_room {
@@ -9,3 +9,25 @@ background-color: #fff;
 .room_calendar {
     
 }
+
+.room_calendar_reservation > p {
+    margin-left: 20px;
+    text-decoration: underline;
+    color: #000;
+    cursor: pointer;
+}
+
+.container_select {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.select {
+    padding: 10px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #686b6e;
+    margin: 10px;
+  }

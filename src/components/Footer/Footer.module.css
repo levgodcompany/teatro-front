@@ -1,0 +1,7 @@
+.container {
+    background-color: #c6b89e;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 50px;
+}
