@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  IImage,
-  ILocal,
-  IOpeningDays,
-} from "../../pages/private/Local/services/Local.service";
+import { IImage, ILocal, IOpeningDays } from "../../pages/private/Home/services/Home.service";
+
 
 const initialState: ILocal = {
   name: "", // Nombre del local vacío

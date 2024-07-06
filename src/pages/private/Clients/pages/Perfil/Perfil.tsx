@@ -6,7 +6,6 @@ import { Header } from "../../../../../components/Header/Header";
 import PerfilStyle from "./Perfil.module.css";
 import { clientByIDHttps, editClientByID } from "../../services/Client.service";
 import { IClient } from "../../../Rooms/services/Rooms.service";
-import MessageDisplay from "../../../../../components/MessageDisplay/MessageDisplay";
 
 interface FormData {
   name: string;

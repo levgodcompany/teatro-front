@@ -13,7 +13,6 @@ import { clientByID, IClient } from "../../../services/Auth.service";
 import { IClientID } from "../../../redux/slices/ClientID.slice";
 import Loading from "../../../components/Loading/Loading";
 
-
 const Room = () => {
   const location = useLocation();
   const idRoom = new URLSearchParams(location.search).get("id");
@@ -107,7 +106,7 @@ const Room = () => {
 
   useEffect(() => {
     get();
-    getClientHTTP()
+    getClientHTTP();
     setIsLoading(false);
   }, []);
 
@@ -115,68 +114,69 @@ const Room = () => {
     setIsDateSelect(!isDateSelect);
   };
 
-  const filterClientShifts = (sel) => {
+  const filterClientShifts = (sel: any) => {
     const val = sel.target.value;
-    if(val == "Todo") {
+    if (val == "Todo") {
       get();
-    }else {
-      const f = room.availableAppointments.filter(a => a.client == client._id);
+    } else {
+      const f = room.availableAppointments.filter(
+        (a) => a.client == client._id
+      );
       setRoom({
         ...room,
-        availableAppointments: f
-      })
+        availableAppointments: f,
+      });
     }
-    setSelecOptionFilter(sel.target.value)
-  }
+    setSelecOptionFilter(sel.target.value);
+  };
 
   return (
     <>
-    {isLoading ? <Loading /> : <>      <Header />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          {" "}
+          <Header />
+          <div className={RoomStyle.room_container}>
+            <div key={room.name} className={RoomStyle.container_room}>
+              <RoomInfo room={room} />
+              <div className={RoomStyle.room_calendar_reservation}>
+                <p onClick={onClickDateSelect}>
+                  Has tu reserva <strong>aquí</strong>
+                </p>
 
-<div className={RoomStyle.room_container}>
-  <div key={room.name} className={RoomStyle.container_room}>
-    <RoomInfo room={room} />
-    <div className={RoomStyle.room_calendar_reservation}>
-      <p onClick={onClickDateSelect}>
-        Has tu reserva <strong>aquí</strong>
-      </p>
-
-      {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}
-    </div>
-    <div className={RoomStyle.container_select}>
-      <select
-        onChange={filterClientShifts}
-        value={selectOptionFilter}
-        className={RoomStyle.select}
-      >
-        <option
-          className={RoomStyle.select_option}
-          value="Todo"
-        >
-          Todo
-        </option>
-        <option
-          className={RoomStyle.select_option}
-          value="filt"
-        >
-          Mis turnos
-        </option>
-      </select>
-    </div>
-    <div className={RoomStyle.room_calendar}>
-      <AppointmentCalendar
-        _appointments={room.availableAppointments}
-        idRoom={room._id}
-        dto={room.dtoRoomHours}
-        price={room.priceBase}
-        nameRoom={room.name}
-        capacity={room.capacity}
-      />
-    </div>
-  </div>
-</div>
-<Footer /></>}
-
+                {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}
+              </div>
+              <div className={RoomStyle.container_select}>
+                <select
+                  onChange={filterClientShifts}
+                  value={selectOptionFilter}
+                  className={RoomStyle.select}
+                >
+                  <option className={RoomStyle.select_option} value="Todo">
+                    Todo
+                  </option>
+                  <option className={RoomStyle.select_option} value="filt">
+                    Mis turnos
+                  </option>
+                </select>
+              </div>
+              <div className={RoomStyle.room_calendar}>
+                <AppointmentCalendar
+                  _appointments={room.availableAppointments}
+                  idRoom={room._id}
+                  dto={room.dtoRoomHours}
+                  price={room.priceBase}
+                  nameRoom={room.name}
+                  capacity={room.capacity}
+                />
+              </div>
+            </div>
+          </div>
+          <Footer />
+        </>
+      )}
     </>
   );
 };

@@ -9,7 +9,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import AppointmentModal from "../AppointmentModal/AppointmentModal";
 import AppointmentCalendarStyle from "./css/AppointmentCalendar.module.css";
 import { DtoRoom, IAppointment } from "../../../Rooms/services/Rooms.service";
-import { deleteAppointmentHTTP, putAppointmentHTTP } from "../../service/Room.service";
+import { deleteAppointmentHTTP } from "../../service/Room.service";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -177,11 +177,11 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     time: "Hora",
     event: "Evento",
     noEventsInRange: "No hay eventos en este rango.",
-    showMore: (total) => `+ Ver más (${total})`,
+    showMore: (total: any) => `+ Ver más (${total})`,
   };
 
   // Estilos personalizados para los botones
-  const CustomToolbar = (toolbar) => {
+  const CustomToolbar = (toolbar: any) => {
     const goToBack = () => {
       toolbar.onNavigate("PREV");
     };
@@ -198,7 +198,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
       toolbar.onNavigate("TODAY");
     };
 
-    const handleViewChange = (event) => {
+    const handleViewChange = (event: any) => {
       toolbar.onView(event.target.value);
     };
 

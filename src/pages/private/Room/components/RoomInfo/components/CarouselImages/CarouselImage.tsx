@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CouruselImageStyle from "./css/Carousel.module.css";
-import { IImage } from "../../../../../Local/services/Local.service";
+import { IImage } from "../../../../../Home/services/Home.service";
 
 const CarouselImage: React.FC<{ images: IImage[] }> = ({ images }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

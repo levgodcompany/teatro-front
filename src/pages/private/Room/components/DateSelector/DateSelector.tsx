@@ -1,5 +1,5 @@
 // DateSelector.tsx
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DateSelectorStyle from "./DateSelector.module.css";
 import Shift from "./components/Shift/Shift";
 import { IRoom } from "../../../Rooms/services/Rooms.service";
@@ -17,10 +17,10 @@ interface IDateSelectorProps {
 }
 
 const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
-  const [selectedMonth, setSelectedMonth] = useState<number>(
+  const [selectedMonth, _setSelectedMonth] = useState<number>(
     new Date().getMonth()
   );
-  const [selectedYear, setSelectedYear] = useState<number>(
+  const [selectedYear, _setSelectedYear] = useState<number>(
     new Date().getFullYear()
   );
   const [selectedDays, setSelectedDays] = useState<number[]>([]);

@@ -14,15 +14,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
     setImages([room.mainImage, ...room.additionalImages]);
   }, [room]);
 
-  const days = [
-    { name: "Lunes", value: room.openingHours.monday },
-    { name: "Martes", value: room.openingHours.tuesday },
-    { name: "Miércoles", value: room.openingHours.wednesday },
-    { name: "Jueves", value: room.openingHours.thursday },
-    { name: "Viernes", value: room.openingHours.friday },
-    { name: "Sábado", value: room.openingHours.saturday },
-    { name: "Domingo", value: room.openingHours.sunday },
-  ];
+
 
   const datailInfo = (props: string, value: string | number) => {
     return (

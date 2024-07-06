@@ -6,13 +6,7 @@ import {
   IAppointment,
   IDtoAppointment,
 } from "../../../Rooms/services/Rooms.service";
-import {
-  ClientDTO,
-  getClientsHTTP,
-  getClientsRegisterHTTP,
-} from "../../service/Room.service";
 import HoursImage from "../../../../../assets/clock-svgrepo-com.svg";
-import DescriptionImage from "../../../../../assets/text-description-svgrepo-com.svg";
 import { format } from "date-fns";
 import CapacityClientImage from "../../../../../assets/users-svgrepo-com.svg";
 import DimeImage from "../../../../../assets/dime.svg";
@@ -38,11 +32,9 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   event,
   capacity,
   price,
-  dto,
 }) => {
   // State hooks for form fields
   const [title, setTitle] = useState(event.title);
-  const [available, setAvailable] = useState<boolean>(event.available);
   const [start, setStart] = useState(event.start as Date);
   const [end, setEnd] = useState(event.end as Date);
   const [dtoRoom, setDtoRoom] = useState<IDtoAppointment | null>(null);
@@ -62,8 +54,6 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   const [inputValuePrice, setInputValuePrice] = useState<number>(price);
 
 
-  const [isAplicDto, setIsAplicDto] = useState<DtoRoom | null>(null);
-
   const getClientHTTP = async () => {
     const res = await clientByID(clientSelector.id);
     if (res) {
@@ -74,31 +64,12 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
 
   // Effect to sync event data with state
   useEffect(() => {
-    const ahora = new Date();
-    const val = new Date(event.start as Date);
-
     getClientHTTP();
 
-    if (
-      val.getDay() >= ahora.getDay() &&
-      val.getMonth() >= ahora.getMonth() &&
-      val.getFullYear() >= ahora.getFullYear()
-    ) {
-      const formattedTime = val.toTimeString().split(" ")[0]; // "HH:MM:SS"
-      const hourMinute = formattedTime.substring(0, 5);
-
-      const roomWithDiscount = isTimeWithinAnyRange(hourMinute, dto);
-      if (roomWithDiscount) {
-        setIsAplicDto(roomWithDiscount);
-      } else {
-        setIsAplicDto(null);
-      }
-    }
 
     setDtoRoom(event.dto);
 
     setTitle(event.title);
-    setAvailable(event.available);
     setStart(event.start as Date);
     setEnd(event.end as Date);
     setInputValuePrice(event.price);
@@ -126,20 +97,6 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
     } else {
       alert("No puedes cancelar el turno, faltan menos de 24 horas.")
     }
-  };
-
-  const isTimeWithinAnyRange = (
-    time: string,
-    rooms: DtoRoom[]
-  ): DtoRoom | null => {
-    return (
-      rooms.find((room) => {
-        const startTime = new Date(`1970-01-01T${room.startHour}:00`);
-        const endTime = new Date(`1970-01-01T${room.endHour}:00`);
-        const checkTime = new Date(`1970-01-01T${time}:00`);
-        return checkTime >= startTime && checkTime < endTime;
-      }) || null
-    );
   };
 
   const formateador = new Intl.NumberFormat("es-ES", {
