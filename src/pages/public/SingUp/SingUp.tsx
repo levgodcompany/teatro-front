@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useState } from "react";
+import { useAppDispatch } from "../../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import formStyle from "./css/SingUp.module.css";
 import logo from "../../../assets/el_juvenil.svg";
@@ -18,7 +18,6 @@ interface StudentForm {
 
 const SingUp = () => {
   const dispatch = useAppDispatch();
-
   const navigate = useNavigate();
   const [formData, setFormData] = useState<StudentForm>({
     name: "",
@@ -31,20 +30,24 @@ const SingUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-
-      const owner = await AuthService.register(`${formData.name}; ${formData.lastName}`, formData.phone, formData.email, formData.password);
-      if(owner){
-        dispatch(createClient(owner))
-        dispatch(createClientID({id: owner._id}))
-        dispatch(createToken({token: owner.token}))
+      const owner = await AuthService.register(
+        `${formData.name} ${formData.lastName}`,
+        formData.phone,
+        formData.email,
+        formData.password
+      );
+      if (owner) {
+        dispatch(createClient(owner));
+        dispatch(createClientID({ id: owner._id }));
+        dispatch(createToken({ token: owner.token }));
         navigate(`/theater/home`, { replace: true });
       }
     } catch (error) {
-      console.log(`Error al buscar el student: ${error}`);
+      console.log(`Error al registrar el usuario: ${error}`);
     }
   };
 
-  const handleSingIn = () => {
+  const handleSignIn = () => {
     navigate(`/singin`, { replace: true });
   };
 
@@ -55,64 +58,66 @@ const SingUp = () => {
   };
 
   return (
-    <>
-      <main className={formStyle.main_form}>
-        <div className={formStyle.container}>
-          <div className={formStyle.container_inputs}>
-            <div className={formStyle.container_image}>
-              <img src={logo} alt="El Juvenil" width="80" height="80" />
-            </div>
-            <div className={formStyle.container_inputs_input}>
-              <div className={formStyle.inputs_name_last}>
-                <input
-                  className={formStyle.inputText}
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Nombre Completo *"
-                />
-                <input
-                  className={formStyle.inputText}
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Apellido Completo *"
-                />
-              </div>
-              <input
-                className={formStyle.inputText}
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Correo Electronico *"
-              />
-              <input
-                className={formStyle.inputText}
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password *"
-              />
-            </div>
+    <main className={formStyle.main_form}>
+      <div className={formStyle.signup_container}>
+        <div className={formStyle.signup_inputs_container}>
+          <div className={formStyle.signup_image_container}>
+            <img src={logo} alt="El Juvenil" width="80" height="80" />
           </div>
-          <div className={formStyle.container_button}>
-            <button className={formStyle.buttonApply} onClick={handleSubmit}>
-              Registrate
-            </button>
-
-            <div className={formStyle.space}></div>
-
-            <button className={formStyle.button_singup} onClick={handleSingIn}>
-              Iniciar sesión
-            </button>
+          <div className={formStyle.signup_inputs}>
+            <div className={formStyle.signup_name_last_inputs}>
+              <input
+                className={formStyle.signup_input}
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Nombre Completo *"
+              />
+              <input
+                className={formStyle.signup_input}
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Apellido Completo *"
+              />
+            </div>
+            <input
+              className={formStyle.signup_input}
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Correo Electrónico *"
+            />
+            <input
+              className={formStyle.signup_input}
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Contraseña *"
+            />
           </div>
         </div>
-      </main>
-    </>
+        <div className={formStyle.signup_buttons}>
+          <button
+            className={formStyle.signup_button_apply}
+            onClick={handleSubmit}
+          >
+            Registrarse
+          </button>
+          <div className={formStyle.signup_space}></div>
+          <button
+            className={formStyle.signup_button_singup}
+            onClick={handleSignIn}
+          >
+            Iniciar sesión
+          </button>
+        </div>
+      </div>
+    </main>
   );
 };
 
