@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import CarouselComp from "../../../components/CourserComps/CarouselComp";
 import { Header } from "../../../components/Header/Header";
-import Sidebar from "../../../components/Sidebar/Sidebar";
 import Room from "./Components/Rooms/Room";
 
 import HomeStyle from "./css/Home.module.css";
@@ -9,10 +7,10 @@ import { getHttpLocalID, ILocalID } from "../../../services/LocalID.service";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { createLocalID } from "../../../redux/slices/LocalID.slice";
 import { DtoRoom, getRoomsHTTP, IImage, IRoom } from "../Rooms/services/Rooms.service";
-import { getLocal, ILocal } from "../Local/services/Local.service";
 import imgLogo from "../../../assets/el_juvenil.svg";
 import { IToken } from "../../../redux/slices/token.slice";
 import Footer from "../../../components/Footer/Footer";
+import { getLocalHTTP, ILocal } from "./services/Home.service";
 
 interface InfoRoom {
   idRoom: string;
@@ -31,7 +29,6 @@ const Home = () => {
   const [local, setLocal] = useState<ILocal | undefined>(undefined);
 
   const dispatch = useAppDispatch();
-
   const token: IToken = useAppSelector((state) => state.token);
   const localId: ILocalID = useAppSelector((state) => state.localID);
 
@@ -65,7 +62,7 @@ const Home = () => {
   };
 
   const getLocalL = async () => {
-    const res = await getLocal();
+    const res = await getLocalHTTP();
     setLocal(res);
   };
 

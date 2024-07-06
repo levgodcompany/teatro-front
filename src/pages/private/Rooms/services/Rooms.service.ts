@@ -1,8 +1,8 @@
 import {
   axiosInstance,
   JsonResponseToken,
-} from "../../../../services/axios.service";
-import { IOpeningDays } from "../../Local/services/Local.service";
+} from "../../../../services/axios.service"
+import { IOpeningDays } from "../../Home/services/Home.service";
 
 
 export interface IAppointment {
