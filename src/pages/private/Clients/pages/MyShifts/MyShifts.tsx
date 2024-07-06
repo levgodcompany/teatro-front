@@ -8,6 +8,7 @@ import { clientByID, IClient } from "../../../../../services/Auth.service";
 import { IClientID } from "../../../../../redux/slices/ClientID.slice";
 import MyShiftsStyle from "./MyShifts.module.css"; // Importa el archivo de estilos CSS
 import { deleteAppointmentHTTP } from "../../../Room/service/Room.service";
+import Loading from "../../../../../components/Loading/Loading";
 
 const MyShifts = () => {
   const clientSelector: IClientID = useAppSelector((state) => state.clientID);
@@ -20,6 +21,7 @@ const MyShifts = () => {
   });
   const [rooms, setRooms] = useState<IRoom[]>([]);
   
+  const [isLoading, setIsLoading] = useState(true);
 
   const getClientHTTP = async () => {
     const res = await clientByID(clientSelector.id);
@@ -54,6 +56,7 @@ const MyShifts = () => {
   useEffect(() => {
     getClientHTTP();
     getRooms();
+    setIsLoading(false)
   }, []);
 
   const cancelShifts = async (idRoom: string, id:string)=> {
@@ -225,7 +228,8 @@ const MyShifts = () => {
 
   return (
     <>
-      <Header />
+    {
+      isLoading ? <Loading /> : <>      <Header />
       <div className={MyShiftsStyle.container}>
         <div className={MyShiftsStyle.container_rooms}>
 
@@ -245,7 +249,9 @@ const MyShifts = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer /></>
+    }
+
     </>
   );
 };

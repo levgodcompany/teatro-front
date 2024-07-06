@@ -11,6 +11,7 @@ import imgLogo from "../../../assets/el_juvenil.svg";
 import { IToken } from "../../../redux/slices/token.slice";
 import Footer from "../../../components/Footer/Footer";
 import { getLocalHTTP, ILocal } from "./services/Home.service";
+import Loading from "../../../components/Loading/Loading";
 
 interface InfoRoom {
   idRoom: string;
@@ -27,6 +28,7 @@ interface InfoRoom {
 const Home = () => {
   const [rooms, setRooms] = useState<InfoRoom[]>([]);
   const [local, setLocal] = useState<ILocal | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useAppDispatch();
   const token: IToken = useAppSelector((state) => state.token);
@@ -70,11 +72,14 @@ const Home = () => {
     getIdLocal();
     getRooms();
     getLocalL();
+    setIsLoading(false); // Marcar la carga como completada después de cierto tiempo (simulado)
+
   }, []);
 
   return (
     <>
-      <Header />
+    {
+      isLoading ? <Loading /> : <><Header />
       <main>
         {local ? (
           <>
@@ -134,7 +139,9 @@ const Home = () => {
 
       </main>
 
-      <Footer />
+      <Footer /></>
+    }
+      
     </>
   );
 };

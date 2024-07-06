@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Header } from "../../../components/Header/Header";
-import InfoRoom from "../Rooms/components/Card_B/InfoRoom";
-import { IAppointment, IRoom } from "../Rooms/services/Rooms.service";
+import { IRoom } from "../Rooms/services/Rooms.service";
 import { getRoomHTTP } from "./service/Room.service";
 import AppointmentCalendar from "./components/AppointmentCalendar/AppointmentCalendar";
 import RoomStyle from "./css/Room.module.css";
-import Sidebar from "../../../components/Sidebar/Sidebar";
 import RoomInfo from "./components/RoomInfo/RoomInfo";
 import DateSelector from "./components/DateSelector/DateSelector";
 import { useAppSelector } from "../../../redux/hooks";
 import Footer from "../../../components/Footer/Footer";
 import { clientByID, IClient } from "../../../services/Auth.service";
 import { IClientID } from "../../../redux/slices/ClientID.slice";
+import Loading from "../../../components/Loading/Loading";
 
-interface ISelects {
-  id: string;
-  year: number;
-  month: number;
-  days: string[];
-}
 
 const Room = () => {
   const location = useLocation();
@@ -35,7 +28,9 @@ const Room = () => {
     phone: "",
     token: "",
   });
-  const [selectOptionFilter, setSelecOptionFilter] = useState<string>("Todo")
+  const [selectOptionFilter, setSelecOptionFilter] = useState<string>("Todo");
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [room, setRoom] = useState<IRoom>({
     _id: "",
@@ -113,6 +108,7 @@ const Room = () => {
   useEffect(() => {
     get();
     getClientHTTP()
+    setIsLoading(false);
   }, []);
 
   const onClickDateSelect = () => {
@@ -135,51 +131,52 @@ const Room = () => {
 
   return (
     <>
-      <Header />
+    {isLoading ? <Loading /> : <>      <Header />
 
-      <div className={RoomStyle.room_container}>
-        <div key={room.name} className={RoomStyle.container_room}>
-          <RoomInfo room={room} />
-          <div className={RoomStyle.room_calendar_reservation}>
-            <p onClick={onClickDateSelect}>
-              Has tu reserva <strong>aquí</strong>
-            </p>
+<div className={RoomStyle.room_container}>
+  <div key={room.name} className={RoomStyle.container_room}>
+    <RoomInfo room={room} />
+    <div className={RoomStyle.room_calendar_reservation}>
+      <p onClick={onClickDateSelect}>
+        Has tu reserva <strong>aquí</strong>
+      </p>
 
-            {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}
-          </div>
-          <div className={RoomStyle.container_select}>
-            <select
-              onChange={filterClientShifts}
-              value={selectOptionFilter}
-              className={RoomStyle.select}
-            >
-              <option
-                className={RoomStyle.select_option}
-                value="Todo"
-              >
-                Todo
-              </option>
-              <option
-                className={RoomStyle.select_option}
-                value="filt"
-              >
-                Mis turnos
-              </option>
-            </select>
-          </div>
-          <div className={RoomStyle.room_calendar}>
-            <AppointmentCalendar
-              _appointments={room.availableAppointments}
-              idRoom={room._id}
-              dto={room.dtoRoomHours}
-              price={room.priceBase}
-              nameRoom={room.name}
-              capacity={room.capacity}
-            />
-          </div>
-        </div>
-      </div>
-      <Footer />
+      {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}
+    </div>
+    <div className={RoomStyle.container_select}>
+      <select
+        onChange={filterClientShifts}
+        value={selectOptionFilter}
+        className={RoomStyle.select}
+      >
+        <option
+          className={RoomStyle.select_option}
+          value="Todo"
+        >
+          Todo
+        </option>
+        <option
+          className={RoomStyle.select_option}
+          value="filt"
+        >
+          Mis turnos
+        </option>
+      </select>
+    </div>
+    <div className={RoomStyle.room_calendar}>
+      <AppointmentCalendar
+        _appointments={room.availableAppointments}
+        idRoom={room._id}
+        dto={room.dtoRoomHours}
+        price={room.priceBase}
+        nameRoom={room.name}
+        capacity={room.capacity}
+      />
+    </div>
+  </div>
+</div>
+<Footer /></>}
+
     </>
   );
 };
