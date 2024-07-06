@@ -30,7 +30,7 @@ const initialState: IClient = {
       },
       resetClient: (state) => {
         state = initialState
-        return initialState;
+        return state;
       },
     },
   });

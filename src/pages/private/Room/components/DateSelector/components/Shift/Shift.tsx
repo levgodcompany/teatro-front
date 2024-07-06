@@ -210,7 +210,6 @@ const Shift: React.FC<IShiftProps> = ({
 
     let priceDto = 0;
     let totalDto = 0
-console.log(start)
     start.setMonth(start.getMonth()+1)
     end.setMonth(end.getMonth()+1)
     
@@ -542,7 +541,7 @@ console.log(start)
                   />
                 </div>
                 <span>
-                  Medidas <strong>20x30 m</strong>
+                  Medidas <strong>{room.length == room.Width ? `${room.length}m²` : `${room.length}x${room.Width}mt`}</strong>
                 </span>
               </div>
 
