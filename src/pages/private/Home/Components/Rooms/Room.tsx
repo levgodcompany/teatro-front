@@ -11,8 +11,8 @@ interface PropsRoom {
   price: number;
   images: IImage[];
   capacity: number;
-  length: number;
-  Width: number;
+  length: string;
+  Width: string;
   dtos: DtoRoom[];
   typeRoom: string;
 }
