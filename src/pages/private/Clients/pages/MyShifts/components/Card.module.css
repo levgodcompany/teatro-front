@@ -1,0 +1,64 @@
+.card {
+  border-radius: 5px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 300px;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #fff;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+}
+
+.roomType {
+  background-color: #9e2d49;
+  color: #feffd5;
+  padding: 5px 10px;
+  border-radius: 0 0 0 8px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.header {
+  padding: 20px 0 10px;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.body {
+  padding: 16px;
+  border-top: 1px solid #dddede;
+}
+
+.dimensions,
+.maxCapacity {
+  margin: 5px 0;
+  color: #450c1f;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+strong {
+  color: #210110;
+}
+.not {
+  font-size: 12px;
+  text-align: center;
+  font-weight: 600;
+  margin-top: 20px;
+}

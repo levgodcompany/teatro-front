@@ -31,7 +31,7 @@ const SingUp = () => {
     e.preventDefault();
     try {
       const owner = await AuthService.register(
-        `${formData.name} ${formData.lastName}`,
+        `${formData.name};${formData.lastName}`,
         formData.phone,
         formData.email,
         formData.password

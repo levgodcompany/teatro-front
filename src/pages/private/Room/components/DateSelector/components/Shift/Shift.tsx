@@ -164,7 +164,6 @@ const Shift: React.FC<IShiftProps> = ({
         const days: IDaysSel[] = [];
         daysSelect.days.forEach((d) => {
           const start = new Date(`${d}T${inputValueTimeStart.slice(0, -3)}`);
-
           const day = start.getDate();
           days.push({
             day,
@@ -216,8 +215,6 @@ const Shift: React.FC<IShiftProps> = ({
 
     let priceDto = 0;
     let totalDto = 0;
-    start.setMonth(start.getMonth() + 1);
-    end.setMonth(end.getMonth() + 1);
 
     room.dtoRoomHours.forEach((dto) => {
       const startHourDto = new Date(`2024-08-14T${dto.startHour}`);
@@ -357,7 +354,7 @@ const Shift: React.FC<IShiftProps> = ({
           let bool = true;
           for (const a of appointmentsInternal) {
             if (
-              a.start.getMonth() == d.start.getMonth() + 1 &&
+              a.start.getMonth() == d.start.getMonth() &&
               a.start.getDate() == d.start.getDate()
             ) {
               if (!hasHourConflict(a, d)) {

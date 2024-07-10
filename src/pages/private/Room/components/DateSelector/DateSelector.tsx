@@ -55,7 +55,7 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
 
   const handleAddButtonClick = () => {
     const formattedDates = selectedDays.map(
-      (day) => `${selectedYear}-${(selectedMonth + 1) < 10 ? `0${selectedMonth}` : selectedMonth}-${(day) < 10 ? `0${day}`: day}`
+      (day) => `${selectedYear}-${(selectedMonth + 1) < 10 ? `0${(selectedMonth+1)}` : (selectedMonth+1)}-${(day) < 10 ? `0${day}`: day}`
     );
     setSelectedDateList(() => {
 

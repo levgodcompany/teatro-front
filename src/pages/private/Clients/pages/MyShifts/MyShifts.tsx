@@ -9,6 +9,7 @@ import { IClientID } from "../../../../../redux/slices/ClientID.slice";
 import MyShiftsStyle from "./MyShifts.module.css"; // Importa el archivo de estilos CSS
 import { deleteAppointmentHTTP } from "../../../Room/service/Room.service";
 import Loading from "../../../../../components/Loading/Loading";
+import Card from "./components/Card";
 
 const MyShifts = () => {
   const clientSelector: IClientID = useAppSelector((state) => state.clientID);
@@ -194,7 +195,7 @@ const MyShifts = () => {
               : `${room.length}x${room.Width}mt`
           )}
           {info("Capacidad máx.", `${room.capacity}`)}
-          {info("Precio", `$ ${formateador.format(room.priceBase)}`)}
+          
         </div>
         <div className={MyShiftsStyle.container_appointments}>
           {room.availableAppointments.length > 0 ? (
@@ -204,6 +205,16 @@ const MyShifts = () => {
           )}
         </div>
       </div>
+
+      </>
+    );
+  };
+
+  const infoRoomNotApp = (room: IRoom) => {
+
+    return (
+      <>
+      <Card title={room.name} roomType={room.typeRoom} dimensions={room.Width == room.length ? `${room.length}m` : `${room.length}x${room.Width} m`} maxCapacity={room.capacity} />
 
       </>
     );
@@ -236,7 +247,7 @@ const MyShifts = () => {
           <div className={MyShiftsStyle.container_rooms_not_app}>
             {
               roomsWithAppAnNotApp(rooms)[1].map(room=> (
-                <React.Fragment key={room._id}>{infoRoom(room)}</React.Fragment>
+                <React.Fragment key={room._id}>{infoRoomNotApp(room)}</React.Fragment>
               ) )
             }
 

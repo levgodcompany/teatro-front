@@ -126,37 +126,46 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
         }
 
         // Función para verificar conflictos de hora
+
         function hasHourConflict(
           appointment: TimeInterval,
           daySelet: TimeInterval
         ): boolean {
           const appStartHours = appointment.start.getHours();
           const appEndHours = appointment.end.getHours();
-
+          const appEndMinutes = appointment.end.getMinutes();
+  
           const daySeletStartHours = daySelet.start.getHours();
+          const daySeletStartMinutes = daySelet.start.getMinutes();
           const daySeletEndHours = daySelet.end.getHours();
-
+  
           if (
             daySeletStartHours >= appStartHours &&
             daySeletStartHours <= appEndHours
           ) {
+            if (
+              daySeletStartHours == appEndHours &&
+              daySeletStartMinutes > appEndMinutes
+            ) {
+              return true;
+            }
             return false;
           }
-
+  
           if (
             daySeletEndHours >= appStartHours &&
             daySeletEndHours <= appEndHours
           ) {
             return false;
           }
-
+  
           if (
             daySeletStartHours < appStartHours &&
             daySeletEndHours > appEndHours
           ) {
             return false;
           }
-
+  
           return true;
         }
 
@@ -218,20 +227,29 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
       }
 
       // Función para verificar conflictos de hora
+
       function hasHourConflict(
         appointment: TimeInterval,
         daySelet: TimeInterval
       ): boolean {
         const appStartHours = appointment.start.getHours();
         const appEndHours = appointment.end.getHours();
+        const appEndMinutes = appointment.end.getMinutes();
 
         const daySeletStartHours = daySelet.start.getHours();
+        const daySeletStartMinutes = daySelet.start.getMinutes();
         const daySeletEndHours = daySelet.end.getHours();
 
         if (
           daySeletStartHours >= appStartHours &&
           daySeletStartHours <= appEndHours
         ) {
+          if (
+            daySeletStartHours == appEndHours &&
+            daySeletStartMinutes > appEndMinutes
+          ) {
+            return true;
+          }
           return false;
         }
 
