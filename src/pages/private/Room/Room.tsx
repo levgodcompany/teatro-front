@@ -39,9 +39,9 @@ const Room = () => {
     phone: "", // Número de teléfono del local
     priceBase: 0,
     dtoRoomHours: [],
-    length: 0,
+    length: "",
     typeRoom: "",
-    Width: 0,
+    Width: "",
     openingHours: {
       monday: {
         isOpen: false,

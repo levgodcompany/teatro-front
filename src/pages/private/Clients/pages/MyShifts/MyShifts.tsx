@@ -191,8 +191,8 @@ const MyShifts = () => {
           {info(
             "Medidas",
             room.length === room.Width
-              ? `${room.length}m`
-              : `${room.length}x${room.Width}mt`
+              ? `${room.length} m²`
+              : `${room.length}x${room.Width} m`
           )}
           {info("Capacidad máx.", `${room.capacity}`)}
           
@@ -214,7 +214,7 @@ const MyShifts = () => {
 
     return (
       <>
-      <Card title={room.name} roomType={room.typeRoom} dimensions={room.Width == room.length ? `${room.length}m` : `${room.length}x${room.Width} m`} maxCapacity={room.capacity} />
+      <Card title={room.name} roomType={room.typeRoom} dimensions={room.Width == room.length ? `${room.length}m²` : `${room.length}x${room.Width} m`} maxCapacity={room.capacity} />
 
       </>
     );

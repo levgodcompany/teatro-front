@@ -44,9 +44,9 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
               <p>{room.name}</p>
             </div>
             {datailInfo("Tipo de sala:", `${room.typeRoom}`)}
-            {room.Width == room.length ? datailInfo("Medidas:", `${room.length}m²`) : datailInfo("Medidas:", `${room.Width}x${room.length}mt`) }
+            {room.Width == room.length ? datailInfo("Medidas:", `${room.length} m²`) : datailInfo("Medidas:", `${room.length}x${room.Width} m`) }
             {datailInfo("Capacidad máxima de personas:", `${room.capacity}`)}
-            {room.phone.length > 0 ? datailInfo("Contacto:", room.phone) : datailInfo("Contacto", "3442 622763")}
+            {room.phone.length > 0 ? datailInfo("Contacto:", room.phone) : datailInfo("Contacto", "+ 54 9 11 5632 1826")}
             {datailInfo("Precio:", `$ ${formateador.format(room.priceBase)}`)}
             {
               room.dtoRoomHours.length > 0 ? <div className={RoomInfoStyle.container_dtos}>

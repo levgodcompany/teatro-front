@@ -572,8 +572,8 @@ const Shift: React.FC<IShiftProps> = ({
                   Medidas{" "}
                   <strong>
                     {room.length == room.Width
-                      ? `${room.length}m²`
-                      : `${room.length}x${room.Width}mt`}
+                      ? `${room.length} m²`
+                      : `${room.length}x${room.Width} m`}
                   </strong>
                 </span>
               </div>

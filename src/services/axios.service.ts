@@ -3,7 +3,7 @@ import axios from "axios";
 import { getLocalStorage } from "../utilities/localStorage.utility";
 import { IToken, initialStateToken, UserKey } from "../redux/slices/token.slice";
 
-export const baseUrl = "https://api-teatro.onrender.com/api/v1/";
+export const baseUrl = "https://teatro-back.onrender.com/api/v1/";
 
 export interface JsonResponseToken<T> {
   message: string;

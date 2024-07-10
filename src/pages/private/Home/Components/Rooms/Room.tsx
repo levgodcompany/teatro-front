@@ -89,7 +89,7 @@ const Room: React.FC<PropsRoom> = ({
           {info("Capacidad Máx.", `${capacity} Personas`)}
           {length === Width
             ? info("Medidas", `${length}m²`)
-            : info("Medidas", `${length}x${Width}mt`)}
+            : info("Medidas", `${length}x${Width} m`)}
           {infoElement(
             "Precio",
             <span className={CardStyles.span_inf}>
