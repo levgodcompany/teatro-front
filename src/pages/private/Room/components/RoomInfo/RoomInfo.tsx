@@ -52,7 +52,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
               room.dtoRoomHours.length > 0 ? <div className={RoomInfoStyle.container_dtos}>
                 <p className={RoomInfoStyle.container_dtos_p}>Off</p>
                 <div className={RoomInfoStyle.cont_dtos}>
-                  {room.dtoRoomHours.map(dto => <div className={RoomInfoStyle.dtos}>
+                  {room.dtoRoomHours.map((dto, i) => <div key={i} className={RoomInfoStyle.dtos}>
                     <span className={RoomInfoStyle.dto}>{dto.dto}% OFF</span>
                     <span className={RoomInfoStyle.dto_horus}>{dto.startHour}hs a {dto.endHour}hs</span>
                   </div>)}
@@ -68,9 +68,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             </span>
             <div className={RoomInfoStyle.services}>
               {room.services.map((s, i) => (
-                <>
                   <span key={i}>⋅ {s}</span>
-                </>
               ))}
             </div>
           </div> : <></>

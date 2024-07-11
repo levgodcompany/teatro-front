@@ -470,7 +470,7 @@ const Shift: React.FC<IShiftProps> = ({
           ) : (
             <>
               <div className={ShiftStyle.from_title}>
-                <span>{client.name}</span>
+                <span>{client.name.split(";")[0]} {client.name.split(";")[1] != null || client.name.split(";")[1] != undefined ? client.name.split(";")[1] : "" }</span>
               </div>
 
               <div className={ShiftStyle.container_days_select}>

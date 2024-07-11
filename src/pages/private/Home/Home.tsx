@@ -103,9 +103,7 @@ const Home = () => {
               </span>
               <div className={HomeStyle.services}>
                 {local.services.map((s, i) => (
-                  <>
                     <span key={i}>{s}</span>
-                  </>
                 ))}
               </div>
             </div> :  <></>
@@ -121,8 +119,8 @@ const Home = () => {
             <h3>Salas de Ensayo</h3>
           </div>
           <div className={HomeStyle.container_room}>
-            {rooms.map((room) => (
-              <>
+            {rooms.map((room, i) => (
+              <div key={i} >
                 <Room
                   idRoom={room.idRoom}
                   typeRoom={room.typeRoom}
@@ -134,7 +132,7 @@ const Home = () => {
                   length={room.length}
                   dtos={room.dtos}
                 />
-              </>
+              </div>
             ))}
           </div>
         </div>

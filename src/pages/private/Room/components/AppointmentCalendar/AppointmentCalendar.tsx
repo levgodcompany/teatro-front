@@ -1,4 +1,3 @@
-// src/components/AppointmentCalendar.tsx
 import React, { useEffect, useState } from "react";
 import {
   Calendar,
@@ -9,9 +8,9 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import AppointmentModal from "../AppointmentModal/AppointmentModal";
 import AppointmentCalendarStyle from "./css/AppointmentCalendar.module.css";
 import { DtoRoom, IAppointment } from "../../../Rooms/services/Rooms.service";
-import { deleteAppointmentHTTP } from "../../service/Room.service";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { es } from "date-fns/locale";
+import ConfirCancelReservation from "../../../../../components/ConfirCancelReservation/ConfirCancelReservation";
 
 interface CalendarProps {
   _appointments: IAppointment[];
@@ -20,6 +19,8 @@ interface CalendarProps {
   capacity: number;
   price: number;
   dto: DtoRoom[];
+  length: string;
+  Width: string;
 }
 
 // Configuración del localizador de date-fns
@@ -40,6 +41,8 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
   capacity,
   dto,
   price,
+  Width,
+  length
 }) => {
   // Event, variable para poder mostrar todos los eventos que hay
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -51,6 +54,23 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const [isConfCancel, setIsConfCancel] = useState(false);
+
+  const [confCancel, setConfCancel] = useState<{idRoom: string, idApp: string}>({
+    idApp: "",
+    idRoom: ""
+  });
+
+  const cancelShifts = async (idRoom: string, id: string) => {
+    setConfCancel({idApp: id, idRoom:idRoom});
+    setIsConfCancel(true)
+    
+  };
+
+  const onClickConfCancelConf = ()=> {
+    setIsConfCancel(!isConfCancel)
+  }
 
   // Seleccionamos un evento
   const [selectedAppointment, setSelectedAppointment] = useState<IAppointment>({
@@ -83,40 +103,41 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
   };
 
   const handleDeleteEvent = async (id: string) => {
-    const rest = await deleteAppointmentHTTP(idRoom, id);
-    if (rest) {
-      const _events: CalendarEvent[] = rest.map((appointment) => ({
-        title: appointment.title,
-        start: new Date(appointment.start),
-        end: new Date(appointment.end),
-        allDay: false,
-        resource: {
-          description: appointment.description,
-          available: appointment.available,
-          client: appointment.client,
-        },
-      }));
+    setModalIsOpen(false);
+    cancelShifts(idRoom, id);    
+  };
 
-      const app: IAppointment[] = rest.map((appointment) => ({
-        _id: appointment._id,
-        date: new Date(appointment.date),
-        start: new Date(appointment.start),
-        end: new Date(appointment.end),
-        title: appointment.title,
-        dto: appointment.dto,
+  const resultDeletEvent = (apps: IAppointment[]) => {
+    setIsConfCancel(false)
+    const _events: CalendarEvent[] = apps.map((appointment) => ({
+      title: appointment.title,
+      start: new Date(appointment.start),
+      end: new Date(appointment.end),
+      allDay: false,
+      resource: {
         description: appointment.description,
         available: appointment.available,
-        price: appointment.price,
         client: appointment.client,
-        GuestListClient: appointment.GuestListClient,
-        GuestListNotClient: appointment.GuestListNotClient,
-      }));
-      setAppointments(app);
-      setEvents([..._events]);
-    }
+      },
+    }));
 
-    setModalIsOpen(false);
-  };
+    const app: IAppointment[] = apps.map((appointment) => ({
+      _id: appointment._id,
+      date: new Date(appointment.date),
+      start: new Date(appointment.start),
+      end: new Date(appointment.end),
+      title: appointment.title,
+      dto: appointment.dto,
+      description: appointment.description,
+      available: appointment.available,
+      price: appointment.price,
+      client: appointment.client,
+      GuestListClient: appointment.GuestListClient,
+      GuestListNotClient: appointment.GuestListNotClient,
+    }));
+    setAppointments(app);
+    setEvents([..._events]);
+  }
 
   useEffect(() => {
     const _app = _appointments.filter((a) => a.available == true);
@@ -265,6 +286,9 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
 
   return (
     <>
+    {
+            isConfCancel ? <ConfirCancelReservation resHTTL={resultDeletEvent} cancel={onClickConfCancelConf} load={()=> {}} idRoom={confCancel.idRoom} appointmentId={confCancel.idApp} /> : <></>
+          }
       <div className={AppointmentCalendarStyle.container}>
         <div className={AppointmentCalendarStyle.header}></div>
         <Calendar
@@ -312,6 +336,8 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
             onSave={handleDeleteEvent}
             capacity={capacity}
             price={price}
+            Width={Width}
+            length={length}
           />
         ) : (
           <></>

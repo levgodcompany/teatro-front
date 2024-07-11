@@ -23,6 +23,8 @@ interface NewEventModalProps {
   event: IAppointment;
   price: number;
   dto: DtoRoom[];
+  length: string;
+  Width: string;
 }
 
 const AppointmentModal: React.FC<NewEventModalProps> = ({
@@ -32,6 +34,8 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   event,
   capacity,
   price,
+  Width,
+  length
 }) => {
   // State hooks for form fields
   const [title, setTitle] = useState(event.title);
@@ -134,7 +138,7 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
         <div className={NewEventModalStyle.container}>
           <div className={NewEventModalStyle.container_form}>
             <div className={NewEventModalStyle.from_title}>
-              <span>{title}</span>
+              <span>{title.split(";")[0]} {title.split(";")[1] ? title.split(";")[1] : "" }</span>
             </div>
 
             <div className={NewEventModalStyle.date_start}>
@@ -184,45 +188,49 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                 />
               </div>
               <span>
-                Medidas <strong>20x30 m</strong>
+                Medidas <strong>{Width == length ? `${length} m²` : `${length}x${Width} m`}</strong>
               </span>
             </div>
-
-            <div className={NewEventModalStyle.container_client}>
-              <div className={NewEventModalStyle.autocomplete_select}>
-                <div className={NewEventModalStyle.container_availability}>
-                  <p className={NewEventModalStyle.p_dto}>
-                    {dtoRoom == null ? (
-                      <>
-                        <strong className={NewEventModalStyle.dto_price}>
-                          ${formateador.format(inputValuePrice)}
-                        </strong>
-                      </>
-                    ) : (
-                      <div className={NewEventModalStyle.dto_value}>
-                        <span className={NewEventModalStyle.span_dto_value}>
-                          {dtoRoom.dto}% dto.
-                        </span>
-
-                        <div>
-                          <span className={NewEventModalStyle.p_span_dto}>
-                            ${formateador.format(dtoRoom.prevPrice)}
-                          </span>{" "}
+              
+              {
+                client._id == event.client ? <div className={NewEventModalStyle.container_client}>
+                <div className={NewEventModalStyle.autocomplete_select}>
+                  <div className={NewEventModalStyle.container_availability}>
+                    <p className={NewEventModalStyle.p_dto}>
+                      {dtoRoom == null ? (
+                        <>
                           <strong className={NewEventModalStyle.dto_price}>
-                            ${formateador.format(dtoRoom.newPrice)}
+                            ${formateador.format(inputValuePrice)}
                           </strong>
+                        </>
+                      ) : (
+                        <div className={NewEventModalStyle.dto_value}>
+                          <span className={NewEventModalStyle.span_dto_value}>
+                            {dtoRoom.dto}% dto.
+                          </span>
+  
+                          <div>
+                            <span className={NewEventModalStyle.p_span_dto}>
+                              ${formateador.format(dtoRoom.prevPrice)}
+                            </span>{" "}
+                            <strong className={NewEventModalStyle.dto_price}>
+                              ${formateador.format(dtoRoom.newPrice)}
+                            </strong>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </p>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+              : <></>
+              }
+            
 
             <div className={NewEventModalStyle.container_buttons}>
               {
                 client._id == event.client ? <>
-                <button type="button" onClick={handleSave}>
+                <button type="button" style={{backgroundColor: "#545454"}} onClick={handleSave}>
                 Cancelar reserva
               </button>
               <button onClick={()=> onRequestClose()}>Aceptar</button>

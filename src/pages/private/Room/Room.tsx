@@ -170,6 +170,8 @@ const Room = () => {
                   price={room.priceBase}
                   nameRoom={room.name}
                   capacity={room.capacity}
+                  Width={room.Width}
+                  length={room.length}
                 />
               </div>
             </div>
