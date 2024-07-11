@@ -1,65 +1,69 @@
-/* Perfil.module.css */
-:root {
-    --color-primary: #9e2d49;
-    --color-secondary: #c6b89e;
-    --color-accent: #feffd5;
-    --color-background: #210110;
-    --color-input-bg: #450c1f;
-    --color-text: #d3c4a5;
-  }
-  
-  .container_perfil {
+.container {
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  padding: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  color: #262626;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup {
+  margin-bottom: 15px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    background-color: var(--color-background);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    margin-top: 2rem;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  .label {
-    color: var(--color-text);
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .input {
-    padding: 0.5rem;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--color-input-bg);
-    color: var(--color-text);
-    margin-top: 0.5rem;
-  }
-  
-  .input:focus {
-    outline: none;
-    box-shadow: 0 0 5px var(--color-accent);
-  }
-  
-  .button {
-    padding: 0.75rem;
-    margin-top: 1.5rem;
-    border: none;
-    border-radius: 5px;
-    background-color: var(--color-primary);
-    color: var(--color-text);
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .button:hover {
-    background-color: var(--color-secondary);
-  }
-  
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  color: #8e8e8e;
+  margin-bottom: 5px;
+}
+
+.input {
+  padding: 10px;
+  border: 1px solid #dbdbdb;
+  border-radius: 3px;
+  font-size: 16px;
+  background-color: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #a8a8a8;
+  outline: none;
+}
+
+.button {
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  background-color: #450c1f;
+  width: 100%;
+  color: #fff;
+  text-decoration: underline;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #9e2d49;
+  color: #fff;
+  outline: none;
+  box-shadow: none;
+}

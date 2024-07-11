@@ -4,6 +4,7 @@ import CarouselImage from "../../../../../components/CarouselImages/CarouselImag
 import { DtoRoom, IImage } from "../../../Rooms/services/Rooms.service";
 import CardStyles from "./css/Room.module.css";
 import { PrivateRoutes } from "../../../../../routes/routes";
+import formateador from "../../../../../utilities/formateador";
 
 interface PropsRoom {
   idRoom: string;
@@ -58,12 +59,6 @@ const Room: React.FC<PropsRoom> = ({
     });
   };
 
-  const formateador = new Intl.NumberFormat("es-ES", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).tagName !== 'BUTTON') {
       setIsInfoDto(!isInfoDto);
@@ -93,7 +88,7 @@ const Room: React.FC<PropsRoom> = ({
           {infoElement(
             "Precio",
             <span className={CardStyles.span_inf}>
-              $<strong>{formateador.format(price)}</strong>
+              <strong>{formateador.format(price)}</strong>
             </span>
           )}
           <div className={CardStyles.container_info_dtos}>

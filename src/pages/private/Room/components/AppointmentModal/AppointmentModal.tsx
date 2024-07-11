@@ -14,6 +14,7 @@ import { es } from "date-fns/locale";
 import { useAppSelector } from "../../../../../redux/hooks";
 import { IClientID } from "../../../../../redux/slices/ClientID.slice";
 import { clientByID, IClient } from "../../../../../services/Auth.service";
+import formateador from "../../../../../utilities/formateador";
 
 interface NewEventModalProps {
   isOpen: boolean;
@@ -102,12 +103,6 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
       alert("No puedes cancelar el turno, faltan menos de 24 horas.")
     }
   };
-
-  const formateador = new Intl.NumberFormat("es-ES", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
 
   const capitalizeFirstLetter = (string: string): string => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -200,7 +195,7 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                       {dtoRoom == null ? (
                         <>
                           <strong className={NewEventModalStyle.dto_price}>
-                            ${formateador.format(inputValuePrice)}
+                            {formateador.format(inputValuePrice)}
                           </strong>
                         </>
                       ) : (
@@ -211,10 +206,10 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   
                           <div>
                             <span className={NewEventModalStyle.p_span_dto}>
-                              ${formateador.format(dtoRoom.prevPrice)}
+                              {formateador.format(dtoRoom.prevPrice)}
                             </span>{" "}
                             <strong className={NewEventModalStyle.dto_price}>
-                              ${formateador.format(dtoRoom.newPrice)}
+                              {formateador.format(dtoRoom.newPrice)}
                             </strong>
                           </div>
                         </div>

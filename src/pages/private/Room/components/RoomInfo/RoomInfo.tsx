@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { IImage, IRoom } from "../../../Rooms/services/Rooms.service";
 import RoomInfoStyle from "./css/RoomInfo.module.css";
 import CarouselImage from "./components/CarouselImages/CarouselImage";
+import formateador from "../../../../../utilities/formateador";
 
 interface RoomInfoProps {
   room: IRoom;
@@ -25,11 +26,6 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
     );
   };
 
-  const formateador = new Intl.NumberFormat("es-ES", {
-    style: "decimal",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
 
   return (
     <div className={RoomInfoStyle.container_room}>
@@ -47,7 +43,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
             {room.Width == room.length ? datailInfo("Medidas:", `${room.length} m²`) : datailInfo("Medidas:", `${room.length}x${room.Width} m`) }
             {datailInfo("Capacidad máxima de personas:", `${room.capacity}`)}
             {room.phone.length > 0 ? datailInfo("Contacto:", room.phone) : datailInfo("Contacto", "+ 54 9 11 5632 1826")}
-            {datailInfo("Precio:", `$ ${formateador.format(room.priceBase)}`)}
+            {datailInfo("Precio:", `${formateador.format(room.priceBase)}`)}
             {
               room.dtoRoomHours.length > 0 ? <div className={RoomInfoStyle.container_dtos}>
                 <p className={RoomInfoStyle.container_dtos_p}>Off</p>

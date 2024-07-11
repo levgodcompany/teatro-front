@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../../../redux/hooks";
 import { IClientID } from "../../../../../redux/slices/ClientID.slice";
 import { Header } from "../../../../../components/Header/Header";
@@ -6,6 +6,7 @@ import { Header } from "../../../../../components/Header/Header";
 import PerfilStyle from "./Perfil.module.css";
 import { clientByIDHttps, editClientByID } from "../../services/Client.service";
 import { IClient } from "../../../Rooms/services/Rooms.service";
+import Footer from "../../../../../components/Footer/Footer";
 
 interface FormData {
   name: string;
@@ -58,67 +59,73 @@ const Perfil = () => {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     editClientByID(client._id, {
-        name: `${formData.name};${formData.lastName}`,
-        phone: formData.phone,
-        password: formData.password.length > 0 ? formData.password : client.password 
-    })
+      name: `${formData.name};${formData.lastName}`,
+      phone: formData.phone,
+      password: formData.password.length > 0 ? formData.password : client.password 
+    });
   };
 
   return (
     <>
       <Header />
 
-      <div className={PerfilStyle.container_perfil}>
-        <form onSubmit={handleSubmit}>
-          <label className={PerfilStyle.label}>
-            Nombre:
+      <div className={PerfilStyle.container}>
+        <h2 className={PerfilStyle.title}>Editar Perfil</h2>
+        <form onSubmit={handleSubmit} className={PerfilStyle.form}>
+          <div className={PerfilStyle.formGroup}>
+            <label className={PerfilStyle.label} htmlFor="name">Nombre:</label>
             <input
               className={PerfilStyle.input}
               type="text"
+              id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
               autoComplete="off"
             />
-          </label>
-          <label className={PerfilStyle.label}>
-            Apellido:
+          </div>
+          <div className={PerfilStyle.formGroup}>
+            <label className={PerfilStyle.label} htmlFor="lastName">Apellido:</label>
             <input
               className={PerfilStyle.input}
               type="text"
+              id="lastName"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
               autoComplete="off"
             />
-          </label>
-          <label className={PerfilStyle.label}>
-            Celular:
+          </div>
+          <div className={PerfilStyle.formGroup}>
+            <label className={PerfilStyle.label} htmlFor="phone">Celular:</label>
             <input
               className={PerfilStyle.input}
               type="text"
+              id="phone"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
               autoComplete="off"
             />
-          </label>
-          <label className={PerfilStyle.label}>
-            Contraseña:
+          </div>
+          <div className={PerfilStyle.formGroup}>
+            <label className={PerfilStyle.label} htmlFor="password">Contraseña:</label>
             <input
               className={PerfilStyle.input}
-              type="text"
+              type="password"
+              id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               autoComplete="off"
             />
-          </label>
-          <button type="submit" className={PerfilStyle.button}>Editar</button>
+          </div>
+          <button type="submit" className={PerfilStyle.button}>Guardar Cambios</button>
         </form>
       </div>
+      <Footer />
     </>
   );
 };
