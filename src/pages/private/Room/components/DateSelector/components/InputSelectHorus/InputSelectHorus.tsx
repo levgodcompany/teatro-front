@@ -132,41 +132,41 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
           appointment: TimeInterval,
           daySelet: TimeInterval
         ): boolean {
-          const appStartHours = appointment.start.getHours();
-          const appEndHours = appointment.end.getHours();
-          const appEndMinutes = appointment.end.getMinutes();
-
-          const daySeletStartHours = daySelet.start.getHours();
-          const daySeletStartMinutes = daySelet.start.getMinutes();
-          const daySeletEndHours = daySelet.end.getHours();
-
-          if (
-            daySeletStartHours >= appStartHours &&
-            daySeletStartHours <= appEndHours
-          ) {
-            if (
-              daySeletStartHours == appEndHours &&
-              daySeletStartMinutes > appEndMinutes
-            ) {
-              return true;
-            }
-            return false;
+          const appStart = appointment.start;
+          const appEnd = appointment.end;
+          const daySeletStart = daySelet.start;
+          const daySeletEnd = daySelet.end;
+        
+          // Si la hora de fin de la cita es la misma que la hora de inicio del intervalo seleccionado, no hay conflicto.
+          if (appEnd.getTime() === daySeletStart.getTime()) {
+            return true;
           }
-
+        
+          // Verifica si la hora de inicio del intervalo seleccionado está dentro del rango de la cita.
           if (
-            daySeletEndHours >= appStartHours &&
-            daySeletEndHours <= appEndHours
+            daySeletStart >= appStart &&
+            daySeletStart < appEnd
           ) {
             return false;
           }
-
+        
+          // Verifica si la hora de fin del intervalo seleccionado está dentro del rango de la cita.
           if (
-            daySeletStartHours < appStartHours &&
-            daySeletEndHours > appEndHours
+            daySeletEnd > appStart &&
+            daySeletEnd <= appEnd
           ) {
             return false;
           }
-
+        
+          // Verifica si el intervalo seleccionado cubre completamente la cita.
+          if (
+            daySeletStart < appStart &&
+            daySeletEnd > appEnd
+          ) {
+            return false;
+          }
+        
+          // Si ninguna de las condiciones anteriores se cumple, entonces no hay un conflicto.
           return true;
         }
 
@@ -233,41 +233,41 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
         appointment: TimeInterval,
         daySelet: TimeInterval
       ): boolean {
-        const appStartHours = appointment.start.getHours();
-        const appEndHours = appointment.end.getHours();
-        const appEndMinutes = appointment.end.getMinutes();
-
-        const daySeletStartHours = daySelet.start.getHours();
-        const daySeletStartMinutes = daySelet.start.getMinutes();
-        const daySeletEndHours = daySelet.end.getHours();
-
-        if (
-          daySeletStartHours >= appStartHours &&
-          daySeletStartHours <= appEndHours
-        ) {
-          if (
-            daySeletStartHours == appEndHours &&
-            daySeletStartMinutes > appEndMinutes
-          ) {
-            return true;
-          }
-          return false;
+        const appStart = appointment.start;
+        const appEnd = appointment.end;
+        const daySeletStart = daySelet.start;
+        const daySeletEnd = daySelet.end;
+      
+        // Si la hora de fin de la cita es la misma que la hora de inicio del intervalo seleccionado, no hay conflicto.
+        if (appEnd.getTime() === daySeletStart.getTime()) {
+          return true;
         }
-
+      
+        // Verifica si la hora de inicio del intervalo seleccionado está dentro del rango de la cita.
         if (
-          daySeletEndHours >= appStartHours &&
-          daySeletEndHours <= appEndHours
+          daySeletStart >= appStart &&
+          daySeletStart < appEnd
         ) {
           return false;
         }
-
+      
+        // Verifica si la hora de fin del intervalo seleccionado está dentro del rango de la cita.
         if (
-          daySeletStartHours < appStartHours &&
-          daySeletEndHours > appEndHours
+          daySeletEnd > appStart &&
+          daySeletEnd <= appEnd
         ) {
           return false;
         }
-
+      
+        // Verifica si el intervalo seleccionado cubre completamente la cita.
+        if (
+          daySeletStart < appStart &&
+          daySeletEnd > appEnd
+        ) {
+          return false;
+        }
+      
+        // Si ninguna de las condiciones anteriores se cumple, entonces no hay un conflicto.
         return true;
       }
 

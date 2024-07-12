@@ -31,7 +31,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({ room }) => {
     <div className={RoomInfoStyle.container_room}>
       <div className={RoomInfoStyle.room_container_image_info}>
         <div className={RoomInfoStyle.room_images}>
-          <span className={RoomInfoStyle.type_room}>Estandar</span>
+          <span className={RoomInfoStyle.type_room}>{room.typeRoom}</span>
           <CarouselImage images={images} />
         </div>
         <div className={RoomInfoStyle.room_info}>

@@ -27,7 +27,6 @@ const Room = () => {
     phone: "",
     token: "",
   });
-  const [selectOptionFilter, setSelecOptionFilter] = useState<string>("Todo");
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -114,20 +113,13 @@ const Room = () => {
     setIsDateSelect(!isDateSelect);
   };
 
-  const filterClientShifts = (sel: any) => {
-    const val = sel.target.value;
-    if (val == "Todo") {
-      get();
-    } else {
-      const f = room.availableAppointments.filter(
+
+
+  const filterByClientIdShifts = () => {
+
+      return room.availableAppointments.filter(
         (a) => a.client == client._id
       );
-      setRoom({
-        ...room,
-        availableAppointments: f,
-      });
-    }
-    setSelecOptionFilter(sel.target.value);
   };
 
   return (
@@ -148,24 +140,11 @@ const Room = () => {
 
                 {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}
               </div>
-              <div className={RoomStyle.container_select}>
-                <select
-                  onChange={filterClientShifts}
-                  value={selectOptionFilter}
-                  className={RoomStyle.select}
-                >
-                  <option className={RoomStyle.select_option} value="Todo">
-                    Todo
-                  </option>
-                  <option className={RoomStyle.select_option} value="filt">
-                    Mis turnos
-                  </option>
-                </select>
-              </div>
+
               <div className={RoomStyle.room_calendar}>
                 <AppointmentCalendar
                   idClient={client._id}
-                  _appointments={room.availableAppointments}
+                  _appointments={filterByClientIdShifts()}
                   idRoom={room._id}
                   dto={room.dtoRoomHours}
                   price={room.priceBase}
