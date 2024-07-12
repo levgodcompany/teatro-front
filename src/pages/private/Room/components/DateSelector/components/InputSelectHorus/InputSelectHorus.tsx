@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import InputSelectHorusStyle from "./InputSelectHorus.module.css";
 import { IAppointment } from "../../../../../Rooms/services/Rooms.service";
+import HoursImage from "../../../../../../../assets/clock-svgrepo-com.svg";
 
 interface IDaysSel {
   day: number;
@@ -42,10 +43,10 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
 
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(()=> {
-    setTS(timeStart)
-    setTE(timeEnd)
-  }, [])
+  useEffect(() => {
+    setTS(timeStart);
+    setTE(timeEnd);
+  }, []);
 
   const generateTimeOptions = () => {
     const times = [];
@@ -134,11 +135,11 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
           const appStartHours = appointment.start.getHours();
           const appEndHours = appointment.end.getHours();
           const appEndMinutes = appointment.end.getMinutes();
-  
+
           const daySeletStartHours = daySelet.start.getHours();
           const daySeletStartMinutes = daySelet.start.getMinutes();
           const daySeletEndHours = daySelet.end.getHours();
-  
+
           if (
             daySeletStartHours >= appStartHours &&
             daySeletStartHours <= appEndHours
@@ -151,21 +152,21 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
             }
             return false;
           }
-  
+
           if (
             daySeletEndHours >= appStartHours &&
             daySeletEndHours <= appEndHours
           ) {
             return false;
           }
-  
+
           if (
             daySeletStartHours < appStartHours &&
             daySeletEndHours > appEndHours
           ) {
             return false;
           }
-  
+
           return true;
         }
 
@@ -295,55 +296,67 @@ const InputSelectHorus: React.FC<IInputSelectHoursPorps> = ({
   };
 
   return (
-    <div className={InputSelectHorusStyle.container}>
-      <div className={InputSelectHorusStyle.container_inputs}>
-        <div className={InputSelectHorusStyle.container_time}>
-          <input
-            id="timeInput"
-            type="text"
-            value={inputValueTimeStart}
-            onChange={handleInputChangeTimeStart}
-            className={InputSelectHorusStyle.input_time}
-            autoComplete="off"
+    <div>
+      <div className={InputSelectHorusStyle.container}>
+        <div className={InputSelectHorusStyle.containerImageHour}>
+          <img
+            className={InputSelectHorusStyle.imageHour}
+            src={HoursImage}
+            alt="Clock"
           />
-          {showOptionsTimeStart && (
-            <ul className={InputSelectHorusStyle.options}>
-              {filteredOptions.map((option, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleOptionClickTimeStart(option)}
-                  className={InputSelectHorusStyle.option}
-                >
-                  {option}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
-        <div className={InputSelectHorusStyle.container_time_end}>
-          <input
-            id="timeInput"
-            type="text"
-            value={inputValueTimeEnd}
-            onChange={handleInputChangeTimeEnd}
-            className={InputSelectHorusStyle.input_time}
-            autoComplete="off"
-          />
-          {showOptionsTimeEnd && (
-            <ul className={InputSelectHorusStyle.options}>
-              {filteredOptions.map((option, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleOptionClickTimeEnd(option)}
-                  className={InputSelectHorusStyle.option}
-                >
-                  {option}
-                </li>
-              ))}
-            </ul>
-          )}
+        <div className={InputSelectHorusStyle.containerInputs}>
+          <div className={InputSelectHorusStyle.containerTime}>
+            <input
+              id="timeInputStart"
+              type="text"
+              value={inputValueTimeStart}
+              onChange={handleInputChangeTimeStart}
+              className={InputSelectHorusStyle.inputTime}
+              autoComplete="off"
+              placeholder="Hora de inicio"
+            />
+            {showOptionsTimeStart && (
+              <ul className={InputSelectHorusStyle.options}>
+                {filteredOptions.map((option, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleOptionClickTimeStart(option)}
+                    className={InputSelectHorusStyle.option}
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className={InputSelectHorusStyle.containerTimeEnd}>
+            <input
+              id="timeInputEnd"
+              type="text"
+              value={inputValueTimeEnd}
+              onChange={handleInputChangeTimeEnd}
+              className={InputSelectHorusStyle.inputTime}
+              autoComplete="off"
+              placeholder="Hora de fin"
+            />
+            {showOptionsTimeEnd && (
+              <ul className={InputSelectHorusStyle.options}>
+                {filteredOptions.map((option, index) => (
+                  <li
+                    key={index}
+                    onClick={() => handleOptionClickTimeEnd(option)}
+                    className={InputSelectHorusStyle.option}
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
+
       {error && <p className={InputSelectHorusStyle.error}>{error}</p>}
     </div>
   );

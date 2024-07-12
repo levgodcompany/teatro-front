@@ -1,43 +1,77 @@
-.contianer {
-  height: 324px;
+/* ConflitDays Styles */
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
-.contianer_day {
-  font-size: 12px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
+.container p {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
 }
 
-.contianer_day_input {
+.containerDay {
+  margin-bottom: 20px;
+}
+
+.containerDayInput {
+  margin-bottom: 10px;
+}
+
+.containerTime {
   display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  padding: 10px 0;
+  gap: 10px;
 }
 
-.span_reservation {
+.spanReservation {
+  display: block;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #333;
 }
 
-.contianer_list {
-  list-style-type: none;
-  padding: 5px;
-  overflow-y: auto;
-  background-color: #fff;
-  color: #666;
+.containerList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .list {
+  margin-top: 5px;
+  color: #555;
 }
 
-.container_buttons {
+
+/* Buttons */
+.containerButtons {
   display: flex;
-  gap: 45px;
-  flex-direction: row-reverse;
+  justify-content: space-between;
 }
 
-.container_buttons > button {
-  background-color: #9e2d49;
-  width: 100%;
+.buttonReserve,
+.buttonCancel {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.buttonReserve {
+  background: #9e2d49;
   color: #fff;
+}
+
+.buttonCancel {
+
+  background-color: #545454;
+    color: #feffd5;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
 }

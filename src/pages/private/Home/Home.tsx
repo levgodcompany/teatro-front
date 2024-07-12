@@ -82,7 +82,7 @@ const Home = () => {
     <>
     {
       isLoading ? <Loading /> : <><Header />
-      <main>
+      <main className={HomeStyle.main}>
         {local ? (
           <>
             <div

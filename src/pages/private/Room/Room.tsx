@@ -164,6 +164,7 @@ const Room = () => {
               </div>
               <div className={RoomStyle.room_calendar}>
                 <AppointmentCalendar
+                  idClient={client._id}
                   _appointments={room.availableAppointments}
                   idRoom={room._id}
                   dto={room.dtoRoomHours}

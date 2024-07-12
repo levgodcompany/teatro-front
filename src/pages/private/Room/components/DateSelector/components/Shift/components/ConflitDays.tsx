@@ -115,7 +115,6 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
       addNewAppointment(d.start, d.end)
     })
     save()
-    close()
   }
 
   const addDaySelect = (day: IDaysSelConflict) => {
@@ -132,32 +131,41 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
   }
 
   return (
-    <div className={ConflitDaysStyle.contianer}>
-      <p>Conflictos con los siguientes horarios </p>
-        {daysAppointments.map((conflitView, index) => (
-          <div className={ConflitDaysStyle.contianer_day} key={index} style={{ marginBottom: "20px" }}>
-            <div className={ConflitDaysStyle.contianer_day_input}>
-                <span>Día: <strong>{conflitView.daySelect.day}</strong></span>
-                <div className={ConflitDaysStyle.container_time}>
-                  <InputSelectHorus shiftsReservations={conflitView.appointmentReservation} daySelects={addDaySelect} dataDay={conflitView.daySelect.dataDay} timeEnd={conflitView.dayInput.end} timeStart={conflitView.dayInput.start} />
-
-              </div>
+    <div className={ConflitDaysStyle.container}>
+      <p>Conflictos con los siguientes horarios</p>
+      {daysAppointments.map((conflitView, index) => (
+        <div className={ConflitDaysStyle.containerDay} key={index}>
+          <div className={ConflitDaysStyle.containerDayInput}>
+            <span>
+              Día: <strong>{conflitView.daySelect.day}</strong>
+            </span>
+            <div className={ConflitDaysStyle.containerTime}>
+              <InputSelectHorus
+                shiftsReservations={conflitView.appointmentReservation}
+                daySelects={addDaySelect}
+                dataDay={conflitView.daySelect.dataDay}
+                timeEnd={conflitView.dayInput.end}
+                timeStart={conflitView.dayInput.start}
+              />
             </div>
-            <span className={ConflitDaysStyle.span_reservation}>Turnos reservados</span>
-            <ul className={ConflitDaysStyle.contianer_list}>
-              {conflitView.appointmentReservation.map((appointment) => (
-                <li className={ConflitDaysStyle.list} key={appointment._id}>
-                  {formatTime(appointment.start)} - {formatTime(appointment.end)}
-                </li>
-              ))}
-            </ul>
           </div>
-        ))}
-
-        <div className={ConflitDaysStyle.container_buttons}>
-          <button onClick={addShifts}>Guardar</button>
-          
+          <span className={ConflitDaysStyle.spanReservation}>
+            Turnos reservados
+          </span>
+          <ul className={ConflitDaysStyle.containerList}>
+            {conflitView.appointmentReservation.map((appointment) => (
+              <li className={ConflitDaysStyle.list} key={appointment._id}>
+                {formatTime(appointment.start)} - {formatTime(appointment.end)}
+              </li>
+            ))}
+          </ul>
         </div>
+      ))}
+  
+      <div className={ConflitDaysStyle.containerButtons}>
+      <button className={ConflitDaysStyle.buttonCancel} onClick={close}>Cancelar</button>
+        <button className={ConflitDaysStyle.buttonReserve} onClick={addShifts}>Guardar</button>
+      </div>
     </div>
   );
 };

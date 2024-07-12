@@ -3,6 +3,7 @@
   color: #210110;
   font-family: Arial, sans-serif;
   padding: 20px;
+  min-height: 100vh;
 }
 
 .container_rooms {

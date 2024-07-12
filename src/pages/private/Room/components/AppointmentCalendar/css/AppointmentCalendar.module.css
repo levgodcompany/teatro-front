@@ -1,8 +1,3 @@
-/* src/components/css/AppointmentCalendar.module.css */
-.container {
-
-}
-
 .header {
   margin-bottom: 10px;
 }
@@ -27,6 +22,20 @@
 .viewSelect {
   display: flex;
   align-items: center;
+}
+
+.div_event {
+  width: 10px;
+  height: 10px;
+  background-color: #9e2d49;
+  border-radius: 50%;
+}
+
+.div_event_not {
+  width: 10px;
+  height: 10px;
+  background-color: #ff4d4d;
+  border-radius: 50%;
 }
 
 .select {

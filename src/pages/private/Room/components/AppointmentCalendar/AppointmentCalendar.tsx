@@ -21,6 +21,7 @@ interface CalendarProps {
   dto: DtoRoom[];
   length: string;
   Width: string;
+  idClient: string;
 }
 
 // Configuración del localizador de date-fns
@@ -42,7 +43,8 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
   dto,
   price,
   Width,
-  length
+  length,
+  idClient,
 }) => {
   // Event, variable para poder mostrar todos los eventos que hay
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -57,20 +59,22 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
 
   const [isConfCancel, setIsConfCancel] = useState(false);
 
-  const [confCancel, setConfCancel] = useState<{idRoom: string, idApp: string}>({
+  const [confCancel, setConfCancel] = useState<{
+    idRoom: string;
+    idApp: string;
+  }>({
     idApp: "",
-    idRoom: ""
+    idRoom: "",
   });
 
   const cancelShifts = async (idRoom: string, id: string) => {
-    setConfCancel({idApp: id, idRoom:idRoom});
-    setIsConfCancel(true)
-    
+    setConfCancel({ idApp: id, idRoom: idRoom });
+    setIsConfCancel(true);
   };
 
-  const onClickConfCancelConf = ()=> {
-    setIsConfCancel(!isConfCancel)
-  }
+  const onClickConfCancelConf = () => {
+    setIsConfCancel(!isConfCancel);
+  };
 
   // Seleccionamos un evento
   const [selectedAppointment, setSelectedAppointment] = useState<IAppointment>({
@@ -91,7 +95,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
   const handleEventClick = (event: CalendarEvent) => {
     const appointment = appointments.find(
       (app) =>
-        app.title === event.title &&
+        app.client === event.title?.toString().split("|")[0] &&
         app.start.getTime() === (event.start as Date).getTime()
     );
 
@@ -104,13 +108,13 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
 
   const handleDeleteEvent = async (id: string) => {
     setModalIsOpen(false);
-    cancelShifts(idRoom, id);    
+    cancelShifts(idRoom, id);
   };
 
   const resultDeletEvent = (apps: IAppointment[]) => {
-    setIsConfCancel(false)
+    setIsConfCancel(false);
     const _events: CalendarEvent[] = apps.map((appointment) => ({
-      title: appointment.title,
+      title: `${appointment.client}|${appointment.title}`,
       start: new Date(appointment.start),
       end: new Date(appointment.end),
       allDay: false,
@@ -137,12 +141,12 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     }));
     setAppointments(app);
     setEvents([..._events]);
-  }
+  };
 
   useEffect(() => {
     const _app = _appointments.filter((a) => a.available == true);
     const _events: CalendarEvent[] = _app.map((appointment) => ({
-      title: appointment.title,
+      title: `${appointment.client}|${appointment.title}`,
       start: new Date(appointment.start),
       end: new Date(appointment.end),
       allDay: false,
@@ -172,13 +176,9 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     setAppointments([...app]);
   }, [_appointments]);
 
-  const eventPropGetter = (event: CalendarEvent) => {
-    let backgroundColor = "#B0BEC5";
-    if (event.resource.client && event.resource.client.length > 0) {
-      backgroundColor = "#F44336";
-    } else if (event.resource.available) {
-      backgroundColor = "#4CAF50";
-    }
+  const eventPropGetter = (_event: CalendarEvent) => {
+    let backgroundColor = "#fff";
+
     return {
       style: { backgroundColor },
     };
@@ -198,7 +198,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     time: "Hora",
     event: "Evento",
     noEventsInRange: "No hay eventos en este rango.",
-    showMore: (total: any) => `+ Ver más (${total})`,
+    showMore: (total: any) =>( `+ Ver más (${total})`),
   };
 
   // Estilos personalizados para los botones
@@ -264,7 +264,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
               className={AppointmentCalendarStyle.select_option}
               value="week"
             >
-             Semana
+              Semana
             </option>
             <option
               className={AppointmentCalendarStyle.select_option}
@@ -284,11 +284,30 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     );
   };
 
+  const eventCalss = (eventTitle: string) => {
+    const isClientEvent = eventTitle.split("|")[0] === idClient;
+    return isClientEvent
+      ? AppointmentCalendarStyle.div_event
+      : AppointmentCalendarStyle.div_event_not;
+  };
+  const eventClient = (eventTitle: string) => {
+    const [firstName, lastName] = eventTitle.split("|")[1].split(";");
+    return [firstName, lastName];
+  };
+
   return (
     <>
-    {
-            isConfCancel ? <ConfirCancelReservation resHTTL={resultDeletEvent} cancel={onClickConfCancelConf} load={()=> {}} idRoom={confCancel.idRoom} appointmentId={confCancel.idApp} /> : <></>
-          }
+      {isConfCancel ? (
+        <ConfirCancelReservation
+          resHTTL={resultDeletEvent}
+          cancel={onClickConfCancelConf}
+          load={() => {}}
+          idRoom={confCancel.idRoom}
+          appointmentId={confCancel.idApp}
+        />
+      ) : (
+        <></>
+      )}
       <div className={AppointmentCalendarStyle.container}>
         <div className={AppointmentCalendarStyle.header}></div>
         <Calendar
@@ -321,8 +340,25 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
               );
             },
             event: ({ event }) => (
-              <div style={{ fontSize: "10px" }}>
-                <strong style={{ color: "#fff" }}>{`${event.title?.toString().split(";")[0]} ${event.title?.toString().split(";")[1] ? event.title?.toString().split(";")[1] : ""}`}</strong>
+              <div
+                style={{
+                  fontSize: "10px",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: "5px",
+                }}
+              >
+                {event.title ? (
+                  <>
+                    <div className={eventCalss(event.title.toString())}></div>
+                    <strong style={{ fontWeight: "500" }}>{`${
+                      eventClient(event.title.toString())
+                    }`}</strong>
+                  </>
+                ) : (
+                  <></>
+                )}
               </div>
             ),
           }}

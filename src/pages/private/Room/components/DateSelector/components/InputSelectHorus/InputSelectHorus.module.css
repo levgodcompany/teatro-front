@@ -1,100 +1,71 @@
-
+/* InputSelectHorus Styles */
 .container {
   display: flex;
-  flex-direction: column;
-  align-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.containerImageHour {
+  display: flex;
   align-items: center;
 }
 
-.container_inputs {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 20px;
+.imageHour {
+  width: 20px;
+  height: 20px;
 }
 
-.container_time {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .container_time_end {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .input_time {
-    padding: 8px;
-    border: none;
-    font-size: 16px;
-    border-radius: 1px;
-    border-bottom: 1px solid #ccc;
-    width: 84px;
-    font-size: 12px;
-    color: #3c4043;
-  }
+.containerInputs {
+  display: flex;
+  gap: 10px;
+}
 
-  .options {
-    list-style-type: none;
-    padding: 0;
-    margin: 5px 0 0;
-    border-top: none;
-    overflow-y: auto;
-    width: 120px;
-    max-height: 180px;
+.containerTime,
+.containerTimeEnd {
+  position: relative;
+  width: 100%;
+}
 
-  }
+.inputTime {
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 12px;
+  transition: border-color 0.2s;
+}
 
-  .options_list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    border: 1px solid #ccc;
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    max-height: 150px;
-    overflow-y: auto;
-    background-color: #fff;
-    position: absolute;
-    width: 100%;
-    z-index: 1;
-  }
-  
-  .options_list li {
-    padding: 3px 10px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .options_list > li > span {
-    /* color: #0b0c0c; */
-    font-size: 14px;
-  }
-  
-  .options_list li:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .options_list li.disabled_option {
-    color: #999;
-    cursor: not-allowed;
-  }
+.inputTime:focus {
+  border-color: #9e2d49;
+}
 
-  .option {
-    padding: 8px;
-    cursor: pointer;
-    background-color: #f9f9f9;
-    font-size: 12px;
-  }
-  
-  .option:hover {
-    background-color: #e9e9e9;
-  }
+.options {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
-  .error {
-    font-size: 10px;
-    color: #ff4747;
-  }
+.option {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.option:hover {
+  background: #f0f0f0;
+}
+
+.error {
+  color: red;
+  font-size: 0.9em;
+}

@@ -178,6 +178,17 @@ const Shift: React.FC<IShiftProps> = ({
     }
   };
 
+  const handleClickDeleteDay = (day:number)=> {
+    if(dataDaySelects.length > 0) {
+       const filt = dataDaySelects.filter(d=> d.day != day);
+
+       setDataDaySelects(filt)
+
+    }
+    updateDay(day)
+  }
+
+
   const handleOptionClickTimeStart = (value: string) => {
     setInputValueTimeStart(value);
     setShowOptionsTimeStart(false);
@@ -255,6 +266,48 @@ const Shift: React.FC<IShiftProps> = ({
     });
   };
 
+  function hasHourConflict(
+    appointment: IAppointment,
+    daySelet: IDaysSel
+  ): boolean {
+    const appStart = appointment.start;
+    const appEnd = appointment.end;
+    const daySeletStart = daySelet.start;
+    const daySeletEnd = daySelet.end;
+  
+    // Si la hora de fin de la cita es la misma que la hora de inicio del intervalo seleccionado, no hay conflicto.
+    if (appEnd.getTime() === daySeletStart.getTime()) {
+      return true;
+    }
+  
+    // Verifica si la hora de inicio del intervalo seleccionado está dentro del rango de la cita.
+    if (
+      daySeletStart >= appStart &&
+      daySeletStart < appEnd
+    ) {
+      return false;
+    }
+  
+    // Verifica si la hora de fin del intervalo seleccionado está dentro del rango de la cita.
+    if (
+      daySeletEnd > appStart &&
+      daySeletEnd <= appEnd
+    ) {
+      return false;
+    }
+  
+    // Verifica si el intervalo seleccionado cubre completamente la cita.
+    if (
+      daySeletStart < appStart &&
+      daySeletEnd > appEnd
+    ) {
+      return false;
+    }
+  
+    // Si ninguna de las condiciones anteriores se cumple, entonces no hay un conflicto.
+    return true;
+  }
+
   const reservation = async () => {
     // Validar el formato con regex
     if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeStart)) {
@@ -297,57 +350,11 @@ const Shift: React.FC<IShiftProps> = ({
         }
       }
 
-      interface TimeInterval {
-        start: Date;
-        end: Date;
-      }
-
-      function hasHourConflict(
-        appointment: TimeInterval,
-        daySelet: TimeInterval
-      ): boolean {
-        const appStartHours = appointment.start.getHours();
-        const appEndHours = appointment.end.getHours();
-        const appEndMinutes = appointment.end.getMinutes();
-
-        const daySeletStartHours = daySelet.start.getHours();
-        const daySeletStartMinutes = daySelet.start.getMinutes();
-        const daySeletEndHours = daySelet.end.getHours();
-
-        if (
-          daySeletStartHours >= appStartHours &&
-          daySeletStartHours <= appEndHours
-        ) {
-          if (
-            daySeletStartHours == appEndHours &&
-            daySeletStartMinutes > appEndMinutes
-          ) {
-            return true;
-          }
-          return false;
-        }
-
-        if (
-          daySeletEndHours >= appStartHours &&
-          daySeletEndHours <= appEndHours
-        ) {
-          return false;
-        }
-
-        if (
-          daySeletStartHours < appStartHours &&
-          daySeletEndHours > appEndHours
-        ) {
-          return false;
-        }
-
-        return true;
-      }
 
       let dayConflic: IDaysSelConflict[] = [];
       function filterNonConflictingIntervals(
-        appointmentsInternal: TimeInterval[],
-        dataDaySelectsInternal: TimeInterval[]
+        appointmentsInternal: IAppointment[],
+        dataDaySelectsInternal: IDaysSel[]
       ): IDaysSelConflict[] {
         let dayNotConflic: IDaysSelConflict[] = [];
         dataDaySelectsInternal.forEach((d) => {
@@ -448,64 +455,72 @@ const Shift: React.FC<IShiftProps> = ({
   };
   const closeConflict = () => {
     setIsOpenConflict(false);
+    setIsSave(false);
+    setDayConflict([]);
+  };
+
+  const closeSaveConf = () => {
+    setIsOpenConflict(false);
   };
 
   const save = () => {
     setIsSave(true);
+    closeSaveConf()
+
   };
   return (
-    <div className={`${ShiftStyle.modal_overlay}`}>
-      <div className={`${ShiftStyle.modal} ${ShiftStyle.modal_overlay}`}>
-        <div className={ShiftStyle.container_form}>
+    <div className={ShiftStyle.modalOverlay}>
+      <div className={ShiftStyle.modal}>
+        <div className={ShiftStyle.containerForm}>
           {isOpenConflict ? (
-            <>
-              <ConflitDays
-                save={save}
-                close={closeConflict}
-                addNewAppointment={addNewAppointment}
-                roomId={room._id}
-                conflicts={dayConflict}
-              />
-            </>
+            <ConflitDays
+              save={save}
+              close={closeConflict}
+              addNewAppointment={addNewAppointment}
+              roomId={room._id}
+              conflicts={dayConflict}
+            />
           ) : (
             <>
-              <div className={ShiftStyle.from_title}>
-                <span>{client.name.split(";")[0]} {client.name.split(";")[1] != null || client.name.split(";")[1] != undefined ? client.name.split(";")[1] : "" }</span>
+              <div className={ShiftStyle.formTitle}>
+                <span>
+                  {client.name.split(";")[0]} {client.name.split(";")[1] ?? ""}
+                </span>
               </div>
 
-              <div className={ShiftStyle.container_days_select}>
+              <div className={ShiftStyle.containerDaysSelect}>
                 {days
                   .sort((a, b) => a - b)
                   .map((d) => (
-                    <span className={ShiftStyle.container_day}>
+                    <span key={d} className={ShiftStyle.containerDay}>
                       <span className={ShiftStyle.day}>{d}</span>
                       <span
-                        className={ShiftStyle.close_day}
-                        onClick={() => updateDay(d)}
+                        className={ShiftStyle.closeDay}
+                        onClick={() => handleClickDeleteDay(d)}
                       >
-                        {" "}
-                        <span>x</span>
+                        x
                       </span>
                     </span>
                   ))}
               </div>
 
-              <div className={ShiftStyle.date_start}>
-                <div className={ShiftStyle.container_image_hour}>
+              <div className={ShiftStyle.dateStart}>
+                <div className={ShiftStyle.containerImageHour}>
                   <img
-                    className={ShiftStyle.image_hour}
+                    className={ShiftStyle.imageHour}
                     src={HoursImage}
                     alt="Clock"
                   />
                 </div>
-                <div className={ShiftStyle.container_time}>
+                <div className={ShiftStyle.containerTime}>
                   <input
-                    id="timeInput"
+                    id="timeInputStart"
                     type="text"
                     value={inputValueTimeStart}
                     onChange={handleInputChangeTimeStart}
-                    className={ShiftStyle.input_time}
+                    className={ShiftStyle.inputTime}
                     autoComplete="off"
+                    placeholder="Hora de inicio"
                   />
                   {showOptionsTimeStart && (
                     <ul className={ShiftStyle.options}>
@@ -521,15 +536,16 @@ const Shift: React.FC<IShiftProps> = ({
                     </ul>
                   )}
                 </div>
-                <span className={ShiftStyle.space_time}>-</span>
-                <div className={ShiftStyle.container_time_end}>
+                <span className={ShiftStyle.spaceTime}>-</span>
+                <div className={ShiftStyle.containerTimeEnd}>
                   <input
-                    id="timeInput"
+                    id="timeInputEnd"
                     type="text"
                     value={inputValueTimeEnd}
                     onChange={handleInputChangeTimeEnd}
-                    className={ShiftStyle.input_time}
+                    className={ShiftStyle.inputTime}
                     autoComplete="off"
+                    placeholder="Hora de fin"
                   />
                   {showOptionsTimeEnd && (
                     <ul className={ShiftStyle.options}>
@@ -548,10 +564,10 @@ const Shift: React.FC<IShiftProps> = ({
               </div>
               {error && <p className={ShiftStyle.error}>{error}</p>}
 
-              <div className={ShiftStyle.container_capacity_max}>
-                <div className={ShiftStyle.container_image_hour}>
+              <div className={ShiftStyle.containerCapacityMax}>
+                <div className={ShiftStyle.containerImageHour}>
                   <img
-                    className={ShiftStyle.image_hour}
+                    className={ShiftStyle.imageHour}
                     src={CapacityClientImage}
                     alt="users"
                   />
@@ -559,10 +575,10 @@ const Shift: React.FC<IShiftProps> = ({
                 <span>Capacidad para {room.capacity} personas</span>
               </div>
 
-              <div className={ShiftStyle.container_capacity_max}>
-                <div className={ShiftStyle.container_image_hour}>
+              <div className={ShiftStyle.containerCapacityMax}>
+                <div className={ShiftStyle.containerImageHour}>
                   <img
-                    className={ShiftStyle.image_hour}
+                    className={ShiftStyle.imageHour}
                     src={DimeImage}
                     width={15}
                     alt="users"
@@ -571,43 +587,40 @@ const Shift: React.FC<IShiftProps> = ({
                 <span>
                   Medidas{" "}
                   <strong>
-                    {room.length == room.Width
+                    {room.length === room.Width
                       ? `${room.length} m²`
                       : `${room.length}x${room.Width} m`}
                   </strong>
                 </span>
               </div>
 
-              <div className={ShiftStyle.container_client}>
-                <div className={ShiftStyle.autocomplete_select}>
-                  <div className={ShiftStyle.container_availability}>
+              <div className={ShiftStyle.containerClient}>
+                <div className={ShiftStyle.autocompleteSelect}>
+                  <div className={ShiftStyle.containerAvailability}>
                     {room.dtoRoomHours.map((dto) => (
-                      <p className={ShiftStyle.p_dto}>
-                        <>
-                          <span className={ShiftStyle.dtp}>{dto.dto}% OFF</span>{" "}
-                          -{" "}
-                          <span className={ShiftStyle.dto_hours}>
-                            {dto.startHour} / {dto.endHour}
-                          </span>
-                        </>
+                      <p key={dto.startHour} className={ShiftStyle.pDto}>
+                        <span className={ShiftStyle.dtp}>{dto.dto}% OFF</span> -{" "}
+                        <span className={ShiftStyle.dtoHours}>
+                          {dto.startHour} / {dto.endHour}
+                        </span>
                       </p>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className={ShiftStyle.container_buttons}>
+              <div className={ShiftStyle.containerButtons}>
                 <button
-                  className={ShiftStyle.button_reserver}
-                  onClick={reservation}
-                >
-                  Reservar
-                </button>
-                <button
-                  className={ShiftStyle.button_cancel}
+                  className={ShiftStyle.buttonCancel}
                   onClick={onRequestClose}
                 >
                   Cancelar
+                </button>
+                <button
+                  className={ShiftStyle.buttonReserve}
+                  onClick={reservation}
+                >
+                  Reservar
                 </button>
               </div>
             </>
