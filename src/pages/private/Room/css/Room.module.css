@@ -10,11 +10,19 @@ background-color: #c6b89e;
     
 }
 
-.room_calendar_reservation > p {
-    margin-left: 20px;
-    text-decoration: underline;
-    color: #000;
+.room_calendar_reservation  {
+    text-align: center;
+}
+
+.room_calendar_reservation_button {
+    padding: 14px 22px;
+    background-color: #9e2d49;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    margin: 10px;
 }
 
 .container_select {

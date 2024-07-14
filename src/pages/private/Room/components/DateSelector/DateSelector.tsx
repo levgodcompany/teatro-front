@@ -80,7 +80,7 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
     );
     const firstDayOfMonth = new Date(selectedYear, selectedMonth, 1).getDay(); // 0 = Sunday, 1 = Monday, ...
     const blanks = Array.from({ length: firstDayOfMonth }, (_, i) => (
-      <td key={`blank-${i}`} className={DateSelectorStyle.blank}></td>
+      <td key={`blank-${i}`} className={`${DateSelectorStyle.blank} ${DateSelectorStyle.item}`}></td>
     )
   
   );
@@ -106,7 +106,7 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
           <td
             key={index}
             className={
-              selectedDays.includes(day) ? `${DateSelectorStyle.selected}` : ""
+              selectedDays.includes(day) ? `${DateSelectorStyle.selected} ${DateSelectorStyle.item}` : `${DateSelectorStyle.item}`
             }
             onClick={() => handleDayClick(day)}
           >

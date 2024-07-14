@@ -1,5 +1,3 @@
-
-
 /* Estilos generales */
 .date_selector {
   font-family: Arial, sans-serif;
@@ -62,7 +60,6 @@
   border-radius: 10px;
 }
 
-
 .header_caledar {
   display: flex;
   align-items: center;
@@ -73,7 +70,6 @@
 .calendar {
   border-collapse: collapse;
   width: 100%;
-  background-color: #feffd5;
 }
 
 /* Estilos para las celdas del calendario */
@@ -88,8 +84,8 @@
 /* Estilos para los encabezados del calendario */
 .calendar th {
   background-color: #d3c4a5;
-    color: #fff;
-    font-weight: 800;
+  color: #fff;
+  font-weight: 800;
 }
 
 /* Estilos para las celdas del calendario */
@@ -99,13 +95,17 @@
 
 /* Estilos para las celdas en blanco del calendario */
 .calendar td.blank {
-  background-color: #f8f8f8;
+  background-color: #fff;
 }
 
 /* Estilos para las celdas seleccionadas del calendario */
 .calendar td.selected {
   background-color: #9e2d49;
-    color: #fff;
+  color: #fff;
+}
+
+.item {
+  background-color: #feffd5;
 }
 
 /* Contenedor de botones */
@@ -149,8 +149,7 @@
   margin-bottom: 4px;
 }
 
-
-.container_date{
+.container_date {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -161,8 +160,7 @@
   box-shadow: 0px 0px 6px 4px #c3c1c159;
 }
 
-
-.container_main{ 
+.container_main {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

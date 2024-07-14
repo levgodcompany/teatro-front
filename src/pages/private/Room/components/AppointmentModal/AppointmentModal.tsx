@@ -36,14 +36,13 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   capacity,
   price,
   Width,
-  length
+  length,
 }) => {
   // State hooks for form fields
   const [title, setTitle] = useState(event.title);
   const [start, setStart] = useState(event.start as Date);
   const [end, setEnd] = useState(event.end as Date);
   const [dtoRoom, setDtoRoom] = useState<IDtoAppointment | null>(null);
-
 
   const clientSelector: IClientID = useAppSelector((state) => state.clientID);
 
@@ -58,7 +57,6 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
   // State hooks for client management
   const [inputValuePrice, setInputValuePrice] = useState<number>(price);
 
-
   const getClientHTTP = async () => {
     const res = await clientByID(clientSelector.id);
     if (res) {
@@ -66,27 +64,20 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
     }
   };
 
-
   // Effect to sync event data with state
   useEffect(() => {
     getClientHTTP();
-
-
     setDtoRoom(event.dto);
-
     setTitle(event.title);
     setStart(event.start as Date);
     setEnd(event.end as Date);
     setInputValuePrice(event.price);
-
-
   }, [event]);
 
   // Effect to fetch clients data
 
   // Save handler for the modal
   const handleSave = () => {
-
     // Obtén la fecha y hora actual
     let now: Date = new Date();
 
@@ -100,7 +91,7 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
     if (diffInHours > 24 && client._id == event.client) {
       onSave(event._id);
     } else {
-      alert("No puedes cancelar el turno, faltan menos de 24 horas.")
+      alert("No puedes cancelar el turno, faltan menos de 24 horas.");
     }
   };
 
@@ -122,6 +113,68 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
     return formattedTime.toLocaleLowerCase();
   };
 
+  const renderButtons = () => {
+    const today = new Date();
+    const startDate = new Date(
+      start.getFullYear(),
+      start.getMonth(),
+      start.getDate()
+    );
+
+    if (
+      startDate <
+      new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    ) {
+      return (
+        <button style={{ marginTop: "10px" }} onClick={() => onRequestClose()}>
+          Aceptar
+        </button>
+      );
+    } else if (
+      startDate.getTime() ===
+      new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
+    ) {
+      return (
+        <button style={{ marginTop: "10px" }} onClick={() => onRequestClose()}>
+          Aceptar
+        </button>
+      );
+    } else {
+      // Obtén la fecha y hora actual
+      let now: Date = new Date();
+
+      // Calcula la diferencia en milisegundos entre la fecha del turno y la fecha actual
+      let diffInMillis: number = start.getTime() - now.getTime();
+
+      // Calcula las horas a partir de la diferencia en milisegundos
+      let diffInHours: number = diffInMillis / (1000 * 60 * 60);
+
+      if (diffInHours > 24 && client._id == event.client) {
+        return (
+          <>
+            <button
+              type="button"
+              style={{ backgroundColor: "#9e2d49" }}
+              onClick={handleSave}
+            >
+              Cancelar Reserva
+            </button>
+            <button onClick={() => onRequestClose()}>Aceptar</button>
+          </>
+        );
+      } else {
+        return (
+          <button
+            style={{ marginTop: "10px" }}
+            onClick={() => onRequestClose()}
+          >
+            Aceptar
+          </button>
+        );
+      }
+    }
+  };
+
   return (
     <>
       <Modal
@@ -133,7 +186,10 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
         <div className={NewEventModalStyle.container}>
           <div className={NewEventModalStyle.container_form}>
             <div className={NewEventModalStyle.from_title}>
-              <span>{title.split(";")[0]} {title.split(";")[1] ? title.split(";")[1] : "" }</span>
+              <span>
+                {title.split(";")[0]}{" "}
+                {title.split(";")[1] ? title.split(";")[1] : ""}
+              </span>
             </div>
 
             <div className={NewEventModalStyle.date_start}>
@@ -183,12 +239,15 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                 />
               </div>
               <span>
-                Medidas <strong>{Width == length ? `${length} m²` : `${length}x${Width} m`}</strong>
+                Medidas{" "}
+                <strong>
+                  {Width == length ? `${length} m²` : `${length}x${Width} m`}
+                </strong>
               </span>
             </div>
-              
-              {
-                client._id == event.client ? <div className={NewEventModalStyle.container_client}>
+
+            {client._id == event.client ? (
+              <div className={NewEventModalStyle.container_client}>
                 <div className={NewEventModalStyle.autocomplete_select}>
                   <div className={NewEventModalStyle.container_availability}>
                     <p className={NewEventModalStyle.p_dto}>
@@ -203,7 +262,7 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                           <span className={NewEventModalStyle.span_dto_value}>
                             {dtoRoom.dto}% dto.
                           </span>
-  
+
                           <div>
                             <span className={NewEventModalStyle.p_span_dto}>
                               {formateador.format(dtoRoom.prevPrice)}
@@ -218,19 +277,12 @@ const AppointmentModal: React.FC<NewEventModalProps> = ({
                   </div>
                 </div>
               </div>
-              : <></>
-              }
-            
+            ) : (
+              <></>
+            )}
 
             <div className={NewEventModalStyle.container_buttons}>
-              {
-                client._id == event.client ? <>
-                <button type="button" style={{backgroundColor: "#545454"}} onClick={handleSave}>
-                Cancelar reserva
-              </button>
-              <button onClick={()=> onRequestClose()}>Aceptar</button>
-                </> : <button style={{marginTop: "10px"}} onClick={()=> onRequestClose()}>Aceptar</button> 
-              }
+              {renderButtons()}
             </div>
           </div>
         </div>

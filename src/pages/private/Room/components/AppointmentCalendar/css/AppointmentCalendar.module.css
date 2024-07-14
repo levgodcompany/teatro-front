@@ -133,3 +133,50 @@
   font-size: 12px;
   color: #5f6368;
 }
+
+
+.past {
+  background-color: #ff4d4d;
+  display: inline-block;
+  border-radius: 131px;
+  width: 8px;
+  height: 8px;;
+}
+
+.today {
+  background-color: #ffd700; /* Amarillo */
+  display: inline-block;
+  border-radius: 131px;
+  width: 8px;
+  height: 8px;
+}
+
+.future {
+  background-color: #4caf50; /* Verde */
+  display: inline-block;
+  border-radius: 131px;
+  width: 8px;
+  height: 8px;
+}
+
+.event_info {
+  font-size: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.hideOnSmallScreen {
+  display: none;
+  width: 35px; /* Ajusta el ancho según lo que necesites */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  overflow: hidden; /* Oculta el texto que se desborda */
+  text-overflow: ellipsis; /* Muestra '...' al final del texto que no cabe */
+}
+
+@media (min-width: 500px) {
+  .hideOnSmallScreen {
+    display: inline;
+  }
+}

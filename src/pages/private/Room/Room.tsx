@@ -17,8 +17,8 @@ const Room = () => {
   const location = useLocation();
   const idRoom = new URLSearchParams(location.search).get("id");
 
+  // Sates
   const [isDateSelect, setIsDateSelect] = useState<boolean>(false);
-
   const clientSelector: IClientID = useAppSelector((state) => state.clientID);
   const [client, setClient] = useState<IClient>({
     _id: "",
@@ -27,9 +27,7 @@ const Room = () => {
     phone: "",
     token: "",
   });
-
   const [isLoading, setIsLoading] = useState(true);
-
   const [room, setRoom] = useState<IRoom>({
     _id: "",
     name: "", // Nombre de la sala
@@ -113,14 +111,11 @@ const Room = () => {
     setIsDateSelect(!isDateSelect);
   };
 
-
-
   const filterByClientIdShifts = () => {
-
-      return room.availableAppointments.filter(
-        (a) => a.client == client._id
-      );
+    return room.availableAppointments.filter((a) => a.client == client._id);
   };
+
+
 
   return (
     <>
@@ -128,15 +123,17 @@ const Room = () => {
         <Loading />
       ) : (
         <>
-          {" "}
           <Header />
           <div className={RoomStyle.room_container}>
             <div key={room.name} className={RoomStyle.container_room}>
               <RoomInfo room={room} />
               <div className={RoomStyle.room_calendar_reservation}>
-                <p onClick={onClickDateSelect}>
+                <button
+                  className={RoomStyle.room_calendar_reservation_button}
+                  onClick={onClickDateSelect}
+                >
                   Has tu reserva <strong>aquí</strong>
-                </p>
+                </button>
 
                 {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}
               </div>

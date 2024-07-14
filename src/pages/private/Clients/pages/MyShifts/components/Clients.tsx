@@ -5,7 +5,6 @@ import { useAppSelector } from "../../../../../../redux/hooks";
 import { clientByID } from "../../../../../../services/Auth.service";
 import { getLocalHTTP, ILocal } from "../services/MyShifts.service";
 import ConfirCancelReservation from "../../../../../../components/ConfirCancelReservation/ConfirCancelReservation";
-
 interface IClientApps {
   id: string;
   idRoom: string;
@@ -234,14 +233,15 @@ const Clients = () => {
               </option>
             </select>
 
+            
             <select
-              className={styles.select}
+              className={`${styles.select} ${styles.customSelect}`}
               value={filterYear}
               onChange={handleFilterChange(setFilterYear)}
             >
               <option value="">Todos los Años</option>
               {uniqueYears.map((year) => (
-                <option key={year} value={year.toString()}>
+                <option className={styles.option_status} key={year} value={year.toString()}>
                   {year}
                 </option>
               ))}
@@ -356,6 +356,9 @@ const Clients = () => {
               </table>
             </div>
           )}
+
+
+
           <p style={{ textAlign: "end" }}>
             Turnos: <strong>{filteredClients.length}</strong> | Precio Total:
             <strong

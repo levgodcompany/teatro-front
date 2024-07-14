@@ -224,7 +224,7 @@
 }
 
 .container_buttons > button {
-  background-color: #9e2d49;
+  background-color: rgb(84, 84, 84);
   width: 100%;
   color: #fff;
 }

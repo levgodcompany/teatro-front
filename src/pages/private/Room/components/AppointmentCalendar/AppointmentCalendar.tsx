@@ -198,7 +198,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     time: "Hora",
     event: "Evento",
     noEventsInRange: "No hay eventos en este rango.",
-    showMore: (total: any) =>( `+ Ver más (${total})`),
+    showMore: (total: any) => `+ ${total}`,
   };
 
   // Estilos personalizados para los botones
@@ -284,11 +284,35 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     );
   };
 
-  const eventCalss = (eventTitle: string) => {
+  const determineStatus = (start: Date) => {
+    const today = new Date();
+    const startDate = new Date(
+      start.getFullYear(),
+      start.getMonth(),
+      start.getDate()
+    );
+
+    if (
+      startDate <
+      new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    ) {
+      return "past";
+    } else if (
+      startDate.getTime() ===
+      new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
+    ) {
+      return "today";
+    } else {
+      return "future";
+    }
+  };
+
+  const eventCalss = (eventTitle: string, start: Date | undefined) => {
     const isClientEvent = eventTitle.split("|")[0] === idClient;
-    return isClientEvent
-      ? AppointmentCalendarStyle.div_event
-      : AppointmentCalendarStyle.div_event_not;
+    if (isClientEvent && start) {
+      return determineStatus(start);
+    }
+    return "div_event_not";
   };
   const eventClient = (eventTitle: string) => {
     const [firstName, lastName] = eventTitle.split("|")[1].split(";");
@@ -340,21 +364,20 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
               );
             },
             event: ({ event }) => (
-              <div
-                style={{
-                  fontSize: "10px",
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: "5px",
-                }}
-              >
+              <div className={AppointmentCalendarStyle.event_info}>
                 {event.title ? (
                   <>
-                    <div className={eventCalss(event.title.toString())}></div>
-                    <strong style={{ fontWeight: "500" }}>{`${
-                      eventClient(event.title.toString())
-                    }`}</strong>
+                    <div
+                      className={`${
+                        AppointmentCalendarStyle[
+                          eventCalss(event.title.toString(), event.start)
+                        ]
+                      }`}
+                    ></div>
+                    <strong
+                      className={AppointmentCalendarStyle.hideOnSmallScreen}
+                      style={{ fontWeight: "500", fontSize: "10px" }}
+                    >{`${eventClient(event.title.toString())}`}</strong>
                   </>
                 ) : (
                   <></>
