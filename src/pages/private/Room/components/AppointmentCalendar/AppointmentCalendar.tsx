@@ -113,7 +113,8 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
 
   const resultDeletEvent = (apps: IAppointment[]) => {
     setIsConfCancel(false);
-    const _events: CalendarEvent[] = apps.map((appointment) => ({
+    const appsFilter = apps.filter(a => a.client && a.client == idClient);
+    const _events: CalendarEvent[] = appsFilter.map((appointment) => ({
       title: `${appointment.client}|${appointment.title}`,
       start: new Date(appointment.start),
       end: new Date(appointment.end),
@@ -125,7 +126,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
       },
     }));
 
-    const app: IAppointment[] = apps.map((appointment) => ({
+    const app: IAppointment[] = appsFilter.map((appointment) => ({
       _id: appointment._id,
       date: new Date(appointment.date),
       start: new Date(appointment.start),
