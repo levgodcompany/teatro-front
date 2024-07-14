@@ -39,6 +39,8 @@
   border: none;
   border-bottom: 1px solid #9f9f9f;
   outline: none;
+  background-color: #fff;
+  color: #000;
 }
 
 .login_buttons {

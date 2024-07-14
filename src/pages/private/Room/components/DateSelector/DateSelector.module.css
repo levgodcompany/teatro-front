@@ -65,12 +65,14 @@
   gap: 10px;
   justify-content: center;
   text-align: left;
+  color: #000;
 }
 
 /* Estilos para el calendario */
 .calendar {
   border-collapse: collapse;
   width: 100%;
+  color: #000;
 }
 
 /* Estilos para las celdas del calendario */

@@ -47,6 +47,8 @@
   border-bottom: 1px solid #9f9f9f; /* Cambiado a color más claro */
   outline: none;
   width: 97%;
+  background-color: #fff;
+  color: #000;
 }
 
 .signup_buttons {

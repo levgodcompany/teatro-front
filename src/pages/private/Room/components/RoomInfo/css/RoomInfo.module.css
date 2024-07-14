@@ -34,6 +34,7 @@
 .detail_value {
   font-size: 14px;
   font-weight: 700;
+  color: #000;
 }
 
 .room_info {
@@ -153,6 +154,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  color: #000;
 }
 
 .dtos {

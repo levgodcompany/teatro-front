@@ -63,6 +63,7 @@
 
 .day {
   font-weight: bold;
+  color: #545454;
 }
 
 .closeDay {
@@ -101,6 +102,8 @@
   border-radius: 5px;
   font-size: 1em;
   transition: border-color 0.2s;
+  background-color: #fff;
+  color: #000;
 }
 
 .inputTime:focus {
@@ -122,6 +125,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  color: #5e5e5e;
 }
 
 .option {
@@ -149,6 +153,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  color: #000;
 }
 
 .containerClient {

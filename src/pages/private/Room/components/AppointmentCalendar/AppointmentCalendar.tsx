@@ -340,7 +340,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 500, backgroundColor: "#fff", padding: "10px" }}
+          style={{ height: 500, backgroundColor: "#fff", padding: "10px", color: "#5c5c5c" }}
           tooltipAccessor={(event) => event.resource.title}
           onSelectEvent={handleEventClick}
           eventPropGetter={eventPropGetter}

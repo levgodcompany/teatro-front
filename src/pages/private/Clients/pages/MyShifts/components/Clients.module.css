@@ -25,6 +25,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   outline: none;
   transition: border 0.3s ease;
+  color: #000
 }
 
 .select:focus {

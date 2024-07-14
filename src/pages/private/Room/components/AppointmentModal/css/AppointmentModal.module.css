@@ -79,6 +79,7 @@
   display: flex;
   justify-content: center;
   flex-direction: row;
+  color: #000;
 }
 
 .from_title > span {

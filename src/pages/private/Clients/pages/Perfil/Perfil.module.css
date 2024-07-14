@@ -41,6 +41,7 @@
   font-size: 16px;
   background-color: #fafafa;
   transition: border-color 0.2s;
+  color: #000;
 }
 
 .input:focus {

@@ -68,6 +68,8 @@ const Shift: React.FC<IShiftProps> = ({
   const clientIDSelector: IClientID = useAppSelector((state) => state.clientID);
   const [isOpenConflict, setIsOpenConflict] = useState<boolean>(false);
 
+  const [isReservation, setIsReservation] = useState<boolean>(false)
+
   const [isSave, setIsSave] = useState<boolean>(false);
 
   const [newsAppointments, setNewAppointment] = useState<IAppointment[]>([]);
@@ -152,12 +154,15 @@ const Shift: React.FC<IShiftProps> = ({
       setError(
         "La hora de salida no puede ser menor o igual a la hora de entrada."
       );
+      setIsReservation(false)
     } else {
       // Validar el formato con regex
       if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeEnd)) {
         setError("Formato no valido para la hora de salida");
+        setIsReservation(false)
         return;
       } else {
+        setIsReservation(true)
         const days: IDaysSel[] = [];
         daysSelect.days.forEach((d) => {
           const start = new Date(`${d}T${inputValueTimeStart.slice(0, -3)}`);
@@ -200,8 +205,10 @@ const Shift: React.FC<IShiftProps> = ({
       setError(
         "La hora de salida no puede ser menor o igual a la hora de entrada."
       );
+      setIsReservation(false)
     } else {
       setError(null);
+      setIsReservation(true)
       const days: IDaysSel[] = [];
       daysSelect.days.forEach((d) => {
         const start = new Date(`${d}T${inputValueTimeStart.slice(0, -3)}`);
@@ -306,66 +313,133 @@ const Shift: React.FC<IShiftProps> = ({
   }
 
   const reservation = async () => {
-    // Validar el formato con regex
-    if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeStart)) {
-      setError("Formato no valido para la hora de inicio");
-      return;
-    } else {
-      setError("");
-    }
-    // Validar el formato con regex
-    if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeEnd)) {
-      setError("Formato no valido para la hora de salida");
-      return;
-    } else {
-      setError("");
-    }
-
-    const apps = await getAppointmentHTTP(room._id);
-    let appointments: IAppointment[] = [];
-    if (apps && apps.length > 0) {
-      for (const a of apps) {
-        const start = new Date(a.start);
-        const end = new Date(a.end);
-        const ahora = new Date();
-        if (start >= ahora && a.available) {
-          const appointment: IAppointment = {
-            _id: a._id,
-            date: a.date, // Fecha y hora del turno
-            start, // Hora de entrada
-            end, // Hora de salida
-            price: a.price,
-            dto: a.dto,
-            title: a.title, // Título del turno
-            description: a.description, // Descripción del turno
-            available: a.available, // Para saber si el turno esta o no disponible
-            client: a.client, // Cliente que reservó el turno
-            GuestListClient: a.GuestListClient, // lista de invitados a al turno de clientes registrado en la app
-            GuestListNotClient: a.GuestListNotClient, //
-          };
-          appointments.push(appointment);
-        }
+    if(isReservation) {
+      // Validar el formato con regex
+      if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeStart)) {
+        setError("Formato no valido para la hora de inicio");
+        return;
+      } else {
+        setError("");
       }
-
-
-      let dayConflic: IDaysSelConflict[] = [];
-      function filterNonConflictingIntervals(
-        appointmentsInternal: IAppointment[],
-        dataDaySelectsInternal: IDaysSel[]
-      ): IDaysSelConflict[] {
-        let dayNotConflic: IDaysSelConflict[] = [];
-        dataDaySelectsInternal.forEach((d) => {
-          let bool = true;
-          for (const a of appointmentsInternal) {
-            if (
-              a.start.getMonth() == d.start.getMonth() &&
-              a.start.getDate() == d.start.getDate()
-            ) {
-              if (!hasHourConflict(a, d)) {
-                bool = false;
+      // Validar el formato con regex
+      if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeEnd)) {
+        setError("Formato no valido para la hora de salida");
+        return;
+      } else {
+        setError("");
+      }
+  
+      const apps = await getAppointmentHTTP(room._id);
+      let appointments: IAppointment[] = [];
+      if (apps && apps.length > 0) {
+        for (const a of apps) {
+          const start = new Date(a.start);
+          const end = new Date(a.end);
+          const ahora = new Date();
+          if (start >= ahora && a.available) {
+            const appointment: IAppointment = {
+              _id: a._id,
+              date: a.date, // Fecha y hora del turno
+              start, // Hora de entrada
+              end, // Hora de salida
+              price: a.price,
+              dto: a.dto,
+              title: a.title, // Título del turno
+              description: a.description, // Descripción del turno
+              available: a.available, // Para saber si el turno esta o no disponible
+              client: a.client, // Cliente que reservó el turno
+              GuestListClient: a.GuestListClient, // lista de invitados a al turno de clientes registrado en la app
+              GuestListNotClient: a.GuestListNotClient, //
+            };
+            appointments.push(appointment);
+          }
+        }
+  
+  
+        let dayConflic: IDaysSelConflict[] = [];
+        function filterNonConflictingIntervals(
+          appointmentsInternal: IAppointment[],
+          dataDaySelectsInternal: IDaysSel[]
+        ): IDaysSelConflict[] {
+          let dayNotConflic: IDaysSelConflict[] = [];
+          dataDaySelectsInternal.forEach((d) => {
+            let bool = true;
+            for (const a of appointmentsInternal) {
+              if (
+                a.start.getMonth() == d.start.getMonth() &&
+                a.start.getDate() == d.start.getDate()
+              ) {
+                if (!hasHourConflict(a, d)) {
+                  bool = false;
+                }
               }
             }
+            const day = d.start.getDate();
+            const _d: IDaysSelConflict = {
+              day,
+              end: d.end,
+              start: d.start,
+              dataDay: "",
+            };
+            if (!bool) {
+              dayConflic.push(_d);
+            } else {
+              dayNotConflic.push(_d);
+            }
+          });
+  
+          return dayNotConflic;
+        }
+  
+        const nonConflictingIntervals = filterNonConflictingIntervals(
+          appointments,
+          dataDaySelects
+        );
+  
+        if (nonConflictingIntervals.length > 0) {
+          for (const notConflic of nonConflictingIntervals) {
+            addNewAppointment(notConflic.start, notConflic.end);
           }
+        }
+  
+        if (dayConflic.length > 0) {
+          setIsOpenConflict(true);
+          dayConflic = dayConflic.map((c) => {
+            daysSelect.days.forEach((d) => {
+              const start = new Date(`${d}`);
+              const day = start.getDate() + 1;
+              if (c.day == day) {
+                c.dataDay = d;
+              }
+            });
+  
+            return c;
+          });
+  
+          setDayConflict(dayConflic);
+  
+          let selConflict: ISelects = {
+            id: daysSelect.id,
+            days: [],
+            month: daysSelect.month,
+            year: daysSelect.year,
+          };
+  
+          dayConflic.forEach((c) => {
+            daysSelect.days.forEach((d) => {
+              const start = new Date(`${d}`);
+              const day = start.getDate() + 1;
+              if (c.day == day) {
+                selConflict.days.push(d);
+              }
+            });
+          });
+        } else {
+          save();
+        }
+      } else {
+        let dayNotConflic: IDaysSelConflict[] = [];
+        dataDaySelects.forEach((d) => {
           const day = d.start.getDate();
           const _d: IDaysSelConflict = {
             day,
@@ -373,81 +447,17 @@ const Shift: React.FC<IShiftProps> = ({
             start: d.start,
             dataDay: "",
           };
-          if (!bool) {
-            dayConflic.push(_d);
-          } else {
-            dayNotConflic.push(_d);
+          dayNotConflic.push(_d);
+        });
+  
+        if (dayNotConflic.length > 0) {
+          for (const notConflic of dayNotConflic) {
+            addNewAppointment(notConflic.start, notConflic.end);
           }
-        });
-
-        return dayNotConflic;
-      }
-
-      const nonConflictingIntervals = filterNonConflictingIntervals(
-        appointments,
-        dataDaySelects
-      );
-
-      if (nonConflictingIntervals.length > 0) {
-        for (const notConflic of nonConflictingIntervals) {
-          addNewAppointment(notConflic.start, notConflic.end);
         }
-      }
-
-      if (dayConflic.length > 0) {
-        setIsOpenConflict(true);
-        dayConflic = dayConflic.map((c) => {
-          daysSelect.days.forEach((d) => {
-            const start = new Date(`${d}`);
-            const day = start.getDate() + 1;
-            if (c.day == day) {
-              c.dataDay = d;
-            }
-          });
-
-          return c;
-        });
-
-        setDayConflict(dayConflic);
-
-        let selConflict: ISelects = {
-          id: daysSelect.id,
-          days: [],
-          month: daysSelect.month,
-          year: daysSelect.year,
-        };
-
-        dayConflic.forEach((c) => {
-          daysSelect.days.forEach((d) => {
-            const start = new Date(`${d}`);
-            const day = start.getDate() + 1;
-            if (c.day == day) {
-              selConflict.days.push(d);
-            }
-          });
-        });
-      } else {
         save();
       }
-    } else {
-      let dayNotConflic: IDaysSelConflict[] = [];
-      dataDaySelects.forEach((d) => {
-        const day = d.start.getDate();
-        const _d: IDaysSelConflict = {
-          day,
-          end: d.end,
-          start: d.start,
-          dataDay: "",
-        };
-        dayNotConflic.push(_d);
-      });
 
-      if (dayNotConflic.length > 0) {
-        for (const notConflic of dayNotConflic) {
-          addNewAppointment(notConflic.start, notConflic.end);
-        }
-      }
-      save();
     }
   };
   const closeConflict = () => {
@@ -614,7 +624,7 @@ const Shift: React.FC<IShiftProps> = ({
                   Cancelar
                 </button>
                 <button
-                  className={ShiftStyle.buttonReserve}
+                  className={`${ isReservation ? ShiftStyle.buttonReserve : ShiftStyle.buttonCancel }`}
                   onClick={reservation}
                 >
                   Reservar

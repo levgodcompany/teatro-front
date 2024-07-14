@@ -73,6 +73,12 @@
   align-items: center;
   gap: 10px;
   margin-right: 10px;
+  color: #000;
+}
+
+.perfil_close:hover {
+  border: none;
+  cursor: pointer;
 }
 
 .container_items > span {
