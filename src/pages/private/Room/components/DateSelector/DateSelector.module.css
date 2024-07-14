@@ -4,7 +4,7 @@
   min-width: 300px;
   min-height: 300px;
   background-color: #c6b89e;
-  padding: 15px;
+  padding: 10px;
 }
 
 /* Contenedor para la selección de año y mes */
@@ -37,7 +37,6 @@
 
 /* Contenedor de los selectores de año y mes */
 .select_container {
-  width: 84px; /* Ajusta el ancho según sea necesario */
 }
 
 /* Estilos para el selector de año y mes */
@@ -64,6 +63,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: center;
+  text-align: left;
 }
 
 /* Estilos para el calendario */

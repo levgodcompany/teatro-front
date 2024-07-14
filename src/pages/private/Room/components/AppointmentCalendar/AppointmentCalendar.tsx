@@ -198,7 +198,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
     time: "Hora",
     event: "Evento",
     noEventsInRange: "No hay eventos en este rango.",
-    showMore: (total: any) => `+ ${total}`,
+    showMore: (total: any) => `${total}+`,
   };
 
   // Estilos personalizados para los botones
@@ -339,7 +339,7 @@ const AppointmentCalendar: React.FC<CalendarProps> = ({
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: 500, backgroundColor: "#fff" }}
+          style={{ height: 500, backgroundColor: "#fff", padding: "10px" }}
           tooltipAccessor={(event) => event.resource.title}
           onSelectEvent={handleEventClick}
           eventPropGetter={eventPropGetter}

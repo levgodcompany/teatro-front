@@ -48,6 +48,7 @@
   max-width: 500px;
   background-color: #fff;
   border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .room_info_title {
