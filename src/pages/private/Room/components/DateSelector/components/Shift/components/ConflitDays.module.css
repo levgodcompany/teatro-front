@@ -11,6 +11,9 @@
   font-size: 1.2em;
   font-weight: bold;
   color: #333;
+  margin: 0;
+  border-bottom: 1px solid;
+  padding: 0 0 8px;
 }
 
 .containerDay {

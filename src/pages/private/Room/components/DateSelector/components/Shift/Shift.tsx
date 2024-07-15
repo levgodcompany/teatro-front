@@ -46,6 +46,7 @@ interface IShiftProps {
   daysSelect: ISelects;
   days: number[];
   updateDay: (daysSelect: number) => void;
+  openSave: () => void;
 }
 
 const Shift: React.FC<IShiftProps> = ({
@@ -54,6 +55,7 @@ const Shift: React.FC<IShiftProps> = ({
   room,
   daysSelect,
   updateDay,
+  openSave
 }) => {
   const [dataDaySelects, setDataDaySelects] = useState<IDaysSel[]>([]);
   const [dayConflict, setDayConflict] = useState<IDaysSelConflict[]>([]);
@@ -96,6 +98,7 @@ const Shift: React.FC<IShiftProps> = ({
       const httpSave = async () => {
         await saveAppointmentsHTTP(room._id, client._id, newsAppointments);
         onRequestClose();
+        openSave();
       };
       httpSave();
     }
@@ -359,6 +362,7 @@ const Shift: React.FC<IShiftProps> = ({
 
   const save = () => {
     setIsSave(true);
+    setIsReservation(false)
     closeSaveConf();
   };
 

@@ -150,7 +150,7 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
   }
   return (
     <div className={ConflitDaysStyle.container}>
-      <p>Conflictos con los siguientes horarios</p>
+      <p>Conflicto de horarios</p>
       {daysAppointments.map((conflitView, index) => (
         <div className={ConflitDaysStyle.containerDay} key={index}>
           <div className={ConflitDaysStyle.containerDayInput}>

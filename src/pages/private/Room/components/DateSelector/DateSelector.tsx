@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import DateSelectorStyle from "./DateSelector.module.css";
 import Shift from "./components/Shift/Shift";
 import { IRoom } from "../../../Rooms/services/Rooms.service";
+import Reservation from "../../../../../components/Reservation/Reservation";
 
 interface ISelects {
   id: string;
@@ -32,6 +33,7 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
   });
 
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isOpenSave, setIsOpenSave] = useState<boolean>(false)
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 
   const daysInMonth = (month: number, year: number) => {
@@ -160,6 +162,11 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
     });
   }
 
+  const openSave = ()=> {
+    setIsOpenSave(!isOpenSave)
+  }
+
+
   return (
     <div className={DateSelectorStyle.date_selector}>
       <div className={DateSelectorStyle.container_calendar}>
@@ -187,9 +194,12 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
       </div>
       <>
       {
-        isOpenModal ? <Shift days={selectedDays} updateDay={handleDayClick} daysSelect={selectedDateList} room={room} isOpen={isOpen} onRequestClose={onRequestClose} /> : <></>
+        isOpenModal ? <Shift openSave={openSave} days={selectedDays} updateDay={handleDayClick} daysSelect={selectedDateList} room={room} isOpen={isOpen} onRequestClose={onRequestClose} /> : <></>
       }
       </>
+      {
+        isOpenSave ? <Reservation openSave={openSave} /> : <></>
+      }
     </div>
   );
 };
