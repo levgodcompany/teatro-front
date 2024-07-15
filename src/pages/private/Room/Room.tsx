@@ -136,7 +136,7 @@ const Room = () => {
                   className={RoomStyle.room_calendar_reservation_button}
                   onClick={onClickDateSelect}
                 >
-                  Mis Reservas
+                  Mí  reserva
                 </button>
 
                 {isDateSelect ? (

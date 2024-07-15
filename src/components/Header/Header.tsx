@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
       <div className={HeaderStyle.container_item_movil}>
         <span onClick={navPerfil}>Perfil</span>
         <span onClick={navHome}>Home</span>
-        <span onClick={navMyShifts}>Mis Turnos</span>
+        <span onClick={navMyShifts}>Mis Reservas</span>
         <img className={HeaderStyle.img_close} src={closeSeccionImg} onClick={navClose} alt="" />
       </div>
     );
@@ -72,7 +72,7 @@ export const Header: React.FC = () => {
 
         <div className={HeaderStyle.container_items}>
           <span onClick={navHome}>Home</span>
-          <span onClick={navMyShifts}>Mis Turnos</span>
+          <span onClick={navMyShifts}>Mis Reservas</span>
         </div>
 
         

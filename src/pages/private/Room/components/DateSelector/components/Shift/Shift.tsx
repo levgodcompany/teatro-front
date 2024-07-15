@@ -115,6 +115,11 @@ const Shift: React.FC<IShiftProps> = ({
     getClientHTTP();
   }, []);
 
+  useEffect(()=> {
+    if(days.length == 0){
+      onRequestClose()
+    }
+  }, [days])
 
 
   const handleClickDeleteDay = (day: number) => {
