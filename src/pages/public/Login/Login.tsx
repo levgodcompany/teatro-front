@@ -45,7 +45,6 @@ const Login = () => {
     dispatch(getToken());
     if (token.token.length > 0) {
       getIdLocal();
-      console.log("token", token.token);
     }
   }, [token.token]);
 

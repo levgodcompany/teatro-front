@@ -87,8 +87,7 @@ const Shift: React.FC<IShiftProps> = ({
     const times = [];
     for (let hour = 0; hour < 24; hour++) {
       const hourString = hour.toString().padStart(2, "0");
-      const period = hour < 12 ? "AM" : "PM";
-      times.push(`${hourString}:00 ${period}`);
+      times.push(`${hourString}:00`);
     }
     return times;
   };
@@ -157,7 +156,7 @@ const Shift: React.FC<IShiftProps> = ({
       setIsReservation(false)
     } else {
       // Validar el formato con regex
-      if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeEnd)) {
+      if (!/^([01]\d|2[0-3]):([0-5]\d)/.test(inputValueTimeEnd)) {
         setError("Formato no valido para la hora de salida");
         setIsReservation(false)
         return;
@@ -165,12 +164,12 @@ const Shift: React.FC<IShiftProps> = ({
         setIsReservation(true)
         const days: IDaysSel[] = [];
         daysSelect.days.forEach((d) => {
-          const start = new Date(`${d}T${inputValueTimeStart.slice(0, -3)}`);
+          const start = new Date(`${d}T${inputValueTimeStart}`);
           const day = start.getDate();
           days.push({
             day,
             start,
-            end: new Date(`${d}T${inputValueTimeEnd.slice(0, -3)}`),
+            end: new Date(`${d}T${inputValueTimeEnd}`),
           });
         });
 
@@ -315,14 +314,14 @@ const Shift: React.FC<IShiftProps> = ({
   const reservation = async () => {
     if(isReservation) {
       // Validar el formato con regex
-      if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeStart)) {
+      if (!/^([01]\d|2[0-3]):([0-5]\d)/.test(inputValueTimeStart)) {
         setError("Formato no valido para la hora de inicio");
         return;
       } else {
         setError("");
       }
       // Validar el formato con regex
-      if (!/^([01]\d|2[0-3]):([0-5]\d) [AP]M$/.test(inputValueTimeEnd)) {
+      if (!/^([01]\d|2[0-3]):([0-5]\d)/.test(inputValueTimeEnd)) {
         setError("Formato no valido para la hora de salida");
         return;
       } else {

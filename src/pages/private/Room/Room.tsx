@@ -128,18 +128,20 @@ const Room = () => {
             <div key={room.name} className={RoomStyle.container_room}>
               <RoomInfo room={room} />
               <div className={RoomStyle.room_calendar_reservation}>
-                <button
-                  className={RoomStyle.room_calendar_reservation_button}
-                  onClick={onClickDateSelect}
-                >
-                  Has tu reserva <strong>aquí</strong>
-                </button>
-
-                {isDateSelect ? <DateSelector load={get} room={room} /> : <></>}
+                <button className={RoomStyle.room_calendar_reservation_button}>Has tu reserva aquí</button>
+              <DateSelector load={get} room={room} />
+                
               </div>
 
               <div className={RoomStyle.room_calendar}>
-                <AppointmentCalendar
+              <button
+                  className={RoomStyle.room_calendar_reservation_button}
+                  onClick={onClickDateSelect}
+                >
+                  Mis Reservas
+                </button>
+
+                {isDateSelect ? <AppointmentCalendar
                   idClient={client._id}
                   _appointments={filterByClientIdShifts()}
                   idRoom={room._id}
@@ -149,7 +151,8 @@ const Room = () => {
                   capacity={room.capacity}
                   Width={room.Width}
                   length={room.length}
-                />
+                /> : <></>}
+                
               </div>
             </div>
           </div>
