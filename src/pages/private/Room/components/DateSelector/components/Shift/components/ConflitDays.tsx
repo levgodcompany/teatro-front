@@ -28,9 +28,15 @@ interface IConflitView {
   appointmentReservation: IAppointment[]; // aca los turnos que son de ese dia
 }
 
+interface IIsConflisInput {
+  day: number;
+  isConflict: boolean
+}
+
 const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppointment, close, save }) => {
   const [daysAppointments, setDaysAppointments] = useState<IConflitView[]>([]);
   const [dataDaySelects, setDataDaySelects] = useState<IDaysSelConflict[]>([]);
+  const [isConflictInputs, setIsConflictInputs] = useState<IIsConflisInput[]>([])
 
   useEffect(() => {
     const httpAppointment = async () => {
@@ -97,8 +103,13 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
 
           return conflitViews;
         }
-
-        setDaysAppointments(groupAppointmentsByDay(apps));
+        const result = groupAppointmentsByDay(apps)
+        setDaysAppointments(result);
+        const d: IIsConflisInput[] = result.map(c => ({
+          day: c.daySelect.day,
+          isConflict: true
+        }));
+        setIsConflictInputs(d)
       }
     };
     httpAppointment();
@@ -130,6 +141,13 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
     })
   }
 
+  const onChangeConf = (day: number, isConflic: boolean)=> {
+    setIsConflictInputs(prev => {
+      const index =prev.findIndex(p=> p.day == day);
+      prev[index].isConflict = isConflic;
+      return [...prev];
+    })
+  }
   return (
     <div className={ConflitDaysStyle.container}>
       <p>Conflictos con los siguientes horarios</p>
@@ -141,8 +159,10 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
             </span>
             <div className={ConflitDaysStyle.containerTime}>
               <InputSelectHorus
+                day={conflitView.daySelect.day}
                 shiftsReservations={conflitView.appointmentReservation}
                 daySelects={addDaySelect}
+                onChangeConf={onChangeConf}
                 dataDay={conflitView.daySelect.dataDay}
                 timeEnd={conflitView.dayInput.end}
                 timeStart={conflitView.dayInput.start}
@@ -150,10 +170,10 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
             </div>
           </div>
           <span className={ConflitDaysStyle.spanReservation}>
-            Turnos reservados
+            Horarios reservados
           </span>
           <ul className={ConflitDaysStyle.containerList}>
-            {conflitView.appointmentReservation.map((appointment) => (
+            {conflitView.appointmentReservation.sort((a, b)=> a.start.getHours() - b.start.getHours()).map((appointment) => (
               <li className={ConflitDaysStyle.list} key={appointment._id}>
                 {formatTime(appointment.start)} - {formatTime(appointment.end)}
               </li>
@@ -164,7 +184,7 @@ const ConflitDays: React.FC<ConflitDaysProps> = ({ conflicts, roomId, addNewAppo
   
       <div className={ConflitDaysStyle.containerButtons}>
       <button className={ConflitDaysStyle.buttonCancel} onClick={close}>Cancelar</button>
-        <button className={ConflitDaysStyle.buttonReserve} onClick={addShifts}>Guardar</button>
+        {isConflictInputs.some(input => input.isConflict) ? <></> : <button className={ConflitDaysStyle.buttonReserve} onClick={addShifts}>Guardar</button>}
       </div>
     </div>
   );

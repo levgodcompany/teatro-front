@@ -109,22 +109,24 @@ const Clients = () => {
     };
 
   const filterClients = () => {
-    return clients.filter((client) => {
-      const matchRoom = filterRoom ? client.room === filterRoom : true;
-      const matchYear = filterYear
-        ? client.start.getFullYear().toString() === filterYear
-        : true;
-      const matchMonth = filterMonth
-        ? (client.start.getMonth() + 1).toString() === filterMonth
-        : true;
-      const matchDay = filterDay
-        ? client.start.getDate().toString() === filterDay
-        : true;
-      const matchStatus = filterStatus
-        ? determineStatus(client.start) === filterStatus
-        : true;
-      return matchRoom && matchYear && matchMonth && matchDay && matchStatus;
-    });
+    return clients
+      .filter((client) => {
+        const matchRoom = filterRoom ? client.room === filterRoom : true;
+        const matchYear = filterYear
+          ? client.start.getFullYear().toString() === filterYear
+          : true;
+        const matchMonth = filterMonth
+          ? (client.start.getMonth() + 1).toString() === filterMonth
+          : true;
+        const matchDay = filterDay
+          ? client.start.getDate().toString() === filterDay
+          : true;
+        const matchStatus = filterStatus
+          ? determineStatus(client.start) === filterStatus
+          : true;
+        return matchRoom && matchYear && matchMonth && matchDay && matchStatus;
+      })
+      .sort((a, b) => b.start.getTime() - a.start.getTime());
   };
 
   const determineStatus = (start: Date) => {
@@ -162,10 +164,42 @@ const Clients = () => {
       return (prev += acc.price);
     }, 0);
     const now: Date = new Date();
-    const isCancel = (start: Date) => {
+
+    const viewIsCancel = (start: Date, idRoom: string, appId: string) => {
+      // Comparar si es el mismo día (año, mes y día)
+      if (
+        now.getFullYear() === start.getFullYear() &&
+        now.getMonth() === start.getMonth() &&
+        now.getDate() === start.getDate()
+      ) {
+        return <></>;
+      }
+
       let diffInMillis: number = start.getTime() - now.getTime();
       let diffInHours: number = diffInMillis / (1000 * 60 * 60);
-      return diffInHours > 24;
+
+      if (diffInHours > 24) {
+        return (
+          <button
+            className={styles.button_cancel}
+            onClick={() => cancelShifts(idRoom, appId)}
+          >
+            Cancelar
+          </button>
+        );
+      } else if (diffInHours >= 0 && diffInHours <= 24) {
+        return <></>;
+      } else if (diffInHours < 0) {
+        return (
+          <button
+            className={styles.button_cancel}
+            onClick={() => cancelShifts(idRoom, appId)}
+          >
+            Eliminar
+          </button>
+        );
+      }
+      return <></>;
     };
 
     const cancelShifts = async (idRoom: string, id: string) => {
@@ -233,7 +267,6 @@ const Clients = () => {
               </option>
             </select>
 
-            
             <select
               className={`${styles.select} ${styles.customSelect}`}
               value={filterYear}
@@ -241,7 +274,11 @@ const Clients = () => {
             >
               <option value="">Todos los Años</option>
               {uniqueYears.map((year) => (
-                <option className={styles.option_status} key={year} value={year.toString()}>
+                <option
+                  className={styles.option_status}
+                  key={year}
+                  value={year.toString()}
+                >
                   {year}
                 </option>
               ))}
@@ -321,13 +358,33 @@ const Clients = () => {
                         )}`}</strong>
                       </td>
                       <td>
-                        <strong>{ client.dto > 0 ? <del>{formateador.format(client.price)}</del> : formateador.format(client.price)}</strong>
+                        <strong>
+                          {client.dto > 0 ? (
+                            <del style={{ color: "#999696" }}>
+                              {formateador.format(client.price)}
+                            </del>
+                          ) : (
+                            formateador.format(client.price)
+                          )}
+                        </strong>
                       </td>
                       <td>
-                        <strong>{client.dto}%</strong>
+                        {client.dto == 0 ? (
+                          <strong style={{ color: "#999696" }}>
+                            {client.dto}%
+                          </strong>
+                        ) : (
+                          <strong>{client.dto}%</strong>
+                        )}
                       </td>
                       <td>
-                        <strong>{formateador.format(client.newPrice)}</strong>
+                        {client.newPrice == 0 ? (
+                          <strong style={{ color: "#999696" }}>
+                            {formateador.format(client.newPrice)}
+                          </strong>
+                        ) : (
+                          <strong>{formateador.format(client.newPrice)}</strong>
+                        )}
                       </td>
                       <td>
                         <span
@@ -337,17 +394,10 @@ const Clients = () => {
                         ></span>
                       </td>
                       <td>
-                        {isCancel(client.start) ? (
-                          <button
-                            className={styles.button_cancel}
-                            onClick={() =>
-                              cancelShifts(client.idRoom, client.appId)
-                            }
-                          >
-                            Cancelar
-                          </button>
-                        ) : (
-                          ""
+                        {viewIsCancel(
+                          client.start,
+                          client.idRoom,
+                          client.appId
                         )}
                       </td>
                     </tr>
@@ -356,8 +406,6 @@ const Clients = () => {
               </table>
             </div>
           )}
-
-
 
           <p style={{ textAlign: "end" }}>
             Turnos: <strong>{filteredClients.length}</strong> | Precio Total:

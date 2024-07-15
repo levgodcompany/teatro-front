@@ -115,8 +115,6 @@ const Room = () => {
     return room.availableAppointments.filter((a) => a.client == client._id);
   };
 
-
-
   return (
     <>
       {isLoading ? (
@@ -128,31 +126,34 @@ const Room = () => {
             <div key={room.name} className={RoomStyle.container_room}>
               <RoomInfo room={room} />
               <div className={RoomStyle.room_calendar_reservation}>
-                <button className={RoomStyle.room_calendar_reservation_button}>Has tu reserva aquí</button>
-              <DateSelector load={get} room={room} />
-                
+              <h2>¡Has tu reservas!</h2>
+              <p>Aquí puedes seleccionar los días y hacer tus reservas de manera rápida y sencilla.</p>
+                <DateSelector load={get} room={room} />
               </div>
 
               <div className={RoomStyle.room_calendar}>
-              <button
+                <button
                   className={RoomStyle.room_calendar_reservation_button}
                   onClick={onClickDateSelect}
                 >
                   Mis Reservas
                 </button>
 
-                {isDateSelect ? <AppointmentCalendar
-                  idClient={client._id}
-                  _appointments={filterByClientIdShifts()}
-                  idRoom={room._id}
-                  dto={room.dtoRoomHours}
-                  price={room.priceBase}
-                  nameRoom={room.name}
-                  capacity={room.capacity}
-                  Width={room.Width}
-                  length={room.length}
-                /> : <></>}
-                
+                {isDateSelect ? (
+                  <AppointmentCalendar
+                    idClient={client._id}
+                    _appointments={filterByClientIdShifts()}
+                    idRoom={room._id}
+                    dto={room.dtoRoomHours}
+                    price={room.priceBase}
+                    nameRoom={room.name}
+                    capacity={room.capacity}
+                    Width={room.Width}
+                    length={room.length}
+                  />
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </div>

@@ -124,8 +124,8 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
     });
     return (
       <table className={DateSelectorStyle.calendar}>
-        <tbody>
-          <tr>
+        <thead>
+        <tr>
             <th>DO</th>
             <th>LU</th>
             <th>MA</th>
@@ -134,6 +134,8 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
             <th>VI</th>
             <th>SA</th>
           </tr>
+        </thead>
+        <tbody>
           {rows}
         </tbody>
       </table>
@@ -179,7 +181,8 @@ const DateSelector: React.FC<IDateSelectorProps> = ({ room, load }) => {
           {renderCalendar()}
         </div>
         <div className={DateSelectorStyle.button_container}>
-          <button onClick={handleAddButtonClick}>Reservar</button>
+          {selectedDays.length > 0 ? <button onClick={handleAddButtonClick}>Reservar</button> : <></>}
+          
         </div>
       </div>
       <>

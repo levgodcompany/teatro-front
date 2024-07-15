@@ -29,10 +29,10 @@
   gap: 20px;
   font-size: 12px;
   background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 /* Title */
@@ -172,6 +172,7 @@
 
 .pDto {
   margin: 0;
+  text-align: left;
 }
 
 .dtp {
@@ -206,15 +207,22 @@
 }
 
 .buttonCancel {
-
   background-color: #545454;
-    color: #feffd5;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 5px;
+  color: #feffd5;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
+.buttonInavil {
+  background-color: #a5a4a4;
+  color: #feffd5;
+  border: none;
+  padding: 8px 16px;
+  cursor: not-allowed;
+  border-radius: 5px;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

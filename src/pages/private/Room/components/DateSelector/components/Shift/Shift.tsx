@@ -68,7 +68,7 @@ const Shift: React.FC<IShiftProps> = ({
   const clientIDSelector: IClientID = useAppSelector((state) => state.clientID);
   const [isOpenConflict, setIsOpenConflict] = useState<boolean>(false);
 
-  const [isReservation, setIsReservation] = useState<boolean>(false)
+  const [isReservation, setIsReservation] = useState<boolean>(false);
 
   const [isSave, setIsSave] = useState<boolean>(false);
 
@@ -76,12 +76,9 @@ const Shift: React.FC<IShiftProps> = ({
 
   const [error, setError] = useState<string | null>(null);
 
-  const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
   const [inputValueTimeStart, setInputValueTimeStart] = useState("");
-  const [showOptionsTimeStart, setShowOptionsTimeStart] = useState(false);
 
   const [inputValueTimeEnd, setInputValueTimeEnd] = useState("");
-  const [showOptionsTimeEnd, setShowOptionsTimeEnd] = useState(false);
 
   const generateTimeOptions = () => {
     const times = [];
@@ -115,113 +112,15 @@ const Shift: React.FC<IShiftProps> = ({
     getClientHTTP();
   }, []);
 
-  const handleInputChangeTimeStart = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
 
-    setInputValueTimeStart(value);
-    setInputValueTimeEnd("");
-    if (value.trim() === "") {
-      setFilteredOptions([]);
-    } else {
-      const filtered = allOptions.filter((option) =>
-        option.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredOptions(filtered);
+
+  const handleClickDeleteDay = (day: number) => {
+    if (dataDaySelects.length > 0) {
+      const filt = dataDaySelects.filter((d) => d.day != day);
+
+      setDataDaySelects(filt);
     }
-    setShowOptionsTimeStart(true);
-  };
-
-  const handleInputChangeTimeEnd = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = event.target.value;
-    setInputValueTimeEnd(value);
-    if (value.trim() === "") {
-      setFilteredOptions([]);
-    } else {
-      const filtered = allOptions.filter((option) =>
-        option.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredOptions(filtered);
-    }
-    setShowOptionsTimeEnd(true);
-    // Validar que la hora final sea mayor que la hora de inicio
-    if (inputValueTimeStart !== "" && value <= inputValueTimeStart) {
-      // Aquí puedes mostrar un mensaje de error o realizar alguna acción
-      setError(
-        "La hora de salida no puede ser menor o igual a la hora de entrada."
-      );
-      setIsReservation(false)
-    } else {
-      // Validar el formato con regex
-      if (!/^([01]\d|2[0-3]):([0-5]\d)/.test(inputValueTimeEnd)) {
-        setError("Formato no valido para la hora de salida");
-        setIsReservation(false)
-        return;
-      } else {
-        setIsReservation(true)
-        const days: IDaysSel[] = [];
-        daysSelect.days.forEach((d) => {
-          const start = new Date(`${d}T${inputValueTimeStart}`);
-          const day = start.getDate();
-          days.push({
-            day,
-            start,
-            end: new Date(`${d}T${inputValueTimeEnd}`),
-          });
-        });
-
-        setDataDaySelects([...days]);
-        setError("");
-      }
-    }
-  };
-
-  const handleClickDeleteDay = (day:number)=> {
-    if(dataDaySelects.length > 0) {
-       const filt = dataDaySelects.filter(d=> d.day != day);
-
-       setDataDaySelects(filt)
-
-    }
-    updateDay(day)
-  }
-
-
-  const handleOptionClickTimeStart = (value: string) => {
-    setInputValueTimeStart(value);
-    setShowOptionsTimeStart(false);
-  };
-
-  const handleOptionClickTimeEnd = (value: string) => {
-    setInputValueTimeEnd(value);
-    setShowOptionsTimeEnd(false);
-    // Validar que la hora final sea mayor que la hora de inicio
-    if (inputValueTimeStart !== "" && value <= inputValueTimeStart) {
-      // Aquí puedes mostrar un mensaje de error o realizar alguna acción
-      setError(
-        "La hora de salida no puede ser menor o igual a la hora de entrada."
-      );
-      setIsReservation(false)
-    } else {
-      setError(null);
-      setIsReservation(true)
-      const days: IDaysSel[] = [];
-      daysSelect.days.forEach((d) => {
-        const start = new Date(`${d}T${inputValueTimeStart.slice(0, -3)}`);
-        const day = start.getDate();
-        days.push({
-          day,
-          start,
-          end: new Date(`${d}T${value.slice(0, -3)}`),
-        });
-      });
-
-      setDataDaySelects([...days]);
-      setError("");
-    }
+    updateDay(day);
   };
 
   const addNewAppointment = (start: Date, end: Date) => {
@@ -277,42 +176,33 @@ const Shift: React.FC<IShiftProps> = ({
     const appEnd = appointment.end;
     const daySeletStart = daySelet.start;
     const daySeletEnd = daySelet.end;
-  
+
     // Si la hora de fin de la cita es la misma que la hora de inicio del intervalo seleccionado, no hay conflicto.
     if (appEnd.getTime() === daySeletStart.getTime()) {
       return true;
     }
-  
+
     // Verifica si la hora de inicio del intervalo seleccionado está dentro del rango de la cita.
-    if (
-      daySeletStart >= appStart &&
-      daySeletStart < appEnd
-    ) {
+    if (daySeletStart >= appStart && daySeletStart < appEnd) {
       return false;
     }
-  
+
     // Verifica si la hora de fin del intervalo seleccionado está dentro del rango de la cita.
-    if (
-      daySeletEnd > appStart &&
-      daySeletEnd <= appEnd
-    ) {
+    if (daySeletEnd > appStart && daySeletEnd <= appEnd) {
       return false;
     }
-  
+
     // Verifica si el intervalo seleccionado cubre completamente la cita.
-    if (
-      daySeletStart < appStart &&
-      daySeletEnd > appEnd
-    ) {
+    if (daySeletStart < appStart && daySeletEnd > appEnd) {
       return false;
     }
-  
+
     // Si ninguna de las condiciones anteriores se cumple, entonces no hay un conflicto.
     return true;
   }
 
   const reservation = async () => {
-    if(isReservation) {
+    if (isReservation) {
       // Validar el formato con regex
       if (!/^([01]\d|2[0-3]):([0-5]\d)/.test(inputValueTimeStart)) {
         setError("Formato no valido para la hora de inicio");
@@ -327,7 +217,7 @@ const Shift: React.FC<IShiftProps> = ({
       } else {
         setError("");
       }
-  
+
       const apps = await getAppointmentHTTP(room._id);
       let appointments: IAppointment[] = [];
       if (apps && apps.length > 0) {
@@ -353,8 +243,7 @@ const Shift: React.FC<IShiftProps> = ({
             appointments.push(appointment);
           }
         }
-  
-  
+
         let dayConflic: IDaysSelConflict[] = [];
         function filterNonConflictingIntervals(
           appointmentsInternal: IAppointment[],
@@ -386,21 +275,21 @@ const Shift: React.FC<IShiftProps> = ({
               dayNotConflic.push(_d);
             }
           });
-  
+
           return dayNotConflic;
         }
-  
+
         const nonConflictingIntervals = filterNonConflictingIntervals(
           appointments,
           dataDaySelects
         );
-  
+
         if (nonConflictingIntervals.length > 0) {
           for (const notConflic of nonConflictingIntervals) {
             addNewAppointment(notConflic.start, notConflic.end);
           }
         }
-  
+
         if (dayConflic.length > 0) {
           setIsOpenConflict(true);
           dayConflic = dayConflic.map((c) => {
@@ -411,19 +300,19 @@ const Shift: React.FC<IShiftProps> = ({
                 c.dataDay = d;
               }
             });
-  
+
             return c;
           });
-  
+
           setDayConflict(dayConflic);
-  
+
           let selConflict: ISelects = {
             id: daysSelect.id,
             days: [],
             month: daysSelect.month,
             year: daysSelect.year,
           };
-  
+
           dayConflic.forEach((c) => {
             daysSelect.days.forEach((d) => {
               const start = new Date(`${d}`);
@@ -448,7 +337,7 @@ const Shift: React.FC<IShiftProps> = ({
           };
           dayNotConflic.push(_d);
         });
-  
+
         if (dayNotConflic.length > 0) {
           for (const notConflic of dayNotConflic) {
             addNewAppointment(notConflic.start, notConflic.end);
@@ -456,7 +345,6 @@ const Shift: React.FC<IShiftProps> = ({
         }
         save();
       }
-
     }
   };
   const closeConflict = () => {
@@ -471,9 +359,70 @@ const Shift: React.FC<IShiftProps> = ({
 
   const save = () => {
     setIsSave(true);
-    closeSaveConf()
-
+    closeSaveConf();
   };
+
+  const handleFilterChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      setter(e.target.value);
+      if(value == "" || inputValueTimeEnd == "") {
+        setIsReservation(false);
+      }else {
+        if(inputValueTimeEnd != "") {
+          if(value >= inputValueTimeEnd){
+            // Aquí puedes mostrar un mensaje de error o realizar alguna acción
+            setError(
+              "La hora de salida no puede ser menor o igual a la hora de entrada."
+            );
+            setIsReservation(false);
+          }else {
+            setError("");
+            setIsReservation(true);
+          }
+  
+        }
+      }
+      
+    };
+
+  const handleFilterChangeEnd =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = e.target.value;
+      setter(e.target.value);
+      console.log("inputValueTimeStart", inputValueTimeStart)
+      if(value == "" || inputValueTimeStart == ""){
+        setIsReservation(false);
+      }else {
+
+        if (inputValueTimeStart !== "" && value <= inputValueTimeStart) {
+          // Aquí puedes mostrar un mensaje de error o realizar alguna acción
+          setError(
+            "La hora de salida no puede ser menor o igual a la hora de entrada."
+          );
+          setIsReservation(false);
+        } else {
+          setError(null);
+          setIsReservation(true);
+          const days: IDaysSel[] = [];
+          daysSelect.days.forEach((d) => {
+            const start = new Date(`${d}T${inputValueTimeStart}`);
+            const day = start.getDate();
+            days.push({
+              day,
+              start,
+              end: new Date(`${d}T${value}`),
+            });
+          });
+  
+          setDataDaySelects([...days]);
+          setError("");
+        }
+      }
+    };
+
   return (
     <div className={ShiftStyle.modalOverlay}>
       <div className={ShiftStyle.modal}>
@@ -519,53 +468,33 @@ const Shift: React.FC<IShiftProps> = ({
                   />
                 </div>
                 <div className={ShiftStyle.containerTime}>
-                  <input
-                    id="timeInputStart"
-                    type="text"
-                    value={inputValueTimeStart}
-                    onChange={handleInputChangeTimeStart}
+                  <select
                     className={ShiftStyle.inputTime}
-                    autoComplete="off"
-                    placeholder="Hora de inicio"
-                  />
-                  {showOptionsTimeStart && (
-                    <ul className={ShiftStyle.options}>
-                      {filteredOptions.map((option, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleOptionClickTimeStart(option)}
-                          className={ShiftStyle.option}
-                        >
-                          {option}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                    value={inputValueTimeStart}
+                    onChange={handleFilterChange(setInputValueTimeStart)}
+                  >
+                    <option value="">Hora de inicio</option>
+                    {allOptions.map((room) => (
+                      <option key={room} value={room}>
+                        {room}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <span className={ShiftStyle.spaceTime}>-</span>
                 <div className={ShiftStyle.containerTimeEnd}>
-                  <input
-                    id="timeInputEnd"
-                    type="text"
-                    value={inputValueTimeEnd}
-                    onChange={handleInputChangeTimeEnd}
+                  <select
                     className={ShiftStyle.inputTime}
-                    autoComplete="off"
-                    placeholder="Hora de fin"
-                  />
-                  {showOptionsTimeEnd && (
-                    <ul className={ShiftStyle.options}>
-                      {filteredOptions.map((option, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleOptionClickTimeEnd(option)}
-                          className={ShiftStyle.option}
-                        >
-                          {option}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                    value={inputValueTimeEnd}
+                    onChange={handleFilterChangeEnd(setInputValueTimeEnd)}
+                  >
+                    <option value="">Hora de fin</option>
+                    {allOptions.map((room) => (
+                      <option key={room} value={room}>
+                        {room}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               {error && <p className={ShiftStyle.error}>{error}</p>}
@@ -623,7 +552,11 @@ const Shift: React.FC<IShiftProps> = ({
                   Cancelar
                 </button>
                 <button
-                  className={`${ isReservation ? ShiftStyle.buttonReserve : ShiftStyle.buttonCancel }`}
+                  className={`${
+                    isReservation
+                      ? ShiftStyle.buttonReserve
+                      : ShiftStyle.buttonInavil
+                  }`}
                   onClick={reservation}
                 >
                   Reservar
